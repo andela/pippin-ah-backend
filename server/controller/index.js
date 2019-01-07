@@ -1,4 +1,4 @@
-const Users = require('./Users');
+import Users from './Users';
 
 export default{
   Users

@@ -1,14 +1,15 @@
-const fs = require("fs"),
-    http = require("http"),
-    path = require("path"),
-    methods = require("methods"),
-    express = require("express"),
-    bodyParser = require("body-parser"),
-    session = require("express-session"),
-    cors = require("cors"),
-    passport = require("passport"),
-    errorhandler = require("errorhandler"),
-    // mongoose = require("mongoose");
+import  fs  from  'fs';
+import  http from  'http';
+import path  from 'path';
+import methods from 'methods';
+import express from 'express';
+import bodyParser from 'body-parser';
+import session  from 'express-session';
+import cors  from 'cors';
+import passport from 'passport';
+import errorhandler from 'errorhandler';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -47,7 +48,9 @@ app.use(
 
 require("./models/User");
 
-app.use(require("./routes"));
+app.use("./routes", (() => {
+    console.log('welcome to the routing page');
+}));
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

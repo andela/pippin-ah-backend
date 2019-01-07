@@ -1,9 +1,9 @@
-const models  = require('../models');
-
+import models from '../models';
+import passport from 'passport';
 const User = models.User;
 
-module.exports={
-    getUser(req, res, next) {
+class Users{
+    static  getUser(req, res, next) {
         User.findById(req.payload.id)
             .then(function(user) {
                 if (!user) {
@@ -12,9 +12,9 @@ module.exports={
                 return res.json({ user: user.toAuthJSON() });
             })
             .catch(next);
-    },
+    }
 
-    updateUser(req, res, next) {
+    static updateUser(req, res, next) {
         User.findById(req.payload.id)
             .then(function(user) {
                 if (!user) {
@@ -43,9 +43,9 @@ module.exports={
                 });
             })
             .catch(next);
-    },
+    }
 
-    login(req, res, next) {
+    static login(req, res, next) {
         if (!req.body.user.email) {
             return res.status(422).json({ errors: { email: "can't be blank" } });
         }
@@ -68,8 +68,9 @@ module.exports={
                 return res.status(422).json(info);
             }
         })(req, res, next);
-    },
-    register(req, res, next) {
+    }
+
+    static register(req, res, next) {
         const user = new User();
     
         user.username = req.body.user.username;
