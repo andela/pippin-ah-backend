@@ -1,12 +1,7 @@
-import fs from 'fs';
-import http from 'http';
-import path from 'path';
-import methods from 'methods';
 import express from 'express';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import cors from 'cors';
-import passport from 'passport';
 import errorhandler from 'errorhandler';
 import mongoose from 'mongoose';
 
@@ -77,7 +72,7 @@ if (!isProduction) {
 
 // production error handler
 // no stacktraces leaked to user
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
     res.status(err.status || 500);
     res.json({
         errors: {
