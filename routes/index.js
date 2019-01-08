@@ -1,5 +1,14 @@
-const router = require("express").Router();
+import express from 'express';
+const router = express.Router();
+import  Users  from '../controller/user';
 
-router.use("/api", require("./api"));
+router.get("/user/:userId",Users.getUser);
 
-module.exports = router;
+router.put("/user/:userId",Users.updateUser);
+
+router.post("/users/login",Users.login);
+
+router.post("/users",Users.register);
+
+
+export default router;
