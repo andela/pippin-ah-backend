@@ -1,14 +1,8 @@
-const fs = require("fs"),
-    http = require("http"),
-    path = require("path"),
-    methods = require("methods"),
-    express = require("express"),
-    bodyParser = require("body-parser"),
-    session = require("express-session"),
-    cors = require("cors"),
-    passport = require("passport"),
-    errorhandler = require("errorhandler"),
-    mongoose = require("mongoose");
+import express from 'express';
+import bodyParser from 'body-parser';
+import session from 'express-session';
+import cors from 'cors';
+import errorhandler from 'errorhandler';
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -39,10 +33,9 @@ if (!isProduction) {
 }
 
 if (isProduction) {
-    mongoose.connect(process.env.MONGODB_URI);
+  // Use production parameters.
 } else {
-    mongoose.connect("mongodb://localhost/conduit");
-    mongoose.set("debug", true);
+  // Use development parameters.
 }
 
 require("./models/User");
@@ -77,7 +70,7 @@ if (!isProduction) {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use((err, req, res) => {
     res.status(err.status || 500);
     res.json({
         errors: {
