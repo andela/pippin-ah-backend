@@ -14,24 +14,27 @@ module.exports = {
       email: {
         type: Sequelize.STRING
       },
-      bio: {
+      password: {
         type: Sequelize.STRING
       },
-      image: {
-        type: Sequelize.STRING
-      },
-      favourite: {
-        type: Sequelize.STRING
-      },
-      following: {
-        type: Sequelize.STRING
-      },
-      salt: {
-        type: Sequelize.STRING
-      },
-      hash: {
-        type: Sequelize.STRING
-      },
+      // bio: {
+      //   type: Sequelize.STRING
+      // },
+      // image: {
+      //   type: Sequelize.STRING
+      // },
+      // favourite: {
+      //   type: Sequelize.STRING
+      // },
+      // following: {
+      //   type: Sequelize.STRING
+      // },
+      // salt: {
+      //   type: Sequelize.STRING
+      // },
+      // hash: {
+      //   type: Sequelize.STRING
+      // },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

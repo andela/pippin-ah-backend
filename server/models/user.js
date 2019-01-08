@@ -7,9 +7,9 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         isUnique(value, next) {
           const self = this;
-          User.find({ where: { username: value } })
-            .then((user) => {
-              if (user && self.id !== user.id) {
+          user.find({ where: { username: value } })
+            .then((users) => {
+              if (users && self.id !== users.id) {
                 return next('Username already in use!');
               }
               return next();
@@ -24,9 +24,9 @@ module.exports = (sequelize, DataTypes) => {
           validate: {
             isUnique(value, next) {
               const self = this;
-              User.find({ where: { email: value } })
-                .then((user) => {
-                  if (user && self.id !== user.id) {
+              user.find({ where: { email: value } })
+                .then((users) => {
+                  if (users && self.id !== users.id) {
                     return next('Email already in use!');
                   }
                   return next();
@@ -35,20 +35,23 @@ module.exports = (sequelize, DataTypes) => {
             }
           }
   },
-  bio: {
-    type:DataType.STRING
+  password: {
+    type: DataTypes.STRING
   },
-  image: {
-    type:DataType.STRING
-  },
-  favorites: { type:DataTypes.ARRAY(DataTypes.DECIMAL)},
-  following:{ type: DataTypes.ARRAY(DataTypes.DECIMAL)},
-  hash:{
-    type:DataType.STRING
-  },
-  salt:{
-    type:DataType.STRING
-  },
+  // bio: {
+  //   type:DataTypes.STRING
+  // },
+  // image: {
+  //   type:DataTypes.STRING
+  // },
+  // favorites: { type:DataTypes.ARRAY(DataTypes.DECIMAL)},
+  // following:{ type: DataTypes.ARRAY(DataTypes.DECIMAL)},
+  // hash:{
+  //   type:DataTypes.STRING
+  // },
+  // salt:{
+  //   type:DataTypes.STRING
+  // },
   }, {});
   user.associate = function(models) {
     // associations can be defined here

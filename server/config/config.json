@@ -2,7 +2,7 @@
   "development": {
     "username": "habibaudu",
     "password": null,
-    "database": "AuthorsHaven",
+    "database": "authorshaven",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },

@@ -1,58 +1,50 @@
 import models from '../models';
 import passport from 'passport';
-const User = models.User;
+import bcrypt from 'bcryptjs';
+
+const User = models.user;
 
 class Users{
-    static  getUser(req, res, next) {
-        User.findById(req.payload.id)
-            .then(function(user) {
-                if (!user) {
-                    return res.sendStatus(401);
-                }
-                return res.json({ user: user.toAuthJSON() });
-            })
-            .catch(next);
-    }
-
-    static updateUser(req, res, next) {
-        User.findById(req.payload.id)
-            .then(function(user) {
-                if (!user) {
-                    return res.sendStatus(401);
-                }
-    
-                // only update fields that were actually passed...
-                if (typeof req.body.user.username !== "undefined") {
-                    user.username = req.body.user.username;
-                }
-                if (typeof req.body.user.email !== "undefined") {
-                    user.email = req.body.user.email;
-                }
-                if (typeof req.body.user.bio !== "undefined") {
-                    user.bio = req.body.user.bio;
-                }
-                if (typeof req.body.user.image !== "undefined") {
-                    user.image = req.body.user.image;
-                }
-                if (typeof req.body.user.password !== "undefined") {
-                    user.setPassword(req.body.user.password);
-                }
-    
-                return user.save().then(function() {
-                    return res.json({ user: user.toAuthJSON() });
+    static  getUser(req, res) {
+        User.findById(req.params.userId)
+            .then((user) => {
+            if (!user) {
+                return res.status(404).json({
+                  message: 'User Not Found'
                 });
+              }
+              return res.status(200).json({
+                message: 'User Found',
+                user
+              });
             })
-            .catch(next);
+            .catch(error => res.status(400).send(error));
     }
 
-    static login(req, res, next) {
-        if (!req.body.user.email) {
-            return res.status(422).json({ errors: { email: "can't be blank" } });
-        }
-    
-        if (!req.body.user.password) {
-            return res.status(422).json({ errors: { password: "can't be blank" } });
-        }
+    static updateUser(req, res) {
+        User.findById(req.params.userId)
+            .then((user) =>{
+                if (!user) {
+                    return res.status(404).json({
+                        message: 'User Not Found'
+                      });
+                    }
+                
+                return User
+                .update({
+                  username: req.body.username,
+                  email: req.body.email,
+                  password:req.body.password
+                })
+                .then(updatedUser => res.status(200).json({
+                  updatedUser,
+                  message: 'User Has been updated'
+                }))
+                .catch(error => res.status(400).send(error));
+            }) 
+    }
+
+    static login(req, res) {
         passport.authenticate("local", { session: false }, function(
             err,
             user,
@@ -63,27 +55,33 @@ class Users{
             }
     
             if (user) {
-                return res.json({ user: user.toAuthJSON() });
+                return res.json({ message :'Login was successful' });
             } else {
-                return res.status(422).json(info);
+                return res.status(401).json('incorrect email or password');
             }
-        })(req, res, next);
+        });
     }
 
-    static register(req, res, next) {
-        const user = new User();
-    
-        user.username = req.body.user.username;
-        user.email = req.body.user.email;
-        user.setPassword(req.body.user.password);
-    
-        user.save()
-            .then(function() {
-                return res.json({ user: user.toAuthJSON() });
-            })
-            .catch(next);
-    }
-    
+    static register(req, res) {
+            const password = bcrypt.hashSync(req.body.password, 10);
+        
+            return User
+              .create({
+                username: req.body.username,
+                email: req.body.email,
+                password
+            
+              })
+              .then(user => res.status(201).send({ 
+                message: 'Your Registration sucessful',
+                username: user.username,
+                email: user.email
+              }))
+              .catch(error => res.status(400).send({ message: 'Email or Username Already in Use'
+              }));
+          }
+        
 
   
 }
+export default Users;
