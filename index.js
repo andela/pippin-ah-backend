@@ -3,7 +3,6 @@ import bodyParser from 'body-parser';
 import session from 'express-session';
 import cors from 'cors';
 import errorhandler from 'errorhandler';
-import mongoose from 'mongoose';
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -34,10 +33,9 @@ if (!isProduction) {
 }
 
 if (isProduction) {
-    mongoose.connect(process.env.MONGODB_URI);
+  // Use production parameters.
 } else {
-    mongoose.connect("mongodb://localhost/conduit");
-    mongoose.set("debug", true);
+  // Use development parameters.
 }
 
 require("./models/User");
