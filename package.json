@@ -4,14 +4,16 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "babel-node index.js",
-    "dev:start": "babel-watch index.js"
+    "dev:start": "babel-watch index.js",
+    "test": "mocha --require babel-polyfill --require babel-register test/*.js"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.1",
     "cors": "^2.8.4",
     "dotenv": "^6.0.0",
     "ejs": "^2.6.1",
@@ -39,6 +41,7 @@
     "babel-watch": "^2.0.8",
     "eslint": "^5.12.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0"
+    "eslint-plugin-import": "^2.14.0",
+    "mocha": "^5.2.0"
   }
 }
