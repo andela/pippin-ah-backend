@@ -6,7 +6,8 @@ import express from 'express';
 import session from 'express-session';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import routes from './routes/index';
+import { userRoutes, catchAllRoute } from './routes';
+
 dotenv.config();
 
 const isProduction = process.env.NODE_ENV === "production";
@@ -22,9 +23,6 @@ app.use(require('morgan')('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.use(require("method-override")());
-app.use(express.static(__dirname + "/public"));
-
 app.use(
     session({
         secret: "authorshaven",
@@ -34,18 +32,7 @@ app.use(
     })
 );
 
+app.use('/api/v1/user', userRoutes);
+app.use('*', catchAllRoute);
 
-require("./models/User");
-
-app.get('/api', (req, res) => res.status(200).send({
-    message: 'Welcome to Authors Haven!',
-  }));
-app.use('/api/v1', routes);
-
-app.get('*', (req, res) => res.status(400).send({ message: 'Welcome To the Den of Authors' }));
-
-
-// finally, let's start our server...
-app.listen(process.env.PORT || 3000, () => {
-  console.log('Server runing on some port');
-});
+export default app;

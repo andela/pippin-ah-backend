@@ -4,8 +4,8 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "start": "babel-node app.js",
-    "dev:start": "babel-watch app.js",
+    "start": "babel-node server.js",
+    "dev:start": "babel-watch server.js",
     "test": "mocha --require babel-polyfill --require babel-register test/*.js"
   },
   "author": "Andela Simulations Programme",
