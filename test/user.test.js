@@ -1,5 +1,5 @@
 import chaiHttp from 'chai-http';
-import chai, { assert } from 'chai';
+import chai from 'chai';
 import app from '../app';
 
 process.env.NODE_ENV = 'test';
@@ -11,6 +11,7 @@ describe('Home route', () => {
     chai.request(app)
       .get('/nonroute')
       .end((err, res) => {
+        // eslint-disable-next-line no-console
         console.log(res.status);
         done();
       });
