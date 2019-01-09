@@ -36,3 +36,5 @@ node_modules
 package-lock.json
 .vscode
 .env
+.nyc_output
+coverage
