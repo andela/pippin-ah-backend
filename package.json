@@ -6,7 +6,8 @@
   "scripts": {
     "start": "babel-node server.js",
     "dev:start": "babel-watch server.js",
-    "test": "mocha --require babel-polyfill --require babel-register test/*.js"
+    "test": "mocha --require babel-polyfill --require babel-register test/*.js",
+    "db:migrate": "sequelize db:migrate"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
