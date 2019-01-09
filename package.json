@@ -6,7 +6,8 @@
   "scripts": {
     "start": "babel-node server.js",
     "dev:start": "babel-watch server.js",
-    "test": "mocha --require babel-polyfill --require babel-register test/*.js",
+    "test": "nyc mocha --require babel-register",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "db:migrate": "sequelize db:migrate"
   },
   "author": "Andela Simulations Programme",
@@ -39,9 +40,12 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-watch": "^2.0.8",
+    "coveralls": "^3.0.2",
     "eslint": "^5.12.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "mocha-lcov-reporter": "^1.3.0",
+    "nyc": "^13.1.0"
   }
 }

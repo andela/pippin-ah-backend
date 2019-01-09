@@ -34,5 +34,10 @@ node_modules
 # Optional REPL history
 .node_repl_history
 package-lock.json
+<<<<<<< HEAD
 .vscode
 .env
+=======
+.nyc_output
+coverage
+>>>>>>> CH(Coveralls): integrate coveralls with Authors Haven
