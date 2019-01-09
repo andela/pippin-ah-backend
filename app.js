@@ -3,11 +3,8 @@ import  http from  'http';
 import path  from 'path';
 import methods from 'methods';
 import express from 'express';
-import bodyParser from 'body-parser';
-import session  from 'express-session';
-import cors  from 'cors';
-import passport from 'passport';
-import errorhandler from 'errorhandler';
+import session from 'express-session';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import routes from './routes/index';
 dotenv.config();
@@ -20,9 +17,10 @@ const app = express();
 app.use(cors());
 
 // Normal express config defaults
-app.use(require("morgan")("dev"));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(require('morgan')('dev'));
+
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 app.use(require("method-override")());
 app.use(express.static(__dirname + "/public"));
