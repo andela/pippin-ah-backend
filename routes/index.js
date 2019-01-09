@@ -1,5 +1,2 @@
-const router = require("express").Router();
-
-router.use("/api", require("./api"));
-
-module.exports = router;
+export { default as userRoutes } from './userRoutes';
+export { default as catchAllRoute } from './catchAllRoute';
