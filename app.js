@@ -48,6 +48,6 @@ app.get('*', (req, res) => res.status(400).send({ message: 'Welcome To the Den o
 
 
 // finally, let's start our server...
-const server = app.listen(process.env.PORT || 3000, function() {
-    console.log("Listening on port " + server.address().port);
+app.listen(process.env.PORT || 3000, () => {
+  console.log('Server runing on some port');
 });
