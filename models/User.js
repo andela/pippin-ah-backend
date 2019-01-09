@@ -1,8 +1,7 @@
-'use strict';
-module.exports = (sequelize, DataTypes) => {
+const User = (sequelize, DataTypes) => {
   const user = sequelize.define('user', {
-    username:{ 
-      type:DataTypes.STRING,
+    username: {
+      type: DataTypes.STRING,
       unique: true,
       validate: {
         isUnique(value, next) {
@@ -19,28 +18,30 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     email: {
-          type:DataTypes.STRING, 
-          unique: true,
-          validate: {
-            isUnique(value, next) {
-              const self = this;
-              user.find({ where: { email: value } })
-                .then((users) => {
-                  if (users && self.id !== users.id) {
-                    return next('Email already in use!');
-                  }
-                  return next();
-                })
-                .catch(err => next(err));
-            }
-          }
-  },
-  password: {
-    type: DataTypes.STRING
-  },
+      type: DataTypes.STRING,
+      unique: true,
+      validate: {
+        isUnique(value, next) {
+          const self = this;
+          user.find({ where: { email: value } })
+            .then((users) => {
+              if (users && self.id !== users.id) {
+                return next('Email already in use!');
+              }
+              return next();
+            })
+            .catch(err => next(err));
+        }
+      }
+    },
+    password: {
+      type: DataTypes.STRING
+    },
   }, {});
-  user.associate = function(models) {
+  user.associate = () => {
     // associations can be defined here
   };
   return user;
 };
+
+export default User;
