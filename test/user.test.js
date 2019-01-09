@@ -7,7 +7,7 @@ chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe('User Routes', () => {
+describe('Register Route: /api/v1/users/register', () => {
   it('should register a user', (done) => {
     chai.request(app)
       .post('/api/v1/users/register')
@@ -20,7 +20,9 @@ describe('User Routes', () => {
         done();
       });
   });
+});
 
+describe('Login Route: /api/v1/users/login', () => {
   it('should login a user', (done) => {
     chai.request(app)
       .post('/api/v1/users/login')
@@ -33,7 +35,9 @@ describe('User Routes', () => {
         done();
       });
   });
+});
 
+describe('Get User Detail Route: /api/v1/users/:userId', () => {
   it('should get a user detail', (done) => {
     chai.request(app)
       .get('/api/v1/users/1')
@@ -43,7 +47,9 @@ describe('User Routes', () => {
         done();
       });
   });
+});
 
+describe('Update User Route: /api/v1/users/:userId', () => {
   it('should update a user detail', (done) => {
     chai.request(app)
       .delete('/api/v1/users/1')
@@ -53,7 +59,9 @@ describe('User Routes', () => {
         done();
       });
   });
+});
 
+describe('Delete User Route: /api/v1/users/:userId', () => {
   it('should delete a user detail', (done) => {
     chai.request(app)
       .delete('/api/v1/users/1')
