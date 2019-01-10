@@ -1,47 +1,24 @@
-const User = (sequelize, DataTypes) => {
-  const user = sequelize.define('user', {
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('User', {
     username: {
       type: DataTypes.STRING,
-      unique: true,
-      validate: {
-        isUnique(value, next) {
-          const self = this;
-          user.find({ where: { username: value } })
-            .then((users) => {
-              if (users && self.id !== users.id) {
-                return next('Username already in use!');
-              }
-              return next();
-            })
-            .catch(err => next(err));
-        }
-      }
+      allowNull: false,
+      unique: true
+
     },
     email: {
       type: DataTypes.STRING,
-      unique: true,
-      validate: {
-        isUnique(value, next) {
-          const self = this;
-          user.find({ where: { email: value } })
-            .then((users) => {
-              if (users && self.id !== users.id) {
-                return next('Email already in use!');
-              }
-              return next();
-            })
-            .catch(err => next(err));
-        }
-      }
+      allowNull: false,
+      unique: true
     },
     password: {
-      type: DataTypes.STRING
-    },
-  }, {});
-  user.associate = () => {
-    // associations can be defined here
-  };
-  return user;
-};
+      type: DataTypes.STRING,
+      allowNull: false
 
-export default User;
+    },
+  });
+  User.associate = models => User.hasOne(models.Profile, {
+
+  });
+  return User;
+};
