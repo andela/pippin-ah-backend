@@ -6,7 +6,7 @@ const { user } = models;
  */
 class userValidations {
   /**
-    * Controll update a user.
+    * Controll signup validation.
     * @constructor
     * @param {object} req - The request object.
     * @param {object} res - The response object.
