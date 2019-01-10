@@ -88,6 +88,7 @@ class Users {
     * @param {object} req - The request object.
     * @param {object} res - The response object.
     */
+<<<<<<< HEAD
   static async register(req, res) {
     // const password = bcrypt.hashSync(req.body.password, 10);
     const { username, email, password } = req.body;
@@ -97,6 +98,25 @@ class Users {
       username: userResponse.username,
       email: userResponse.email
     });
+=======
+  static register(req, res) {
+    const password = bcrypt.hashSync(req.body.password, 10);
+    return User
+      .create({
+        username: req.body.username,
+        email: req.body.email,
+        password
+
+      })
+      .then(user => res.status(201).send({
+        message: 'Your Registration sucessful',
+        username: user.username,
+        email: user.email
+      }))
+      .catch(() => res.status(500).send(
+        { message: 'Internal server Error' }
+      ));
+>>>>>>> feat(descriptive error):create a userValidations.js
   }
 }
 

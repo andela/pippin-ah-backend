@@ -26,8 +26,13 @@ app.use(
     saveUninitialized: false
   })
 );
+<<<<<<< HEAD
 
 app.use('/api/v1/users', authRoutes);
+=======
+app.get('*', (req, res) => res.status(404).send(
+  { message: 'Welcome To Authors Haven the Den of authors' }));
+>>>>>>> feat(descriptive error):create a userValidations.js
 app.use('/api/v1/user', userRoutes);
 app.use(notFoundRoute);
 app.use(errorHandler);

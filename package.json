@@ -35,8 +35,12 @@
     "sequelize-cli": "^5.4.0",
     "slug": "^0.9.1",
     "supertest": "^3.3.0",
+<<<<<<< HEAD
     "underscore": "^1.9.1",
     "validator": "^10.10.0"
+=======
+    "underscore": "^1.9.1"
+>>>>>>> feat(descriptive error):create a userValidations.js
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
