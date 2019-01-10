@@ -90,7 +90,6 @@ class Users {
     */
   static register(req, res) {
     const password = bcrypt.hashSync(req.body.password, 10);
-
     return User
       .create({
         username: req.body.username,
@@ -103,8 +102,8 @@ class Users {
         username: user.username,
         email: user.email
       }))
-      .catch(() => res.status(400).send(
-        { message: 'Email or Username Already in Use' }
+      .catch(() => res.status(500).send(
+        { message: 'Internal server Error' }
       ));
   }
 }

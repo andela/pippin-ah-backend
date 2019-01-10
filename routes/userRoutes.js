@@ -1,5 +1,8 @@
 import express from 'express';
 import Users from '../controllers/user';
+import userValidations from '../middlewares';
+
+const { signup } = userValidations;
 
 const {
   getUser,
@@ -18,6 +21,6 @@ router.route('/login')
   .post(login);
 
 router.route('/')
-  .post(register);
+  .post(signup, register);
 
 export default router;

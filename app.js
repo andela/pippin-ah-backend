@@ -26,7 +26,8 @@ app.use(
     saveUninitialized: false
   })
 );
-
+app.get('*', (req, res) => res.status(404).send(
+  { message: 'Welcome To Authors Haven the Den of authors' }));
 app.use('/api/v1/user', userRoutes);
 app.use(notFoundRoute);
 app.use(errorHandler);
