@@ -28,7 +28,7 @@ app.use(
 );
 
 app.use('/api/v1/user', userRoutes);
-app.use(errorHandler);
 app.use('*', catchAllRoute);
+app.use(errorHandler);
 
 export default app;
