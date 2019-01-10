@@ -2,7 +2,7 @@
 export default (err, req, res, next) => {
   res.status(err.status || 500).send({
     errors: {
-      message: err.message,
+      body: [err.message],
     }
   });
 };
