@@ -2,7 +2,8 @@ import express from 'express';
 import session from 'express-session';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { userRoutes, catchAllRoute } from './routes';
+import userRoutes from './routes';
+import errorHandler from './middlewares';
 
 dotenv.config();
 
@@ -27,6 +28,6 @@ app.use(
 );
 
 app.use('/api/v1/user', userRoutes);
-app.use('*', catchAllRoute);
+app.use(errorHandler);
 
 export default app;
