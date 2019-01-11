@@ -23,7 +23,8 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
   User.associate = models => User.hasOne(models.Profile, {
-    foreignKey: 'userId'
+    foreignKey: 'userId',
+    onDelete: 'CASCADE'
   });
   return User;
 };

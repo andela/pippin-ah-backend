@@ -29,7 +29,8 @@ module.exports = {
       }
     },
     category: {
-      type: Sequelize.STRING
+      type: Sequelize.ENUM,
+      values: ['Science', 'Technology', 'Engineering', 'Arts', 'Mathematics']
     },
 
     createdAt: {

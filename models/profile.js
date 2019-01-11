@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT
     },
     category: {
-      type: DataTypes.STRING
+      type: DataTypes.ENUM,
+      values: ['Science', 'Technology', 'Engineering', 'Arts', 'Mathematics']
     },
 
   });
