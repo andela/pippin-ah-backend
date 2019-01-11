@@ -14,7 +14,7 @@ describe('User', () => {
       .post('/api/v1/users')
       .send(newUser2)
       .end((err, res) => {
-        expect(res.body.message).to.equal(
+        expect(res.body).to.equal(
           'password must contain only numbers and alphabet');
         done();
       });
@@ -29,7 +29,7 @@ describe('User', () => {
       .post('/api/v1/users')
       .send(newUser2)
       .end((err, res) => {
-        expect(res.body.message).to.equal(
+        expect(res.body).to.equal(
           'Your password must be at least 8 characters');
         done();
       });
@@ -45,7 +45,7 @@ describe('User', () => {
       .post('/api/v1/users')
       .send(newUser2)
       .end((err, res) => {
-        expect(res.body.message).to.equal(
+        expect(res.body).to.equal(
           'Your username must be at least 6 characters');
         done();
       });
@@ -61,7 +61,7 @@ describe('User', () => {
         .post('/api/v1/users')
         .send(newUser2)
         .end((err, res) => {
-          expect(res.body.message).to.equal(
+          expect(res.body).to.equal(
             'username must contain only alphabets and numbers');
           done();
         });
@@ -77,7 +77,7 @@ describe('User', () => {
       .post('/api/v1/users')
       .send(newUser2)
       .end((err, res) => {
-        expect(res.body.message).to.equal(
+        expect(res.body).to.equal(
           'username field is required');
         done();
       });
@@ -92,7 +92,7 @@ describe('User', () => {
       .post('/api/v1/users')
       .send(newUser2)
       .end((err, res) => {
-        expect(res.body.message).to.equal(
+        expect(res.body).to.equal(
           'please Enter a valid Email');
         done();
       });
@@ -107,7 +107,7 @@ describe('User', () => {
       .post('/api/v1/users')
       .send(newUser2)
       .end((err, res) => {
-        expect(res.body.message).to.equal(
+        expect(res.body.error.body[0]).to.equal(
           'All fields are required');
         done();
       });
