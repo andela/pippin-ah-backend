@@ -1,5 +1,5 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('comments', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Comments', {
     id: {
       allowNull: false,
       autoIncrement: true,
@@ -17,12 +17,11 @@ module.exports = {
       allowNull: false,
       onDelete: 'CASCADE',
       references: {
-        model: 'articles',
+        model: 'Articles',
         key: 'id',
         as: 'articleId'
       }
     },
-
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE
@@ -32,5 +31,5 @@ module.exports = {
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('comments')
+  down: queryInterface => queryInterface.dropTable('Comments')
 };
