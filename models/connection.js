@@ -1,11 +1,17 @@
 module.exports = (sequelize, DataTypes) => {
-  const connection = sequelize.define('Connection', {
+  const Connection = sequelize.define('Connection', {
+    userId: {
+      type: DataTypes.INTEGER
+    },
     followerId: {
       type: DataTypes.INTEGER
     },
-    followedId: {
-      type: DataTypes.INTEGER
-    }
   });
-  return connection;
+  Connection.associate = (models) => {
+    Connection.belongsTo(models.User, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE'
+    });
+  };
+  return Connection;
 };

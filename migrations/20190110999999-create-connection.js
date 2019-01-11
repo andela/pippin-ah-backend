@@ -1,16 +1,20 @@
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable('connection', {
-    id: {
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-      type: Sequelize.INTEGER
+    userId: {
+      type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'users',
+        key: 'id'
+      }
     },
     followerId: {
-      type: Sequelize.INTEGER
-    },
-    followedId: {
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'users',
+        key: 'id'
+      }
     },
     createdAt: {
       allowNull: false,
