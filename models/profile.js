@@ -16,7 +16,11 @@ module.exports = (sequelize, DataTypes) => {
 
     bio: {
       type: DataTypes.TEXT
-    }
+    },
+    category: {
+      type: DataTypes.ENUM,
+      values: ['Science', 'Technology', 'Engineering', 'Arts', 'Mathematics']
+    },
 
   });
   Profile.associate = (models) => {

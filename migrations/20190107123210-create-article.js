@@ -1,22 +1,30 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('Profiles', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Articles', {
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    firstName: {
-      type: Sequelize.STRING
+    post: {
+      type: Sequelize.STRING,
+      allowNull: false
     },
-    lastName: {
-      type: Sequelize.STRING
+    likes: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0
     },
-    bio: {
-      type: Sequelize.TEXT
+    dislikes: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0
     },
-    imageUrl: {
-      type: Sequelize.STRING
+    rating: {
+      type: Sequelize.INTEGER,
+      allowNull: true
+    },
+    category: {
+      type: Sequelize.STRING,
+      allowNull: false
     },
     userId: {
       type: Sequelize.INTEGER,
@@ -28,10 +36,6 @@ module.exports = {
         as: 'userId'
       }
     },
-    category: {
-      type: Sequelize.ENUM,
-      values: ['Science', 'Technology', 'Engineering', 'Arts', 'Mathematics']
-    },
 
     createdAt: {
       allowNull: false,
@@ -42,5 +46,5 @@ module.exports = {
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('Profiles')
+  down: queryInterface => queryInterface.dropTable('articles')
 };
