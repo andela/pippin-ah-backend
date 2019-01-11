@@ -1,8 +1,5 @@
 import express from 'express';
 import Users from '../controllers/user';
-import userValidations from '../middlewares';
-
-const { signup } = userValidations;
 
 const {
   getUser,
