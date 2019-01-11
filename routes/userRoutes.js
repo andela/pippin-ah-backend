@@ -21,6 +21,6 @@ router.route('/login')
   .post(login);
 
 router.route('/')
-  .post(signup, register);
+  .post(register);
 
 export default router;
