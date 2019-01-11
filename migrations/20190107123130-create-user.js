@@ -15,6 +15,10 @@ module.exports = {
     password: {
       type: Sequelize.STRING
     },
+    isMentor: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
+    },
 
     createdAt: {
       allowNull: false,
