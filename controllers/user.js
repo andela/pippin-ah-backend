@@ -89,10 +89,14 @@ class Users {
     * @param {object} res - The response object.
     */
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> [#162727552] refactor user validations
   static async register(req, res) {
     // const password = bcrypt.hashSync(req.body.password, 10);
     const { username, email, password } = req.body;
     const userResponse = await User.create({ username, email, password });
+<<<<<<< HEAD
 
     return res.send({
       username: userResponse.username,
@@ -117,6 +121,13 @@ class Users {
         { message: 'Internal server Error' }
       ));
 >>>>>>> feat(descriptive error):create a userValidations.js
+=======
+
+    return res.send({
+      username: userResponse.username,
+      email: userResponse.email
+    });
+>>>>>>> [#162727552] refactor user validations
   }
 }
 
