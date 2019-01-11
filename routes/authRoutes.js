@@ -1,6 +1,6 @@
 import express from 'express';
 import Users from '../controllers/user';
-import { UserValidations } from '../middlewares';
+import { userValidations } from '../middlewares';
 
 const {
   expectedParamsValidator,
@@ -12,7 +12,7 @@ const {
   passwordValidator
 
 
-} = UserValidations;
+} = userValidations;
 
 const {
   login,
