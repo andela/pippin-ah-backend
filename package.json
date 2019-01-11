@@ -6,13 +6,15 @@
   "scripts": {
     "start": "babel-node server.js",
     "dev:start": "babel-watch server.js",
-    "test": "nyc mocha --require babel-register",
+    "test": "NODE_ENV=test nyc mocha --require babel-register --exit",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "db:migrate": "sequelize db:migrate"
+    "db:migrate": "sequelize db:migrate",
+    "undo:migration": "sequelize db:migrate:undo:all"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "bcrypt": "^3.0.3",
     "chai": "^4.2.0",
     "chai-http": "^4.2.1",
@@ -33,12 +35,13 @@
     "sequelize": "^4.42.0",
     "sequelize-cli": "^5.4.0",
     "slug": "^0.9.1",
-    "underscore": "^1.9.1"
+    "supertest": "^3.3.0",
+    "underscore": "^1.9.1",
+    "validator": "^10.10.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
-    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-watch": "^2.0.8",
     "coveralls": "^3.0.2",

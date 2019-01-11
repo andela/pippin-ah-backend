@@ -1,8 +1,8 @@
 import passport from 'passport';
-import bcrypt from 'bcrypt';
+import 'babel-polyfill';
 import models from '../models';
 
-const User = models.user;
+const { User } = models;
 
 /**
  * @class
@@ -88,24 +88,22 @@ class Users {
     * @param {object} req - The request object.
     * @param {object} res - The response object.
     */
-  static register(req, res) {
-    const password = bcrypt.hashSync(req.body.password, 10);
+  static async register(req, res) {
+    const { username, email, password } = req.body;
 
-    return User
+    const userCreated = await User
       .create({
-        username: req.body.username,
-        email: req.body.email,
+        username,
+        email,
         password
+      });
+    if (userCreated) {
+      return res.status(201).json({
+        username: userCreated.username,
+        email: userCreated.email
 
-      })
-      .then(user => res.status(201).send({
-        message: 'Your Registration sucessful',
-        username: user.username,
-        email: user.email
-      }))
-      .catch(() => res.status(400).send(
-        { message: 'Email or Username Already in Use' }
-      ));
+      });
+    }
   }
 }
 
