@@ -17,7 +17,6 @@ module.exports = {
     },
     isMentor: {
       type: Sequelize.BOOLEAN,
-      allowNull: true,
       defaultValue: false
     },
 

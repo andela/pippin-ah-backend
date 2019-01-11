@@ -18,7 +18,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     isMentor: {
       type: DataTypes.BOOLEAN,
-      allowNull: true,
       defaultValue: false
     },
   });
