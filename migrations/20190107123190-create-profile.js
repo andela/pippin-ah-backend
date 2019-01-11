@@ -23,10 +23,13 @@ module.exports = {
       allowNull: false,
       onDelete: 'CASCADE',
       references: {
-        model: 'User',
+        model: 'users',
         key: 'id',
         as: 'userId'
       }
+    },
+    category: {
+      type: Sequelize.STRING
     },
 
     createdAt: {

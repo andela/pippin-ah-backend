@@ -16,9 +16,14 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
 
     },
+    isMentor: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: false
+    },
   });
   User.associate = models => User.hasOne(models.Profile, {
-
+    foreignKey: 'userId'
   });
   return User;
 };

@@ -16,7 +16,10 @@ module.exports = (sequelize, DataTypes) => {
 
     bio: {
       type: DataTypes.TEXT
-    }
+    },
+    category: {
+      type: DataTypes.STRING
+    },
 
   });
   Profile.associate = (models) => {
