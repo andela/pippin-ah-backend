@@ -31,7 +31,7 @@ module.exports = {
       allowNull: false,
       onDelete: 'CASCADE',
       references: {
-        model: 'users',
+        model: 'Users',
         key: 'id',
         as: 'userId'
       }
@@ -46,5 +46,5 @@ module.exports = {
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('articles')
+  down: queryInterface => queryInterface.dropTable('Articles')
 };
