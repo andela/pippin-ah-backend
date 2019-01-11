@@ -16,7 +16,9 @@ module.exports = {
       type: Sequelize.STRING
     },
     isMentor: {
-      type: Sequelize.BOOLEAN
+      type: Sequelize.BOOLEAN,
+      allowNull: true,
+      defaultValue: false
     },
 
     createdAt: {
