@@ -23,13 +23,13 @@ const router = express.Router();
 
 router.route('/')
   .post(
+    expectedParamsValidator,
+    nonEmptyParamsValidator,
     emailIsValid,
     usernameValidator,
     passwordValidator,
     emailExistsValidator,
     usernameExistsValidator,
-    expectedParamsValidator,
-    nonEmptyParamsValidator,
     register
   );
 

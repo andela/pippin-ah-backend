@@ -31,7 +31,7 @@ export default {
     const errorArray = [];
 
     nonEmptyParams.forEach((param) => {
-      if (!param.trim().length) {
+      if (!req.body[param].trim().length) {
         errorArray.push(`${param} must not be empty`);
       }
     });
@@ -48,17 +48,15 @@ export default {
 
   emailExistsValidator(req, res, next) {
     const { email } = req.body;
-    if (validation.isEmail(email)) {
-      User.findOne({ where: { email } })
-        .then((user) => {
-          if (user) {
-            const error = new Error('Email already in use');
-            error.status = 409;
-            return next(error);
-          }
-          next();
-        });
-    }
+    User.findOne({ where: { email } })
+      .then((user) => {
+        if (user) {
+          const error = new Error('Email already in use');
+          error.status = 409;
+          return next(error);
+        }
+        next();
+      });
   },
   usernameExistsValidator(req, res, next) {
     const { username } = req.body;
