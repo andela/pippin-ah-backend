@@ -3,7 +3,7 @@ import session from 'express-session';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { authRoutes, userRoutes } from './routes';
-import { errorHandler } from './middlewares';
+import { errorHandler, notFoundRoute } from './middlewares';
 
 dotenv.config();
 
