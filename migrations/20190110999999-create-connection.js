@@ -1,5 +1,5 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('connection', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Connections', {
     userId: {
       type: Sequelize.INTEGER,
       onDelete: 'CASCADE',
@@ -25,5 +25,5 @@ module.exports = {
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('connection')
+  down: queryInterface => queryInterface.dropTable('Connections')
 };
