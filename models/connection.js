@@ -1,11 +1,11 @@
-export default (sequelize, DataTypes) => {
-  const follow = sequelize.define('Follow', {
-    userId: {
+module.exports = (sequelize, DataTypes) => {
+  const connection = sequelize.define('Connection', {
+    followerId: {
       type: DataTypes.INTEGER
     },
-    followerUserId: {
+    followedId: {
       type: DataTypes.INTEGER
     }
-  }, {});
-  return follow;
+  });
+  return connection;
 };

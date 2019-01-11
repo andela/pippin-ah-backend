@@ -1,21 +1,17 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('follow', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('connection', {
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    userId: {
+    followerId: {
       type: Sequelize.INTEGER
     },
-    followerUserId: {
+    followedId: {
       type: Sequelize.INTEGER
     },
-    password: {
-      type: Sequelize.STRING
-    },
-
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE
@@ -25,5 +21,5 @@ module.exports = {
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('Follow')
+  down: queryInterface => queryInterface.dropTable('connection')
 };
