@@ -8,7 +8,8 @@
     "dev:start": "babel-watch server.js",
     "test": "nyc mocha --require babel-register",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "db:migrate": "sequelize db:migrate"
+    "db:migrate": "sequelize db:migrate",
+    "undo:migration": "sequelize db:migrate:undo:all"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
