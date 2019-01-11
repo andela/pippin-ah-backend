@@ -1,2 +1,2 @@
-// all middlewares will be here.
-export { default } from './errorHandler';
+export { default as errorHandler } from './errorHandler';
+export { default as notFoundRoute } from './notFoundRoute';

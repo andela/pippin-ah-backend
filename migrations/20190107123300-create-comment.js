@@ -1,38 +1,27 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('Profiles', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Comments', {
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    firstName: {
-      type: Sequelize.STRING
-    },
-    lastName: {
-      type: Sequelize.STRING
-    },
-    bio: {
-      type: Sequelize.TEXT
-    },
-    imageUrl: {
+    comment: {
       type: Sequelize.STRING
     },
     userId: {
+      type: Sequelize.INTEGER
+    },
+    articleId: {
       type: Sequelize.INTEGER,
       allowNull: false,
       onDelete: 'CASCADE',
       references: {
-        model: 'Users',
+        model: 'Articles',
         key: 'id',
-        as: 'userId'
+        as: 'articleId'
       }
     },
-    category: {
-      type: Sequelize.ENUM,
-      values: ['Science', 'Technology', 'Engineering', 'Arts', 'Mathematics']
-    },
-
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE
@@ -42,5 +31,5 @@ module.exports = {
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('Profiles')
+  down: queryInterface => queryInterface.dropTable('Comments')
 };

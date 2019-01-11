@@ -29,10 +29,10 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE'
     });
 
-    /*  Article.hasMany(models.Comment, {
+    Article.hasMany(models.Comment, {
       foreignKey: 'articleId',
       onDelete: 'CASCADE'
-    }); */
+    });
   };
   return Article;
 };
