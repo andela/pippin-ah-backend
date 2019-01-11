@@ -1,4 +1,5 @@
 import passport from 'passport';
+import 'babel-polyfill';
 import models from '../models';
 
 const { User } = models;
@@ -93,6 +94,7 @@ class Users {
 >>>>>>> [#162727552] refactor user validations
   static async register(req, res) {
     const { username, email, password } = req.body;
+<<<<<<< HEAD
     const userResponse = await User.create({ username, email, password });
 <<<<<<< HEAD
 
@@ -126,6 +128,21 @@ class Users {
       email: userResponse.email
     });
 >>>>>>> [#162727552] refactor user validations
+=======
+    const userCreated = await User
+      .create({
+        username,
+        email,
+        password
+      });
+    if (userCreated) {
+      return res.status(201).json({
+        username: userCreated.username,
+        email: userCreated.email
+
+      });
+    }
+>>>>>>> feat(descriptive errors): installs babel-polyfill on dependencies
   }
 }
 

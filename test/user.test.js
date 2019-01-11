@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import request from 'supertest';
+import 'babel-polyfill';
 import server from '../app';
 
 describe('User', () => {
@@ -10,7 +11,7 @@ describe('User', () => {
       password: 'hhrt----',
     };
     request(server)
-      .post('/api/v1/user')
+      .post('/api/v1/users')
       .send(newUser2)
       .end((err, res) => {
         expect(res.body.message).to.equal(
@@ -25,7 +26,7 @@ describe('User', () => {
       password: 'hba123',
     };
     request(server)
-      .post('/api/v1/user')
+      .post('/api/v1/users')
       .send(newUser2)
       .end((err, res) => {
         expect(res.body.message).to.equal(
@@ -41,7 +42,7 @@ describe('User', () => {
       password: 'hbasdg3546',
     };
     request(server)
-      .post('/api/v1/user')
+      .post('/api/v1/users')
       .send(newUser2)
       .end((err, res) => {
         expect(res.body.message).to.equal(
@@ -57,7 +58,7 @@ describe('User', () => {
         password: 'hbasdg3546',
       };
       request(server)
-        .post('/api/v1/user')
+        .post('/api/v1/users')
         .send(newUser2)
         .end((err, res) => {
           expect(res.body.message).to.equal(
@@ -73,7 +74,7 @@ describe('User', () => {
       password: 'hbasdg3546',
     };
     request(server)
-      .post('/api/v1/user')
+      .post('/api/v1/users')
       .send(newUser2)
       .end((err, res) => {
         expect(res.body.message).to.equal(
@@ -88,7 +89,7 @@ describe('User', () => {
       password: 'hbasdg3546',
     };
     request(server)
-      .post('/api/v1/user')
+      .post('/api/v1/users')
       .send(newUser2)
       .end((err, res) => {
         expect(res.body.message).to.equal(
@@ -103,7 +104,7 @@ describe('User', () => {
       password: '',
     };
     request(server)
-      .post('/api/v1/user')
+      .post('/api/v1/users')
       .send(newUser2)
       .end((err, res) => {
         expect(res.body.message).to.equal(
