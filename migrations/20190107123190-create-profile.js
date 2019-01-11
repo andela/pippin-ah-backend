@@ -28,6 +28,10 @@ module.exports = {
         as: 'userId'
       }
     },
+    category: {
+      type: Sequelize.ENUM,
+      values: ['Science', 'Technology', 'Engineering', 'Arts', 'Mathematics']
+    },
 
     createdAt: {
       allowNull: false,
