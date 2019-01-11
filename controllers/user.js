@@ -88,47 +88,9 @@ class Users {
     * @param {object} req - The request object.
     * @param {object} res - The response object.
     */
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> [#162727552] refactor user validations
   static async register(req, res) {
     const { username, email, password } = req.body;
-<<<<<<< HEAD
-    const userResponse = await User.create({ username, email, password });
-<<<<<<< HEAD
 
-    return res.send({
-      username: userResponse.username,
-      email: userResponse.email
-    });
-=======
-  static register(req, res) {
-    const password = bcrypt.hashSync(req.body.password, 10);
-    return User
-      .create({
-        username: req.body.username,
-        email: req.body.email,
-        password
-
-      })
-      .then(user => res.status(201).send({
-        message: 'Your Registration sucessful',
-        username: user.username,
-        email: user.email
-      }))
-      .catch(() => res.status(500).send(
-        { message: 'Internal server Error' }
-      ));
->>>>>>> feat(descriptive error):create a userValidations.js
-=======
-
-    return res.send({
-      username: userResponse.username,
-      email: userResponse.email
-    });
->>>>>>> [#162727552] refactor user validations
-=======
     const userCreated = await User
       .create({
         username,
@@ -142,7 +104,6 @@ class Users {
 
       });
     }
->>>>>>> feat(descriptive errors): installs babel-polyfill on dependencies
   }
 }
 
