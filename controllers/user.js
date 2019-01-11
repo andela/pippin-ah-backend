@@ -1,5 +1,4 @@
 import passport from 'passport';
-import bcrypt from 'bcrypt';
 import models from '../models';
 
 const { User } = models;
@@ -93,7 +92,6 @@ class Users {
 =======
 >>>>>>> [#162727552] refactor user validations
   static async register(req, res) {
-    // const password = bcrypt.hashSync(req.body.password, 10);
     const { username, email, password } = req.body;
     const userResponse = await User.create({ username, email, password });
 <<<<<<< HEAD

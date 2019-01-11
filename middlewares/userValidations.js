@@ -45,56 +45,73 @@ export default {
     error.status = 400;
     return next(error);
   },
-  // signupValidator(req, res, next) {
-  //   const { username, email, password } = req.body;
 
-  //   if (validation.isEmail(req.body.email)) {
-  //     User.findOne({ where: { email: req.body.email } })
-  //       .then((user) => {
-  //         if (user) {
-  //           const error = new Error('Email already in use');
-  //           error.status = 409;
-  //           return next(error);
-  //         }
-  //         next();
-  //       });
-  //   }
+  emailExistsValidator(req, res, next) {
+    const { email } = req.body;
+    if (validation.isEmail(email)) {
+      User.findOne({ where: { email } })
+        .then((user) => {
+          if (user) {
+            const error = new Error('Email already in use');
+            error.status = 409;
+            return next(error);
+          }
+          next();
+        });
+    }
+  },
+  usernameExistsValidator(req, res, next) {
+    const { username } = req.body;
+    User.findOne({ where: { username } })
+      .then((user) => {
+        if (user) {
+          const error = new Error('Username already in use');
+          error.status = 409;
+          return next(error);
+        }
+        next();
+      });
+  },
+  emailIsValid(req, res, next) {
+    if (!validation.isEmail(req.body.email)) {
+      const error = new Error('please Enter a valid Email');
+      error.status = 400;
+      return next(error);
+    }
+    next();
+  },
+  usernameValidator(req, res, next) {
+    if (!validation.isAlphanumeric(req.body.username)) {
+      const error = new Error(
+        'username must contain only alphabets and numbers');
+      error.status = 400;
+      return next(error);
+    }
+    // eslint-disable-next-line no-empty
+    if (req.body.username.length < 6) {
+      const error = new Error(
+        'Your username must be at least 6 characters');
+      error.status = 400;
+      return next(error);
+    }
+    next();
+  },
 
-  //   if (!username
-  //      && !email
-  //      && !password
-  //   ) {
-  //     return res.status(400).send({ message: 'All fields are required' });
-  //   }
-  //   if (!validation.isEmail(req.body.email)) {
-  //     return res.status(400).send(
-  //       { message: 'please Enter a valid Email' });
-  //   }
+  passwordValidator(req, res, next) {
+    if (!validation.isAlphanumeric(req.body.password)) {
+      const error = new Error(
+        'password must contain only numbers and alphabet');
+      error.status = 400;
+      return next(error);
+    }
+    // eslint-disable-next-line no-empty
+    if (req.body.password.length < 8) {
+      const error = new Error(
+        'Your password must be at least 8 characters');
+      error.status = 400;
+      return next(error);
+    }
+    next();
+  }
 
-  //   if (req.body.username === ''
-  //   || typeof req.body.username
-  //    === 'undefined'
-  //   || req.body.username === null) {
-  //     return res.status(400).send({ message: 'username field is required' });
-  //   }
-  //   if (!validation.isAlphanumeric(req.body.username)) {
-  //     return res.status(400).send(
-  //       { message: 'username must contain only alphabets and numbers' });
-  //   }
-  //   if (req.body.username.length < 6) {
-  //     return res.status(400).send(
-  //       { message: 'Your username must be at least 6 characters' });
-  //   }
-
-  //   if (req.body.password.length < 8) {
-  //     return res.status(400).send(
-  //       { message: 'Your password must be at least 8 characters' });
-  //   }
-  //   if (!validation.isAlphanumeric(req.body.password)) {
-  //     return res.status(400).send(
-  //       { message: 'password must contain only numbers and alphabet' });
-  //   }
-
-  //   next();
-  // }
 };

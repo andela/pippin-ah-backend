@@ -2,7 +2,17 @@ import express from 'express';
 import Users from '../controllers/user';
 import { UserValidations } from '../middlewares';
 
-const { expectedParamsValidator, nonEmptyParamsValidator } = UserValidations;
+const {
+  expectedParamsValidator,
+  nonEmptyParamsValidator,
+  emailExistsValidator,
+  usernameExistsValidator,
+  emailIsValid,
+  usernameValidator,
+  passwordValidator
+
+
+} = UserValidations;
 
 const {
   login,
@@ -15,6 +25,11 @@ router.route('/')
   .post(
     expectedParamsValidator,
     nonEmptyParamsValidator,
+    emailIsValid,
+    usernameValidator,
+    passwordValidator,
+    emailExistsValidator,
+    usernameExistsValidator,
     register
   );
 
