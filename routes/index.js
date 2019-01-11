@@ -1,2 +1,2 @@
-// eslint-disable-next-line import/prefer-default-export
+export { default as authRoutes } from './authRoutes';
 export { default as userRoutes } from './userRoutes';
