@@ -65,10 +65,46 @@ describe('USER TEST SUITE', () => {
           });
       });
 
+    it('should fail creation when case is changed for used email',
+      (done) => {
+        const newUser2 = {
+          username: 'habibaudu',
+          email: 'Auduhabib1990@gmail.com',
+          password: 'hhrtuyhgt678',
+        };
+        chai.request(server)
+          .post('/api/v1/users')
+          .send(newUser2)
+          .end((err, res) => {
+            expect(res.status).to.equal(409);
+            expect(res.body.errors.body[0]).to.equal(
+              'Email already in use');
+            done();
+          });
+      });
+
     it('should fail creation when username is already in use',
       (done) => {
         const newUser2 = {
           username: 'habibaudu',
+          email: 'auduhabib@gmail.com',
+          password: 'hhrtuyhgt678',
+        };
+        chai.request(server)
+          .post('/api/v1/users')
+          .send(newUser2)
+          .end((err, res) => {
+            expect(res.status).to.equal(409);
+            expect(res.body.errors.body[0]).to.equal(
+              'Username already in use');
+            done();
+          });
+      });
+
+    it('should fail creation when case is changed for used username',
+      (done) => {
+        const newUser2 = {
+          username: 'Habibaudu',
           email: 'auduhabib@gmail.com',
           password: 'hhrtuyhgt678',
         };
