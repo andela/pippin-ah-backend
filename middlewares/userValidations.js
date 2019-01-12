@@ -48,17 +48,15 @@ export default {
     return next(error);
   },
 
-  emailExistsValidator(req, res, next) {
+  async emailExistsValidator(req, res, next) {
     const { email } = req.body;
-    User.findOne({ where: { email: { [iLike]: email } } })
-      .then((user) => {
-        if (user) {
-          const error = new Error('Email already in use');
-          error.status = 409;
-          return next(error);
-        }
-        next();
-      });
+    const used = await User.findOne({ where: { email: { [iLike]: email } } });
+    if (used) {
+      const error = new Error('Email already in use');
+      error.status = 409;
+      return next(error);
+    }
+    next();
   },
   usernameExistsValidator(req, res, next) {
     const { username } = req.body;
