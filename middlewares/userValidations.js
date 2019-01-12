@@ -1,6 +1,8 @@
+import Sequelize from 'sequelize';
 import validation from 'validator';
 import models from '../models';
 
+const { iLike } = Sequelize.Op;
 const { User } = models;
 
 const requiredParams = ['username', 'email', 'password'];
@@ -48,7 +50,7 @@ export default {
 
   emailExistsValidator(req, res, next) {
     const { email } = req.body;
-    User.findOne({ where: { email } })
+    User.findOne({ where: { email: { [iLike]: email } } })
       .then((user) => {
         if (user) {
           const error = new Error('Email already in use');
