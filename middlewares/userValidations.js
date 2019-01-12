@@ -58,17 +58,15 @@ export default {
     }
     next();
   },
-  usernameExistsValidator(req, res, next) {
+  async usernameExistsValidator(req, res, next) {
     const { username } = req.body;
-    User.findOne({ where: { username: { [iLike]: username } } })
-      .then((user) => {
-        if (user) {
-          const error = new Error('Username already in use');
-          error.status = 409;
-          return next(error);
-        }
-        next();
-      });
+    const used = await User.findOne({ where: { username: { [iLike]: username } } });
+    if (used) {
+      const error = new Error('Username already in use');
+      error.status = 409;
+      return next(error);
+    }
+    next();
   },
   emailIsValid(req, res, next) {
     if (!validation.isEmail(req.body.email)) {
