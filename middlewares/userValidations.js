@@ -1,6 +1,8 @@
+import Sequelize from 'sequelize';
 import validation from 'validator';
 import models from '../models';
 
+const { iLike } = Sequelize.Op;
 const { User } = models;
 
 const requiredParams = ['username', 'email', 'password'];
@@ -46,29 +48,26 @@ export default {
     return next(error);
   },
 
-  emailExistsValidator(req, res, next) {
+  async emailExistsValidator(req, res, next) {
     const { email } = req.body;
-    User.findOne({ where: { email } })
-      .then((user) => {
-        if (user) {
-          const error = new Error('Email already in use');
-          error.status = 409;
-          return next(error);
-        }
-        next();
-      });
+    const used = await User.findOne({ where: { email: { [iLike]: email } } });
+    if (used) {
+      const error = new Error('Email already in use');
+      error.status = 409;
+      return next(error);
+    }
+    next();
   },
-  usernameExistsValidator(req, res, next) {
+  async usernameExistsValidator(req, res, next) {
     const { username } = req.body;
-    User.findOne({ where: { username } })
-      .then((user) => {
-        if (user) {
-          const error = new Error('Username already in use');
-          error.status = 409;
-          return next(error);
-        }
-        next();
-      });
+    const used = await User
+      .findOne({ where: { username: { [iLike]: username } } });
+    if (used) {
+      const error = new Error('Username already in use');
+      error.status = 409;
+      return next(error);
+    }
+    next();
   },
   emailIsValid(req, res, next) {
     if (!validation.isEmail(req.body.email)) {
