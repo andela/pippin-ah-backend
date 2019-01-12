@@ -24,16 +24,23 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     hooks: {
-      beforeCreate: (user) => {
-        const salt = bcrypt.genSaltSync(10);
-        user.password = bcrypt.hashSync(user.password, salt);
+      beforeCreate: async (user) => {
+        await user.hashPassword();
       }
     }
   }
   );
+
   User.associate = models => User.hasOne(models.Profile, {
     foreignKey: 'userId',
     onDelete: 'CASCADE'
   });
+
+  User.prototype.hashPassword = async function hashPassword() {
+    const saltRounds = 10;
+    this.password = await bcrypt.hash(this.password, saltRounds);
+  };
+
+
   return User;
 };
