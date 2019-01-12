@@ -60,7 +60,7 @@ export default {
   },
   usernameExistsValidator(req, res, next) {
     const { username } = req.body;
-    User.findOne({ where: { username } })
+    User.findOne({ where: { username: { [iLike]: username } } })
       .then((user) => {
         if (user) {
           const error = new Error('Username already in use');
