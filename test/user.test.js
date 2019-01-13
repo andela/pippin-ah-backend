@@ -230,4 +230,107 @@ describe('USER TEST SUITE', () => {
           });
       });
   });
+  describe('User SignIn Validations', () => {
+    it('should sign user in with valid email and password',
+      (done) => {
+        const newUser2 = {
+          email: 'auduhabib1990@gmail.com',
+          password: 'hhrtuyhgt678'
+        };
+        chai.request(server)
+          .post('/api/v1/users/login')
+          .send(newUser2)
+          .end((err, res) => {
+            expect(res.status).to.equal(200);
+            expect(res.body.message).to.equal('Login was sucessful');
+            done();
+          });
+      });
+    it('should sign user in with valid username and password',
+      (done) => {
+        const newUser2 = {
+          username: 'habibaudu',
+          password: 'hhrtuyhgt678'
+        };
+        chai.request(server)
+          .post('/api/v1/users/login')
+          .send(newUser2)
+          .end((err, res) => {
+            expect(res.status).to.equal(200);
+            expect(res.body.message).to.equal('Login was sucessful');
+            done();
+          });
+      });
+    it('should not allow  invalid email or password signIn',
+      (done) => {
+        const newUser2 = {
+          email: 'auduhabib1990@gmail.com',
+          password: 'invalidpassword'
+        };
+        chai.request(server)
+          .post('/api/v1/users/login')
+          .send(newUser2)
+          .end((err, res) => {
+            expect(res.status).to.equal(404);
+            expect(res.body.message).to.equal('Invalid Credential');
+            done();
+          });
+      });
+    it('should not login user when required params are not provided',
+      (done) => {
+        const newUser2 = {
+
+        };
+        chai.request(server)
+          .post('/api/v1/users/login')
+          .send(newUser2)
+          .end((err, res) => {
+            const errorResult = JSON.parse(res.body.errors.body[0]);
+            expect(res.status).to.equal(400);
+            expect(errorResult.length).to.equal(2);
+            // eslint-disable-next-line no-unused-expressions
+            expect(Array.isArray(errorResult)).to.be.true;
+            expect(errorResult[0]).to.equal('username is required');
+            expect(errorResult[1]).to.equal('password is required');
+            done();
+          });
+      });
+    it('should not allow login when fields are empty', (done) => {
+      const newUser2 = {
+        email: '  ',
+        password: '   ',
+      };
+      chai.request(server)
+        .post('/api/v1/users/login')
+        .send(newUser2)
+        .end((err, res) => {
+          const errorResult = JSON.parse(res.body.errors.body[0]);
+          expect(res.status).to.equal(400);
+          expect(errorResult.length).to.equal(2);
+          // eslint-disable-next-line no-unused-expressions
+          expect(Array.isArray(errorResult)).to.be.true;
+          expect(errorResult[0]).to.equal('email must not be empty');
+          expect(errorResult[1]).to.equal('password must not be empty');
+          done();
+        });
+    });
+    it('should not allow login when username is empty', (done) => {
+      const newUser2 = {
+        username: '    ',
+        password: 'hhrtuyhgt678',
+      };
+      chai.request(server)
+        .post('/api/v1/users/login')
+        .send(newUser2)
+        .end((err, res) => {
+          const errorResult = JSON.parse(res.body.errors.body[0]);
+          expect(res.status).to.equal(400);
+          expect(errorResult.length).to.equal(1);
+          // eslint-disable-next-line no-unused-expressions
+          expect(Array.isArray(errorResult)).to.be.true;
+          expect(errorResult[0]).to.equal('username must not be empty');
+          done();
+        });
+    });
+  });
 });

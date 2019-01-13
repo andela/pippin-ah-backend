@@ -109,6 +109,46 @@ export default {
       return next(error);
     }
     next();
+  },
+  loginParamsValidator(req, res, next) {
+    const availableParams = (req.body.email)
+      ? ['email', 'password'] : ['username', 'password'];
+    const errorArray = [];
+
+    availableParams.forEach((param) => {
+      if (!Object.keys(req.body).includes(param)) {
+        errorArray.push(`${param} is required`);
+      }
+    });
+
+    if (!errorArray.length) {
+      return next();
+    }
+
+    const errorMessage = JSON.stringify(errorArray);
+    const error = new Error(errorMessage);
+    error.status = 400;
+    return next(error);
+  },
+  loginNonEmptyParamsValidator(req, res, next) {
+    const availableParams = (req.body.username)
+      ? ['username', 'password'] : ['email', 'password'];
+    const errorArray = [];
+
+    availableParams.forEach((param) => {
+      if (!req.body[param].trim().length) {
+        errorArray.push(`${param} must not be empty`);
+      }
+    });
+
+    if (!errorArray.length) {
+      return next();
+    }
+
+    const errorMessage = JSON.stringify(errorArray);
+    const error = new Error(errorMessage);
+    error.status = 400;
+    return next(error);
   }
 
 };

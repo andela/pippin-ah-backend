@@ -1,4 +1,4 @@
-import passport from 'passport';
+import bcrypt from 'bcrypt';
 import 'babel-polyfill';
 import models from '../models';
 
@@ -66,21 +66,31 @@ class Users {
     * @param {object} res - The response object.
     * @param {object} next - The response object.
     */
-  static login(req, res, next) {
-    passport.authenticate('local', { session: false }, (
-      err,
-      user
-    ) => {
-      if (err) {
-        return next(err);
-      }
+  static async login(req, res) {
+    const usernameOrEmail = (req.body.email)
+      ? { email: req.body.email.toLowerCase() }
+      : { username: req.body.username.toLowerCase() };
+    const loginUser = await User
+      .findOne({ where: usernameOrEmail });
+    if (loginUser) {
+      if (bcrypt.compareSync(req.body.password.toLowerCase(),
 
-      if (user) {
-        return res.json({ message: 'Login was successful' });
+        loginUser.password)) {
+        return res.status(200).json({
+          message: 'Login was sucessful'
+        });
       }
-      return res.status(401).json('incorrect email or password');
-    });
+      return res.status(404).json({
+        message: 'Invalid Credential'
+      });
+    }
+    if (loginUser === null) {
+      return res.status(404).json({
+        message: 'Invalid Credential'
+      });
+    }
   }
+
 
   /**
     * Represents a controller.
@@ -89,8 +99,10 @@ class Users {
     * @param {object} res - The response object.
     */
   static async register(req, res) {
-    const { username, email, password } = req.body;
-
+    let { username, email, password } = req.body;
+    username = username.toLowerCase();
+    email = email.toLowerCase();
+    password = password.toLowerCase();
     const userCreated = await User
       .create({
         username,
