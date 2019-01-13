@@ -9,7 +9,9 @@
     "test": "NODE_ENV=test nyc mocha --require babel-register --exit",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "db:migrate": "sequelize db:migrate",
-    "undo:migration": "sequelize db:migrate:undo:all"
+    "undo:migration": "sequelize db:migrate:undo:all",
+    "db:migrate:testdb": "NODE_ENV=test sequelize db:migrate",
+    "undo:migrations:testdb": "NODE_ENV=test sequelize db:migrate:undo:all"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
