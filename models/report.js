@@ -14,11 +14,6 @@ module.exports = (sequelize, DataTypes) => {
 
     },
   });
-    // Report.associate = models => Report.hasOne(models.Profile, {
 
-  // });
-  // Report.associate = models => {
-
-  // };
   return Report;
 };
