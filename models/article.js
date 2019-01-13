@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
 
   });
 
+
   Article.associate = (models) => {
     Article.belongsTo(models.User, {
       foreignKey: 'userId',
@@ -30,6 +31,11 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Article.hasMany(models.Comment, {
+      foreignKey: 'articleId',
+      onDelete: 'CASCADE'
+    });
+
+    Article.hasMany(models.Report, {
       foreignKey: 'articleId',
       onDelete: 'CASCADE'
     });

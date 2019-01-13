@@ -31,10 +31,17 @@ module.exports = (sequelize, DataTypes) => {
   }
   );
 
-  User.associate = models => User.hasOne(models.Profile, {
-    foreignKey: 'userId',
-    onDelete: 'CASCADE'
-  });
+  User.associate = (models) => {
+    User.hasOne(models.Profile, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE'
+    });
+
+    User.hasMany(models.Report, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE'
+    });
+  };
 
   User.prototype.hashPassword = async function hashPassword() {
     const saltRounds = 10;
