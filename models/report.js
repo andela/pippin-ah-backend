@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
     articleId: {
       type: DataTypes.INTEGER,
       allowNull: false
-
     },
   });
 
