@@ -16,12 +16,11 @@ class Users {
     * @constructor
     * @param {object} req - The request object.
     * @param {object} res - The response object.
+    * @param {object} next -The next middleware
     */
-  static async getUser(req, res, next) {
-    const error = new Error('User not found');
-    error.status = 404;
+  static async getUser(req, res) {
     const user = await User.findOne({ where: { id: req.params.userId } });
-    !user ? next(error) : res.status(200).json({ message: 'success', user });
+    return res.json({ message: 'success', user });
   }
 
   /**
