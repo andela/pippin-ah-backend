@@ -376,11 +376,10 @@ describe('USER TEST SUITE', () => {
         .get('/api/v1/user/1')
         .end((err, res) => {
           expect(res.status).to.equal(200);
-          expect(res.body.message).to.equal('success');
           done();
         });
     });
-    it('Should should not get a user when the id is not found in the database',
+    it('Should not get a user when the id is not found in the database',
       (done) => {
         chai.request(server)
           .get('/api/v1/user/50')
@@ -389,7 +388,7 @@ describe('USER TEST SUITE', () => {
             done();
           });
       });
-    it('Should should not get a user when the id is not provided',
+    it('Should not get a user when the id is not provided',
       (done) => {
         chai.request(server)
           .get('/api/v1/user/')
@@ -398,7 +397,7 @@ describe('USER TEST SUITE', () => {
             done();
           });
       });
-    it('Should should not get a user when the id is not a number',
+    it('Should not get a user when the id is not a number',
       (done) => {
         chai.request(server)
           .get('/api/v1/user/')

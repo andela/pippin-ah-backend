@@ -9,6 +9,14 @@ const requiredParams = ['username', 'email', 'password'];
 const nonEmptyParams = ['username', 'email', 'password'];
 
 export default {
+  async isUser(req, res, next) {
+    const error = new Error('User not found');
+    error.status = 404;
+    const user = await User.findOne({ where: { id: req.params.userId } });
+    // eslint-disable-next-line no-unused-expressions
+    !user ? next(error) : next();
+  },
+
   expectedParamsValidator(req, res, next) {
     const errorArray = [];
 
@@ -179,3 +187,6 @@ export default {
     next();
   }
 };
+
+
+ 

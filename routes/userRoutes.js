@@ -1,6 +1,6 @@
 import express from 'express';
 import Users from '../controllers/user';
-import { isUser } from '../middlewares';
+import { userValidations } from '../middlewares';
 
 const {
   getUser,
@@ -10,7 +10,7 @@ const {
 const router = express.Router();
 
 router.route('/:userId')
-  .get(isUser.getUser, getUser)
+  .get(userValidations.isUser, getUser)
   .put(updateUser);
 
 export default router;

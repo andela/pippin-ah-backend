@@ -20,7 +20,11 @@ class Users {
     */
   static async getUser(req, res) {
     const user = await User.findOne({ where: { id: req.params.userId } });
-    return res.json({ message: 'success', user });
+    return res.json({
+      username: user.username,
+      email: user.email,
+      isMentor: user.isMentor,
+    });
   }
 
   /**
