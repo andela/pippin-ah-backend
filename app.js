@@ -19,8 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use('/api/v1/users', authRoutes);
-app.use(verifyToken);
-app.use('/api/v1/user', userRoutes);
+app.use('/api/v1/user', verifyToken, userRoutes);
 app.use(notFoundRoute);
 app.use(errorHandler);
 

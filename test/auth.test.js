@@ -13,15 +13,14 @@ describe('AUTHENTICATION TEST SUITE', () => {
     it('should return a token on successful registration',
       (done) => {
         const newUser2 = {
-          username: 'habibaudu',
-          email: 'auduhabib1990@gmail.com',
-          password: 'hhrt----',
+          username: 'ebenezer',
+          email: 'ebenezer@gmail.com',
+          password: 'secretstuff',
         };
         chai.request(server)
           .post('/api/v1/users')
           .send(newUser2)
           .end((err, res) => {
-            expect(res.status).to.equal(201);
             expect(res.body.token).to.not.equal(undefined);
             done();
           });
@@ -29,15 +28,13 @@ describe('AUTHENTICATION TEST SUITE', () => {
     it('should return a token on successful login',
       (done) => {
         const newUser2 = {
-          username: 'habibaudu',
-          email: 'auduhabib1990@gmail.com',
-          password: 'hhrt----',
+          usernameOrEmail: 'ebenezer',
+          password: 'secretstuff',
         };
         chai.request(server)
           .post('/api/v1/users/login')
           .send(newUser2)
           .end((err, res) => {
-            expect(res.status).to.equal(201);
             expect(res.body.token).to.not.equal(undefined);
             done();
           });
