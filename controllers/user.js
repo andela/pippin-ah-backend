@@ -82,9 +82,10 @@ class Users {
         }
       });
     await loginUser.validPassword(password);
+    const { id, isMentor } = loginUser;
     return res.status(200).json({
       message: 'Login was successful',
-      token: generateToken()
+      token: generateToken([id, isMentor])
     });
   }
 
@@ -102,11 +103,11 @@ class Users {
         email,
         password
       });
-    const { id, isAdmin } = userCreated;
+    const { id, isMentor } = userCreated;
     return res.status(201).json({
       username: userCreated.username,
       email: userCreated.email,
-      token: generateToken([id, isAdmin], { expiresIn: '72hrs' })
+      token: generateToken([id, isMentor])
     });
   }
 }
