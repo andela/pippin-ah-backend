@@ -5,7 +5,6 @@ import dotenv from 'dotenv';
 import { authRoutes, userRoutes } from './routes';
 import { errorHandler, notFoundRoute } from './middlewares';
 
-
 dotenv.config();
 
 // Create global app object
