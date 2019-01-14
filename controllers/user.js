@@ -1,5 +1,5 @@
 import Sequelize from 'sequelize';
-import bcrypt from 'bcrypt';
+
 import 'babel-polyfill';
 import models from '../models';
 
@@ -72,9 +72,15 @@ class Users {
   static async login(req, res) {
     const loginUser = await User
       // eslint-disable-next-line max-len
-      .findOne({ where: { [or]: [{ username: { [iLike]: req.body.username } }, { email: { [iLike]: req.body.email } }] } });
+      .findOne({
+        where: {
+          [or]: [{ username: { [iLike]: req.body.username } },
+            { email: { [iLike]: req.body.email } }]
+        }
+      });
     if (loginUser) {
-      if (bcrypt.compareSync(req.body.password, loginUser.password)) {
+      const validPassword = await loginUser.validPassword(req.body.password);
+      if (validPassword) {
         return res.status(200).json({
           message: 'Login was sucessful'
         });
