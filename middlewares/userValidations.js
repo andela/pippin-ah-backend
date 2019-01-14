@@ -18,7 +18,7 @@ export default {
 
   userParamIsInteger(req, res, next) {
     const { userId } = req.params;
-    const isInteger = Number.isInteger(userId);
+    const isInteger = Number.isInteger(Number(userId));
     if (isInteger) return next();
     const error = new Error(`${userId} must be an integer`);
     error.status = 400;
