@@ -102,9 +102,11 @@ class Users {
         email,
         password
       });
+    const { id, isAdmin } = userCreated;
     return res.status(201).json({
       username: userCreated.username,
-      email: userCreated.email
+      email: userCreated.email,
+      token: generateToken([id, isAdmin], { expiresIn: '72hrs' })
     });
   }
 }
