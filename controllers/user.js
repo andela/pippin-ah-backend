@@ -82,7 +82,10 @@ class Users {
         }
       });
     await loginUser.validPassword(password);
-    return res.status(200).json({ message: 'Login was successful' });
+    return res.status(200).json({
+      message: 'Login was successful',
+      token: generateToken()
+    });
   }
 
   /**
@@ -99,13 +102,10 @@ class Users {
         email,
         password
       });
-    if (userCreated) {
-      return res.status(201).json({
-        username: userCreated.username,
-        email: userCreated.email,
-        token: generateToken([userCreated.id], { expiresIn: '24hrs' })
-      });
-    }
+    return res.status(201).json({
+      username: userCreated.username,
+      email: userCreated.email
+    });
   }
 }
 
