@@ -9,9 +9,10 @@ const {
   usernameExistsValidator,
   emailIsValid,
   usernameValidator,
-  passwordValidator
-
-
+  passwordValidator,
+  loginParamsValidator,
+  loginNonEmptyParamsValidator,
+  invalidCredentials
 } = userValidations;
 
 const {
@@ -34,6 +35,11 @@ router.route('/')
   );
 
 router.route('/login')
-  .post(login);
+  .post(
+    loginParamsValidator,
+    loginNonEmptyParamsValidator,
+    invalidCredentials,
+    login
+  );
 
 export default router;
