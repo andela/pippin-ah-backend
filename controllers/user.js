@@ -1,7 +1,10 @@
+import Sequelize from 'sequelize';
 import bcrypt from 'bcrypt';
 import 'babel-polyfill';
 import models from '../models';
 
+
+const { iLike, or } = Sequelize.Op;
 const { User } = models;
 
 /**
@@ -67,15 +70,11 @@ class Users {
     * @param {object} next - The response object.
     */
   static async login(req, res) {
-    const usernameOrEmail = (req.body.email)
-      ? { email: req.body.email.toLowerCase() }
-      : { username: req.body.username.toLowerCase() };
     const loginUser = await User
-      .findOne({ where: usernameOrEmail });
+      // eslint-disable-next-line max-len
+      .findOne({ where: { [or]: [{ username: { [iLike]: req.body.username } }, { email: { [iLike]: req.body.email } }] } });
     if (loginUser) {
-      if (bcrypt.compareSync(req.body.password.toLowerCase(),
-
-        loginUser.password)) {
+      if (bcrypt.compareSync(req.body.password, loginUser.password)) {
         return res.status(200).json({
           message: 'Login was sucessful'
         });
@@ -99,10 +98,7 @@ class Users {
     * @param {object} res - The response object.
     */
   static async register(req, res) {
-    let { username, email, password } = req.body;
-    username = username.toLowerCase();
-    email = email.toLowerCase();
-    password = password.toLowerCase();
+    const { username, email, password } = req.body;
     const userCreated = await User
       .create({
         username,
