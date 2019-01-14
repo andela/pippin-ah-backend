@@ -8,7 +8,6 @@ const { User } = models;
 const requiredParams = ['username', 'email', 'password'];
 const nonEmptyParams = ['username', 'email', 'password'];
 
-
 export default {
   expectedParamsValidator(req, res, next) {
     const errorArray = [];
@@ -58,17 +57,19 @@ export default {
     }
     next();
   },
+
   async usernameExistsValidator(req, res, next) {
     const { username } = req.body;
-    const used = await User
+    const usernameIsInUse = await User
       .findOne({ where: { username: { [iLike]: username } } });
-    if (used) {
+    if (usernameIsInUse) {
       const error = new Error('Username already in use');
       error.status = 409;
       return next(error);
     }
     next();
   },
+
   emailIsValid(req, res, next) {
     if (!validation.isEmail(req.body.email)) {
       const error = new Error('please Enter a valid Email');
@@ -77,6 +78,7 @@ export default {
     }
     next();
   },
+
   usernameValidator(req, res, next) {
     if (!validation.isAlphanumeric(req.body.username)) {
       const error = new Error(
@@ -84,7 +86,7 @@ export default {
       error.status = 400;
       return next(error);
     }
-    // eslint-disable-next-line no-empty
+
     if (req.body.username.length < 6) {
       const error = new Error(
         'Your username must be at least 6 characters');
@@ -101,7 +103,6 @@ export default {
       error.status = 400;
       return next(error);
     }
-    // eslint-disable-next-line no-empty
     if (req.body.password.length < 8) {
       const error = new Error(
         'Your password must be at least 8 characters');
@@ -110,6 +111,7 @@ export default {
     }
     next();
   },
+
   loginParamsValidator(req, res, next) {
     const availableParams = ['usernameOrEmail', 'password'];
 
@@ -130,6 +132,7 @@ export default {
     error.status = 400;
     return next(error);
   },
+
   loginNonEmptyParamsValidator(req, res, next) {
     const availableParams = ['usernameOrEmail', 'password'];
     const errorArray = [];
@@ -149,29 +152,30 @@ export default {
     error.status = 400;
     return next(error);
   },
-  async invalidCredential(req, res, next) {
+
+  async invalidCredentials(req, res, next) {
     const { usernameOrEmail, password } = req.body;
     const loginUser = await User
       .findOne({
         where: {
-          [or]: [{ username: { [iLike]: usernameOrEmail } },
-            { email: { [iLike]: usernameOrEmail } }]
+          [or]: [
+            { username: { [iLike]: usernameOrEmail } },
+            { email: { [iLike]: usernameOrEmail } }
+          ]
         }
       });
 
     if (!loginUser) {
-      const error = new Error('Invalid Credential');
+      const error = new Error('Invalid Credentials');
       error.status = 400;
       return next(error);
     }
-    const valid = await loginUser.validPassword(password);
-    if (!valid) {
+    const validPassword = await loginUser.validPassword(password);
+    if (!validPassword) {
       const error = new Error('Invalid Password');
       error.status = 400;
       return next(error);
     }
     next();
   }
-
-
 };

@@ -74,16 +74,15 @@ class Users {
     const loginUser = await User
       .findOne({
         where: {
-          [or]: [{ username: { [iLike]: usernameOrEmail } },
-            { email: { [iLike]: usernameOrEmail } }]
+          [or]: [
+            { username: { [iLike]: usernameOrEmail } },
+            { email: { [iLike]: usernameOrEmail } }
+          ]
         }
       });
     await loginUser.validPassword(password);
-    return res.status(200).json({
-      message: 'Login was sucessful'
-    });
+    return res.status(200).json({ message: 'Login was successful' });
   }
-
 
   /**
     * Represents a controller.

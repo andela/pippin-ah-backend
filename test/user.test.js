@@ -10,8 +10,6 @@ chai.use(chaiHttp);
 describe('USER TEST SUITE', () => {
   before(() => models.sequelize.sync({ force: true }));
 
-  // after(() => models.sequelize.sync({ force: true }));
-
   describe('User Signup Validations', () => {
     it('should fail creation if password contains special characters',
       (done) => {
@@ -230,6 +228,7 @@ describe('USER TEST SUITE', () => {
           });
       });
   });
+
   describe('User SignIn Validations', () => {
     it('should sign user in with valid email and password',
       (done) => {
@@ -242,10 +241,11 @@ describe('USER TEST SUITE', () => {
           .send(newUser2)
           .end((err, res) => {
             expect(res.status).to.equal(200);
-            expect(res.body.message).to.equal('Login was sucessful');
+            expect(res.body.message).to.equal('Login was successful');
             done();
           });
       });
+
     it('should sign user in with valid username and password',
       (done) => {
         const newUser2 = {
@@ -257,10 +257,11 @@ describe('USER TEST SUITE', () => {
           .send(newUser2)
           .end((err, res) => {
             expect(res.status).to.equal(200);
-            expect(res.body.message).to.equal('Login was sucessful');
+            expect(res.body.message).to.equal('Login was successful');
             done();
           });
       });
+
     it('should not allow  invalid email or password signIn',
       (done) => {
         const newUser2 = {
@@ -272,11 +273,12 @@ describe('USER TEST SUITE', () => {
           .send(newUser2)
           .end((err, res) => {
             expect(res.status).to.equal(400);
-            expect(res.body.errors.body[0]).to.equal('Invalid Credential');
+            expect(res.body.errors.body[0]).to.equal('Invalid Credentials');
             done();
           });
       });
-    it('should not allow  invalid  password signIn',
+
+    it('should not allow invalid password signIn',
       (done) => {
         const newUser2 = {
           usernameOrEmail: 'auduhabib1990@gmail.com',
@@ -291,6 +293,7 @@ describe('USER TEST SUITE', () => {
             done();
           });
       });
+
     it('should not login user when required params are not provided',
       (done) => {
         const newUser2 = {
@@ -309,6 +312,7 @@ describe('USER TEST SUITE', () => {
             done();
           });
       });
+
     it('should not allow login when fields are empty', (done) => {
       const newUser2 = {
         UsernameOrEmail: '  ',
@@ -327,6 +331,7 @@ describe('USER TEST SUITE', () => {
           done();
         });
     });
+
     it('should not allow login when username is empty', (done) => {
       const newUser2 = {
         username: '    ',
@@ -344,6 +349,7 @@ describe('USER TEST SUITE', () => {
           done();
         });
     });
+
     it('should not allow creation when fields are empty', (done) => {
       const newUser2 = {
         usernameOrEmail: '',
