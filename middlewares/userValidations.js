@@ -9,12 +9,20 @@ const requiredParams = ['username', 'email', 'password'];
 const nonEmptyParams = ['username', 'email', 'password'];
 
 export default {
-  async isUser(req, res, next) {
+  async userExists(req, res, next) {
     const error = new Error('User not found');
     error.status = 404;
     const user = await User.findOne({ where: { id: req.params.userId } });
-    // eslint-disable-next-line no-unused-expressions
-    !user ? next(error) : next();
+    return !user ? next(error) : next();
+  },
+
+  userParamIsInteger(req, res, next) {
+    const { userId } = req.params;
+    const isInteger = Number.isInteger(userId);
+    if (isInteger) return next();
+    const error = new Error(`${userId} must be an integer`);
+    error.status = 400;
+    return next(error);
   },
 
   expectedParamsValidator(req, res, next) {
@@ -187,6 +195,3 @@ export default {
     next();
   }
 };
-
-
- 

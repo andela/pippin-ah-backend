@@ -7,10 +7,12 @@ const {
   updateUser,
 } = Users;
 
+const { userExists, userParamIsInteger } = userValidations;
+
 const router = express.Router();
 
 router.route('/:userId')
-  .get(userValidations.isUser, getUser)
+  .get(userParamIsInteger, userExists, getUser)
   .put(updateUser);
 
 export default router;
