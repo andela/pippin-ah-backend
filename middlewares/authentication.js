@@ -10,7 +10,7 @@ const verifyToken = (req, res, next) => {
   jwt.verify(token, secret, (error, decoded) => {
     if (error) {
       error = new Error('Invalid authencation! Can you check and try again?');
-      error.status = 400;
+      error.status = 401;
       return next(error);
     }
     req.decoded = decoded;
