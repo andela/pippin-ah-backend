@@ -1,7 +1,10 @@
-import passport from 'passport';
+import Sequelize from 'sequelize';
+
 import 'babel-polyfill';
 import models from '../models';
 
+
+const { iLike, or } = Sequelize.Op;
 const { User } = models;
 
 /**
@@ -66,20 +69,19 @@ class Users {
     * @param {object} res - The response object.
     * @param {object} next - The response object.
     */
-  static login(req, res, next) {
-    passport.authenticate('local', { session: false }, (
-      err,
-      user
-    ) => {
-      if (err) {
-        return next(err);
-      }
-
-      if (user) {
-        return res.json({ message: 'Login was successful' });
-      }
-      return res.status(401).json('incorrect email or password');
-    });
+  static async login(req, res) {
+    const { usernameOrEmail, password } = req.body;
+    const loginUser = await User
+      .findOne({
+        where: {
+          [or]: [
+            { username: { [iLike]: usernameOrEmail } },
+            { email: { [iLike]: usernameOrEmail } }
+          ]
+        }
+      });
+    await loginUser.validPassword(password);
+    return res.status(200).json({ message: 'Login was successful' });
   }
 
   /**
@@ -90,7 +92,6 @@ class Users {
     */
   static async register(req, res) {
     const { username, email, password } = req.body;
-
     const userCreated = await User
       .create({
         username,
