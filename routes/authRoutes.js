@@ -11,7 +11,8 @@ const {
   usernameValidator,
   passwordValidator,
   loginParamsValidator,
-  loginNonEmptyParamsValidator
+  loginNonEmptyParamsValidator,
+  invalidCredential
 
 } = userValidations;
 
@@ -38,6 +39,7 @@ router.route('/login')
   .post(
     loginParamsValidator,
     loginNonEmptyParamsValidator,
+    invalidCredential,
     login
   );
 

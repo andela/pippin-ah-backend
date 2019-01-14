@@ -70,30 +70,18 @@ class Users {
     * @param {object} next - The response object.
     */
   static async login(req, res) {
+    const { usernameOrEmail, password } = req.body;
     const loginUser = await User
-      // eslint-disable-next-line max-len
       .findOne({
         where: {
-          [or]: [{ username: { [iLike]: req.body.username } },
-            { email: { [iLike]: req.body.email } }]
+          [or]: [{ username: { [iLike]: usernameOrEmail } },
+            { email: { [iLike]: usernameOrEmail } }]
         }
       });
-    if (loginUser) {
-      const validPassword = await loginUser.validPassword(req.body.password);
-      if (validPassword) {
-        return res.status(200).json({
-          message: 'Login was sucessful'
-        });
-      }
-      return res.status(404).json({
-        message: 'Invalid Credential'
-      });
-    }
-    if (loginUser === null) {
-      return res.status(404).json({
-        message: 'Invalid Credential'
-      });
-    }
+    await loginUser.validPassword(password);
+    return res.status(200).json({
+      message: 'Login was sucessful'
+    });
   }
 
 

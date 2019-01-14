@@ -2,7 +2,7 @@ import Sequelize from 'sequelize';
 import validation from 'validator';
 import models from '../models';
 
-const { iLike } = Sequelize.Op;
+const { iLike, or } = Sequelize.Op;
 const { User } = models;
 
 const requiredParams = ['username', 'email', 'password'];
@@ -111,8 +111,8 @@ export default {
     next();
   },
   loginParamsValidator(req, res, next) {
-    const availableParams = (req.body.email)
-      ? ['email', 'password'] : ['username', 'password'];
+    const availableParams = ['usernameOrEmail', 'password'];
+
     const errorArray = [];
 
     availableParams.forEach((param) => {
@@ -131,8 +131,7 @@ export default {
     return next(error);
   },
   loginNonEmptyParamsValidator(req, res, next) {
-    const availableParams = (req.body.username)
-      ? ['username', 'password'] : ['email', 'password'];
+    const availableParams = ['usernameOrEmail', 'password'];
     const errorArray = [];
 
     availableParams.forEach((param) => {
@@ -149,6 +148,30 @@ export default {
     const error = new Error(errorMessage);
     error.status = 400;
     return next(error);
+  },
+  async invalidCredential(req, res, next) {
+    const { usernameOrEmail, password } = req.body;
+    const loginUser = await User
+      .findOne({
+        where: {
+          [or]: [{ username: { [iLike]: usernameOrEmail } },
+            { email: { [iLike]: usernameOrEmail } }]
+        }
+      });
+
+    if (!loginUser) {
+      const error = new Error('Invalid Credential');
+      error.status = 400;
+      return next(error);
+    }
+    const valid = await loginUser.validPassword(password);
+    if (!valid) {
+      const error = new Error('Invalid Password');
+      error.status = 400;
+      return next(error);
+    }
+    next();
   }
+
 
 };
