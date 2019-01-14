@@ -386,8 +386,6 @@ describe('USER TEST SUITE', () => {
           .get('/api/v1/user/50')
           .end((err, res) => {
             expect(res.status).to.equal(404);
-            // eslint-disable-next-line max-len
-            expect(res.body.message).to.equal('No user with userId 50, Please make sure you have the correct userId.');
             done();
           });
       });

@@ -17,10 +17,11 @@ class Users {
     * @param {object} req - The request object.
     * @param {object} res - The response object.
     */
-  static async getUser(req, res) {
+  static async getUser(req, res, next) {
+    const error = new Error('User not found');
+    error.status = 404;
     const user = await User.findOne({ where: { id: req.params.userId } });
-    // eslint-disable-next-line no-unused-expressions
-    !user ? res.status(404).json({ message: `No user with userId ${req.params.userId}, Please make sure you have the correct userId.` }) : res.status(200).json({ message: 'success', user });
+    !user ? next(error) : res.status(200).json({ message: 'success', user });
   }
 
   /**
