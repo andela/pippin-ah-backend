@@ -1,6 +1,7 @@
 import passport from 'passport';
 import 'babel-polyfill';
 import models from '../models';
+import { generateToken } from '../middlewares/authentication';
 
 const { User } = models;
 
@@ -100,7 +101,8 @@ class Users {
     if (userCreated) {
       return res.status(201).json({
         username: userCreated.username,
-        email: userCreated.email
+        email: userCreated.email,
+        token: generateToken([userCreated.id], { expiresIn: '24hrs' })
       });
     }
   }
