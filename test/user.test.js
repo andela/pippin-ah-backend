@@ -324,7 +324,6 @@ describe('USER TEST SUITE', () => {
         .end((err, res) => {
           const errorResult = JSON.parse(res.body.errors.body[0]);
           expect(res.status).to.equal(400);
-
           // eslint-disable-next-line no-unused-expressions
           expect(Array.isArray(errorResult)).to.be.true;
           expect(errorResult[0]).to.equal('usernameOrEmail is required');
@@ -369,5 +368,46 @@ describe('USER TEST SUITE', () => {
           done();
         });
     });
+  });
+
+  describe('GET USER', () => {
+    it('Should get a user with valid user id present in database', (done) => {
+      chai.request(server)
+        .get('/api/v1/user/1')
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body.message).to.equal('success');
+          done();
+        });
+    });
+    it('Should should not get a user when the id is not found in the database',
+      (done) => {
+        chai.request(server)
+          .get('/api/v1/user/50')
+          .end((err, res) => {
+            expect(res.status).to.equal(404);
+            // eslint-disable-next-line max-len
+            expect(res.body.message).to.equal('No user with userId 50, Please make sure you have the correct userId.');
+            done();
+          });
+      });
+    it('Should should not get a user when the id is not provided',
+      (done) => {
+        chai.request(server)
+          .get('/api/v1/user/')
+          .end((err, res) => {
+            expect(res.status).to.equal(404);
+            done();
+          });
+      });
+    it('Should should not get a user when the id is not a number',
+      (done) => {
+        chai.request(server)
+          .get('/api/v1/user/')
+          .end((err, res) => {
+            expect(res.status).to.equal(404);
+            done();
+          });
+      });
   });
 });
