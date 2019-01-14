@@ -101,7 +101,6 @@ class Users {
       return res.status(201).json({
         username: userCreated.username,
         email: userCreated.email
-
       });
     }
   }
