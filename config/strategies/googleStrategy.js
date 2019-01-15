@@ -27,7 +27,7 @@ export default {
 
   redirect: passport.authenticate('google',
     {
-      failureRedirect: '/api/v1/users/login',
+      failureRedirect: '/api/v1/users/google',
       session: false
     }),
 
