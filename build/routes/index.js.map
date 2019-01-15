@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../routes/index.js"],"names":["default"],"mappings":";;;;;;;;;;;+CAASA,O;;;;;;;;;+CACAA,O","file":"index.js","sourcesContent":["export { default as authRoutes } from './authRoutes';\nexport { default as userRoutes } from './userRoutes';\n"]}
