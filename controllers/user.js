@@ -112,7 +112,6 @@ class Users {
       isMentor: user.isMentor
     };
     const token = generateToken(tokenPayload);
-    console.log(tokenPayload);
 
     return res.status(201).json({
       username: user.username,
@@ -129,6 +128,7 @@ class Users {
     */
   static async processGoogleUser(req, res) {
     const { email } = req.user;
+
     const user = await User
       .findOne({ where: { email: { [iLike]: email } } });
     if (user) {
@@ -143,6 +143,7 @@ class Users {
         token
       });
     }
+
     const newUser = await User
       .create({ email });
     const tokenPayload = {

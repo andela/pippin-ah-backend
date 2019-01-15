@@ -1,7 +1,5 @@
 import googleStrategy from './strategies';
 
-const init = () => {
+export default () => {
   googleStrategy.init();
 };
-
-export default init;

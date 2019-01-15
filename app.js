@@ -2,12 +2,12 @@ import 'babel-polyfill';
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import passportInit from './config';
+import initPassport from './config';
 import { authRoutes, userRoutes } from './routes';
 import { errorHandler, notFoundRoute } from './middlewares';
 
 dotenv.config();
-passportInit();
+initPassport();
 // Create global app object
 const app = express();
 
