@@ -23,7 +23,7 @@ describe('USER TEST SUITE', () => {
           .send(newUser2)
           .end((err, res) => {
             expect(res.status).to.equal(400);
-            expect(res.body.errors.body[0]).to.equal(
+            expect(res.body.error).to.equal(
               'password must contain only numbers and alphabet');
             done();
           });
@@ -57,7 +57,7 @@ describe('USER TEST SUITE', () => {
           .send(newUser2)
           .end((err, res) => {
             expect(res.status).to.equal(409);
-            expect(res.body.errors.body[0]).to.equal(
+            expect(res.body.error).to.equal(
               'Email already in use');
             done();
           });
@@ -75,7 +75,7 @@ describe('USER TEST SUITE', () => {
           .send(newUser2)
           .end((err, res) => {
             expect(res.status).to.equal(409);
-            expect(res.body.errors.body[0]).to.equal(
+            expect(res.body.error).to.equal(
               'Email already in use');
             done();
           });
@@ -93,7 +93,7 @@ describe('USER TEST SUITE', () => {
           .send(newUser2)
           .end((err, res) => {
             expect(res.status).to.equal(409);
-            expect(res.body.errors.body[0]).to.equal(
+            expect(res.body.error).to.equal(
               'Username already in use');
             done();
           });
@@ -111,7 +111,7 @@ describe('USER TEST SUITE', () => {
           .send(newUser2)
           .end((err, res) => {
             expect(res.status).to.equal(409);
-            expect(res.body.errors.body[0]).to.equal(
+            expect(res.body.error).to.equal(
               'Username already in use');
             done();
           });
@@ -129,7 +129,7 @@ describe('USER TEST SUITE', () => {
           .send(newUser2)
           .end((err, res) => {
             expect(res.status).to.equal(400);
-            expect(res.body.errors.body[0]).to.equal(
+            expect(res.body.error).to.equal(
               'Your password must be at least 8 characters');
             done();
           });
@@ -147,7 +147,7 @@ describe('USER TEST SUITE', () => {
           .send(newUser2)
           .end((err, res) => {
             expect(res.status).to.equal(400);
-            expect(res.body.errors.body[0]).to.equal(
+            expect(res.body.error).to.equal(
               'Your username must be at least 6 characters');
             done();
           });
@@ -165,7 +165,7 @@ describe('USER TEST SUITE', () => {
           .send(newUser2)
           .end((err, res) => {
             expect(res.status).to.equal(400);
-            expect(res.body.errors.body[0]).to.equal(
+            expect(res.body.error).to.equal(
               'username must contain only alphabets and numbers');
             done();
           });
@@ -182,7 +182,7 @@ describe('USER TEST SUITE', () => {
         .send(newUser2)
         .end((err, res) => {
           expect(res.status).to.equal(400);
-          expect(res.body.errors.body[0]).to.equal(
+          expect(res.body.error).to.equal(
             'please Enter a valid Email');
           done();
         });
@@ -198,7 +198,7 @@ describe('USER TEST SUITE', () => {
         .post('/api/v1/users')
         .send(newUser2)
         .end((err, res) => {
-          const errorResult = JSON.parse(res.body.errors.body[0]);
+          const errorResult = JSON.parse(res.body.error);
           expect(res.status).to.equal(400);
           expect(errorResult.length).to.equal(3);
           // eslint-disable-next-line no-unused-expressions
@@ -217,7 +217,7 @@ describe('USER TEST SUITE', () => {
           .post('/api/v1/users')
           .send(newUser2)
           .end((err, res) => {
-            const errorResult = JSON.parse(res.body.errors.body[0]);
+            const errorResult = JSON.parse(res.body.error);
             expect(res.status).to.equal(400);
             expect(errorResult.length).to.equal(2);
             // eslint-disable-next-line no-unused-expressions
