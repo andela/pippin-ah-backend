@@ -1,11 +1,15 @@
 import Sequelize from 'sequelize';
-
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 import 'babel-polyfill';
 import models from '../models';
 
-
+dotenv.config();
 const { iLike, or } = Sequelize.Op;
 const { User } = models;
+const secret = process.env.SECRET_KEY;
+const time = { expiresIn: '72hrs' };
+const generateToken = payload => jwt.sign(payload, secret, time);
 
 /**
  * @class
@@ -19,7 +23,8 @@ class Users {
     * @param {object} next -The next middleware
     */
   static async getUser(req, res) {
-    const user = await User.findOne({ where: { id: req.params.userId } });
+    const { id } = req.decoded;
+    const user = await User.findOne({ where: { id } });
     return res.json({
       username: user.username,
       email: user.email,
@@ -65,7 +70,7 @@ class Users {
     */
   static async login(req, res) {
     const { usernameOrEmail, password } = req.body;
-    const loginUser = await User
+    const user = await User
       .findOne({
         where: {
           [or]: [
@@ -74,8 +79,17 @@ class Users {
           ]
         }
       });
-    await loginUser.validPassword(password);
-    return res.status(200).json({ message: 'Login was successful' });
+    await user.validPassword(password);
+
+    const tokenPayload = {
+      id: user.id,
+      isMentor: user.isMentor
+    };
+
+    return res.status(200).json({
+      message: 'Login was successful',
+      token: generateToken(tokenPayload)
+    });
   }
 
   /**
@@ -86,19 +100,25 @@ class Users {
     */
   static async register(req, res) {
     const { username, email, password } = req.body;
-    const userCreated = await User
+    const user = await User
       .create({
         username,
         email,
         password
       });
-    if (userCreated) {
-      return res.status(201).json({
-        username: userCreated.username,
-        email: userCreated.email
 
-      });
-    }
+    const tokenPayload = {
+      id: user.id,
+      isMentor: user.isMentor
+    };
+    const token = generateToken(tokenPayload);
+    console.log(tokenPayload);
+
+    return res.status(201).json({
+      username: user.username,
+      email: user.email,
+      token
+    });
   }
 }
 
