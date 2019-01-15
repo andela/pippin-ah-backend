@@ -9,15 +9,6 @@ const requiredParams = ['username', 'email', 'password'];
 const nonEmptyParams = ['username', 'email', 'password'];
 
 export default {
-  async userExists(req, res, next) {
-    const { id } = req.decoded;
-    const user = await User.findOne({ where: { id } });
-    if (user) return next();
-    const error = new Error(`No user with ID: ${id}`);
-    error.status = 404;
-    return next(error);
-  },
-
   expectedParamsValidator(req, res, next) {
     const errorArray = [];
 
