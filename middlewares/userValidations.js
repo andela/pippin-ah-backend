@@ -177,16 +177,5 @@ export default {
       return next(error);
     }
     next();
-  },
-
-  async isNewUser(req, res, next) {
-    const { email } = req.body;
-    const used = await User.findOne({ where: { email: { [iLike]: email } } });
-    if (used) {
-      const error = new Error('Email already in use');
-      error.status = 409;
-      return next(error);
-    }
-    next();
   }
 };

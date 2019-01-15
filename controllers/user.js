@@ -120,6 +120,33 @@ class Users {
       token
     });
   }
+
+  /**
+    * Represents a controller.
+    * @constructor
+    * @param {object} req - The request object.
+    * @param {object} res - The response object.
+    */
+  static async processGoogleUser(req, res) {
+    const { email } = req.user;
+    const userDetails = await User
+      .findOne({ where: { email: { [iLike]: email } } });
+    if (userDetails) {
+      const tokenPayload = {
+        id: userDetails.id,
+        isMentor: userDetails.isMentor
+      };
+      const token = generateToken(tokenPayload);
+      return res.status(201).json({
+        username: userDetails.username,
+        email: userDetails.email,
+        token
+      });
+    }
+    res.status(404).send(
+      'There is no such user'
+    );
+  }
 }
 
 export default Users;

@@ -1,6 +1,8 @@
 import passport from 'passport';
 import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
+import Users from '../../controllers/user';
 
+const { processGoogleUser } = Users;
 
 export default {
 
@@ -11,7 +13,11 @@ export default {
       callbackURL: '/api/v1/users/google/redirect'
     },
     (accessToken, refreshToken, profile, done) => {
-      done(null, profile);
+      done(null, {
+        email: profile.emails[0].value,
+        firstName: profile.name.givenName,
+        lastName: profile.name.familyName
+      });
     }));
   },
 
@@ -25,9 +31,6 @@ export default {
       session: false
     }),
 
-  onAuthSuccess: (req, res) => {
-    console.log(req.user);
-    res.send('You have successfully logged in');
-  }
+  onAuthSuccess: processGoogleUser
 
 };
