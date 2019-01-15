@@ -1,8 +1,6 @@
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import models from '../models';
-
-import 'babel-polyfill';
 import server from '../app';
 
 chai.use(chaiHttp);
