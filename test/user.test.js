@@ -324,7 +324,6 @@ describe('USER TEST SUITE', () => {
         .end((err, res) => {
           const errorResult = JSON.parse(res.body.errors.body[0]);
           expect(res.status).to.equal(400);
-
           // eslint-disable-next-line no-unused-expressions
           expect(Array.isArray(errorResult)).to.be.true;
           expect(errorResult[0]).to.equal('usernameOrEmail is required');
@@ -369,5 +368,57 @@ describe('USER TEST SUITE', () => {
           done();
         });
     });
+  });
+
+  describe('Get a single User', () => {
+    it('Should get a user with valid user id present in database', (done) => {
+      chai.request(server)
+        .get('/api/v1/user/1')
+        .end((err, res) => {
+          const responseBodyKeys = Object.keys(res.body);
+          expect(res.status).to.equal(200);
+          expect(Array.isArray(responseBodyKeys)).to.equal(true);
+          expect(responseBodyKeys.includes('username')).to.equal(true);
+          expect(responseBodyKeys.includes('email')).to.equal(true);
+          expect(responseBodyKeys.includes('isMentor')).to.equal(true);
+          done();
+        });
+    });
+
+    it('Should not get a user when the id is not found in the database',
+      (done) => {
+        chai.request(server)
+          .get('/api/v1/user/50')
+          .end((err, res) => {
+            const errorArray = res.body.errors.body;
+            expect(res.status).to.equal(404);
+            expect(errorArray[0]).to.equal('No user with ID: 50');
+            done();
+          });
+      });
+
+    it('Should not get a user when the id is not provided',
+      (done) => {
+        chai.request(server)
+          .get('/api/v1/user/')
+          .end((err, res) => {
+            const errorArray = res.body.errors.body;
+            expect(res.status).to.equal(404);
+            expect(errorArray[0]).to.equal('Route not found');
+            done();
+          });
+      });
+
+    it('Should not get a user when the id is not a number',
+      (done) => {
+        chai.request(server)
+          .get('/api/v1/user/my-user')
+          .end((err, res) => {
+            const errorArray = res.body.errors.body;
+            expect(res.status).to.equal(400);
+            expect(errorArray[0]).to.equal('my-user must be an integer');
+            done();
+          });
+      });
   });
 });
