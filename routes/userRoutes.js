@@ -1,6 +1,6 @@
 import express from 'express';
 import Users from '../controllers/user';
-import { userValidations } from '../middlewares';
+import { userValidations, verifyToken } from '../middlewares';
 
 const {
   getUser,

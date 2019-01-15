@@ -1,12 +1,15 @@
 import Sequelize from 'sequelize';
-
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 import 'babel-polyfill';
 import models from '../models';
-import { generateToken } from '../middlewares/authentication';
 
-
+dotenv.config();
 const { iLike, or } = Sequelize.Op;
 const { User } = models;
+const secret = process.env.SECRET_KEY;
+const time = { expiresIn: '72hrs' };
+const generateToken = payload => jwt.sign(payload, secret, time);
 
 /**
  * @class
@@ -91,17 +94,24 @@ class Users {
     */
   static async register(req, res) {
     const { username, email, password } = req.body;
-    const userCreated = await User
+    const user = await User
       .create({
         username,
         email,
         password
       });
-    const { id, isMentor } = userCreated;
+
+    const tokenPayload = {
+      id: user.id,
+      isMentor: user.isMentor
+    };
+    const token = generateToken(tokenPayload);
+    console.log(tokenPayload);
+
     return res.status(201).json({
-      username: userCreated.username,
-      email: userCreated.email,
-      token: generateToken([id, isMentor])
+      username: user.username,
+      email: user.email,
+      token
     });
   }
 }
