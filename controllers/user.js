@@ -129,23 +129,36 @@ class Users {
     */
   static async processGoogleUser(req, res) {
     const { email } = req.user;
-    const userDetails = await User
+    const user = await User
       .findOne({ where: { email: { [iLike]: email } } });
-    if (userDetails) {
+    if (user) {
       const tokenPayload = {
-        id: userDetails.id,
-        isMentor: userDetails.isMentor
+        id: user.id,
+        isMentor: user.isMentor
       };
       const token = generateToken(tokenPayload);
-      return res.status(201).json({
-        username: userDetails.username,
-        email: userDetails.email,
+      return res.json({
+        username: user.username,
+        email: user.email,
         token
       });
     }
-    res.status(404).send(
-      'There is no such user'
-    );
+    const newUser = await User
+      .create({
+        username: 'verycrazyguy',
+        email,
+        password: 'oneHell90ofpass'
+      });
+    const tokenPayload = {
+      id: newUser.id,
+      isMentor: false
+    };
+    const token = generateToken(tokenPayload);
+    return res.status(201).json({
+      username: newUser.username,
+      email: newUser.email,
+      token
+    });
   }
 }
 
