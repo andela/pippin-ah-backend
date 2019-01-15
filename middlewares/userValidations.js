@@ -177,5 +177,20 @@ export default {
       return next(error);
     }
     next();
+  },
+
+  async updateErrorHandler(req, res, next) {
+    const updateUser = await User.findByPk(req.params.userId);
+    if (!updateUser) {
+      const error = new Error('User Not Found');
+      error.status = 400;
+      return next(error);
+    }
+    next();
+  },
+
+  async updateEmailPasswordUsernamevalidator(req, res, next) {
+    next();
   }
+
 };

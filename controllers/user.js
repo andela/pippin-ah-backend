@@ -38,28 +38,21 @@ class Users {
     * @param {object} req - The request object.
     * @param {object} res - The response object.
     */
-  static updateUser(req, res) {
-    User.findByPk(req.params.userId)
-      .then((user) => {
-        if (!user) {
-          return res.status(404).json({
-            message: 'User Not Found'
-          });
-        }
-
-        return user
-          .update({
-            username: req.body.username,
-            email: req.body.email,
-            password: req.body.password
-          })
-          .then(updatedUser => res.status(200).json({
-            updatedUser,
-            message: 'User Has been updated'
-          }))
-          .catch(error => res.status(400).send(error));
+  static async updateUser(req, res) {
+    const updateUser = await User.findByPk(req.params.userId);
+    const userpassword = await updateUser.hashPassword(req.body.password);
+    const updatedUser = await updateUser
+      .update({
+        username: req.body.username || updateUser.username,
+        email: req.body.email || updateUser.email,
+        password: userpassword || updateUser.password
       });
+    return res.json({
+      updatedUser,
+      message: 'User has been updated'
+    });
   }
+
 
   /**
     * Represents a controller.

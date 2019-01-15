@@ -401,4 +401,17 @@ describe('USER TEST SUITE', () => {
         expect(response.body.error).to.equal('Invalid token');
       });
   });
+
+  describe('User Update Validations', () => {
+    it('should return User not found if Id not found',
+      (done) => {
+        chai.request(server)
+          .put('/api/v1/user/1000000000')
+          .end((err, res) => {
+            expect(res.status).to.equal(400);
+            expect(res.body.errors.body[0]).to.equal('User Not Found');
+            done();
+          });
+      });
+  });
 });
