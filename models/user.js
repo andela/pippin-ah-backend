@@ -39,6 +39,9 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   User.prototype.hashPassword = async function hashPassword() {
+    if (!this.password) {
+      return;
+    }
     const saltRounds = 10;
     this.password = await bcrypt.hash(this.password, saltRounds);
     return this.password;

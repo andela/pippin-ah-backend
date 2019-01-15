@@ -144,18 +144,13 @@ class Users {
       });
     }
     const newUser = await User
-      .create({
-        username: 'verycrazyguy',
-        email,
-        password: 'oneHell90ofpass'
-      });
+      .create({ email });
     const tokenPayload = {
       id: newUser.id,
       isMentor: false
     };
     const token = generateToken(tokenPayload);
     return res.status(201).json({
-      username: newUser.username,
       email: newUser.email,
       token
     });
