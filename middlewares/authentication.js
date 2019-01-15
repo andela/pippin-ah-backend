@@ -20,13 +20,6 @@ const verifyToken = (req, res, next) => {
     }
 
     req.decoded = decoded;
-    console.log('******', decoded);
-
-    if (req.decoded.id !== req.params.id) {
-      error = new Error('Unauthorized');
-      error.status = 401;
-      return next(error);
-    }
     return next();
   });
 };

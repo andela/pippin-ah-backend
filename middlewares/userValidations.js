@@ -10,19 +10,11 @@ const nonEmptyParams = ['username', 'email', 'password'];
 
 export default {
   async userExists(req, res, next) {
-    const user = await User.findOne({ where: { id: req.params.userId } });
+    const { id } = req.decoded;
+    const user = await User.findOne({ where: { id } });
     if (user) return next();
-    const error = new Error(`No user with ID: ${req.params.userId}`);
+    const error = new Error(`No user with ID: ${id}`);
     error.status = 404;
-    return next(error);
-  },
-
-  userParamIsInteger(req, res, next) {
-    const { userId } = req.params;
-    const isInteger = Number.isInteger(Number(userId));
-    if (isInteger) return next();
-    const error = new Error(`${userId} must be an integer`);
-    error.status = 400;
     return next(error);
   },
 

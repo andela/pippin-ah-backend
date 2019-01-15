@@ -39,13 +39,5 @@ describe('AUTHENTICATION TEST SUITE', () => {
             done();
           });
       });
-    it('it should return unauthorized user if user not logged in',
-      (done) => {
-        chai.request(server).get('/api/v1/user/1')
-          .end((error, res) => {
-            expect(res).to.have.status(401);
-            done();
-          });
-      });
   });
 });

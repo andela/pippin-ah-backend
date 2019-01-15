@@ -23,7 +23,8 @@ class Users {
     * @param {object} next -The next middleware
     */
   static async getUser(req, res) {
-    const user = await User.findOne({ where: { id: req.params.userId } });
+    const { id } = req.decoded;
+    const user = await User.findOne({ where: { id } });
     return res.json({
       username: user.username,
       email: user.email,
@@ -69,7 +70,7 @@ class Users {
     */
   static async login(req, res) {
     const { usernameOrEmail, password } = req.body;
-    const loginUser = await User
+    const user = await User
       .findOne({
         where: {
           [or]: [
@@ -78,11 +79,16 @@ class Users {
           ]
         }
       });
-    await loginUser.validPassword(password);
-    const { id, isMentor } = loginUser;
+    await user.validPassword(password);
+
+    const tokenPayload = {
+      id: user.id,
+      isMentor: user.isMentor
+    };
+
     return res.status(200).json({
       message: 'Login was successful',
-      token: generateToken([id, isMentor])
+      token: generateToken(tokenPayload)
     });
   }
 

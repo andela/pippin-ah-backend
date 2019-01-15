@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { authRoutes, userRoutes } from './routes';
-import { errorHandler, notFoundRoute, verifyToken } from './middlewares';
+import { errorHandler, notFoundRoute } from './middlewares';
 
 dotenv.config();
 
@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use('/api/v1/users', authRoutes);
-app.use('/api/v1/user', verifyToken, userRoutes);
+app.use('/api/v1', userRoutes);
 app.use(notFoundRoute);
 app.use(errorHandler);
 
