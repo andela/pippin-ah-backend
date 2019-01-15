@@ -273,7 +273,7 @@ describe('USER TEST SUITE', () => {
           .send(newUser2)
           .end((err, res) => {
             expect(res.status).to.equal(400);
-            expect(res.body.errors.body[0]).to.equal('Invalid Credentials');
+            expect(res.body.error).to.equal('Invalid Credentials');
             done();
           });
       });
@@ -289,7 +289,7 @@ describe('USER TEST SUITE', () => {
           .send(newUser2)
           .end((err, res) => {
             expect(res.status).to.equal(400);
-            expect(res.body.errors.body[0]).to.equal('Invalid Password');
+            expect(res.body.error).to.equal('Invalid Password');
             done();
           });
       });
@@ -303,7 +303,7 @@ describe('USER TEST SUITE', () => {
           .post('/api/v1/users/login')
           .send(newUser2)
           .end((err, res) => {
-            const errorResult = JSON.parse(res.body.errors.body[0]);
+            const errorResult = JSON.parse(res.body.error);
             expect(res.status).to.equal(400);
             // eslint-disable-next-line no-unused-expressions
             expect(Array.isArray(errorResult)).to.be.true;
@@ -322,7 +322,7 @@ describe('USER TEST SUITE', () => {
         .post('/api/v1/users/login')
         .send(newUser2)
         .end((err, res) => {
-          const errorResult = JSON.parse(res.body.errors.body[0]);
+          const errorResult = JSON.parse(res.body.error);
           expect(res.status).to.equal(400);
           // eslint-disable-next-line no-unused-expressions
           expect(Array.isArray(errorResult)).to.be.true;
@@ -340,7 +340,7 @@ describe('USER TEST SUITE', () => {
         .post('/api/v1/users/login')
         .send(newUser2)
         .end((err, res) => {
-          const errorResult = JSON.parse(res.body.errors.body[0]);
+          const errorResult = JSON.parse(res.body.error);
           expect(res.status).to.equal(400);
           // eslint-disable-next-line no-unused-expressions
           expect(Array.isArray(errorResult)).to.be.true;
@@ -358,7 +358,7 @@ describe('USER TEST SUITE', () => {
         .post('/api/v1/users/login')
         .send(newUser2)
         .end((err, res) => {
-          const errorResult = JSON.parse(res.body.errors.body[0]);
+          const errorResult = JSON.parse(res.body.error);
           expect(res.status).to.equal(400);
           expect(errorResult.length).to.equal(2);
           // eslint-disable-next-line no-unused-expressions
@@ -390,9 +390,8 @@ describe('USER TEST SUITE', () => {
         chai.request(server)
           .get('/api/v1/user/50')
           .end((err, res) => {
-            const errorArray = res.body.errors.body;
             expect(res.status).to.equal(404);
-            expect(errorArray[0]).to.equal('No user with ID: 50');
+            expect(res.body.error).to.equal('No user with ID: 50');
             done();
           });
       });
@@ -402,9 +401,8 @@ describe('USER TEST SUITE', () => {
         chai.request(server)
           .get('/api/v1/user/')
           .end((err, res) => {
-            const errorArray = res.body.errors.body;
             expect(res.status).to.equal(404);
-            expect(errorArray[0]).to.equal('Route not found');
+            expect(res.body.error).to.equal('Route not found');
             done();
           });
       });
@@ -414,9 +412,8 @@ describe('USER TEST SUITE', () => {
         chai.request(server)
           .get('/api/v1/user/my-user')
           .end((err, res) => {
-            const errorArray = res.body.errors.body;
             expect(res.status).to.equal(400);
-            expect(errorArray[0]).to.equal('my-user must be an integer');
+            expect(res.body.error).to.equal('my-user must be an integer');
             done();
           });
       });
