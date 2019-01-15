@@ -2,11 +2,12 @@ import 'babel-polyfill';
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import google from './config';
 import { authRoutes, userRoutes } from './routes';
 import { errorHandler, notFoundRoute } from './middlewares';
 
 dotenv.config();
-
+google.config();
 // Create global app object
 const app = express();
 

@@ -1,24 +1,32 @@
 import passport from 'passport';
-import User from '../models';
+import passportGoogle from 'passport-google-oauth';
 
-const LocalStrategy = require('passport-local').Strategy;
+export default {
 
-passport.use(
-  new LocalStrategy(
-    {
-      usernameField: 'user[email]',
-      passwordField: 'user[password]'
+  config() {
+    const GoogleStrategy = passportGoogle.OAuth2Strategy;
+    passport.use(new GoogleStrategy({
+      clientID: '1072047676773-9me877aptv1ieau17vh0istko2cu0911.apps.googleusercontent.com',
+      clientSecret: 'FZhvENs8ywRiV6NYfs_6V3WY',
+      callbackURL: 'http://localhost:5017/api/v1/users/google/redirect'
     },
-    ((username, password, done) => {
-      User.findOne({ username }, (err, user) => {
-        if (err) { return done(err); }
-        if (!user) {
-          return done(null, false, { message: 'Incorrect username.' });
-        }
-        if (!user.validPassword(password)) {
-          return done(null, false, { message: 'Incorrect password.' });
-        }
-        return done(null, user);
-      });
+    ((accessToken, refreshToken, profile, done) => {
+      console.log(profile);
+      return done(null, { user: 'user' });
     })
-  ));
+    ));
+  },
+
+  authenticate: passport.authenticate(
+    'google', { scope: ['profile', 'email'] }
+  ),
+  redirect: passport.authenticate('google',
+    {
+      failureRedirect: '/api/v1/users/login',
+      session: false
+    }),
+  onAuthSuccess: (req, res) => {
+    res.send('You have successfully logged in');
+  }
+
+};
