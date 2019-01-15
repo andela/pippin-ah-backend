@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../controllers/index.js"],"names":["default"],"mappings":";;;;;;;;;;;yCAASA,O","file":"index.js","sourcesContent":["export { default } from './user';\n"]}
