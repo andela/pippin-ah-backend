@@ -10,9 +10,9 @@ const generateToken = payload => jwt.sign({ payload }, secret, time);
 
 const verifyToken = (req, res, next) => {
   const token = req.headers.accesstoken;
-  jwt.verify(token, secret, (error, decoded) => {
-    if (error) {
-      error = new Error('Invalid authencation! Can you check and try again?');
+  jwt.verify(token, secret, (err, decoded) => {
+    if (err) {
+      const error = new Error('Invalid token');
       error.status = 401;
       return next(error);
     }
