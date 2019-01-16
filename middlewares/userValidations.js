@@ -79,7 +79,7 @@ export default {
     next();
   },
 
-  usernameValidator(req, res, next) {
+  isUsernameValidator(req, res, next) {
     if (!validation.isAlphanumeric(req.body.username)) {
       const error = new Error(
         'username must contain only alphabets and numbers');

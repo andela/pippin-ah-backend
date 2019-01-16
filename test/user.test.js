@@ -434,6 +434,9 @@ describe('USER TEST SUITE', () => {
           .send(newUser2)
           .set('Authorization', firstUserToken);
         expect(response.body.message).to.equal('User Updated Successfully');
+        expect(response.body.responseObject.username).to.equal('talktoat');
+        expect(response.body.responseObject.email).to.equal('talkto@gmail.com');
+        expect(response.body.responseObject.isMentor).to.equal(false);
       });
 
 
@@ -559,11 +562,8 @@ describe('USER TEST SUITE', () => {
           .patch('/api/v1/user')
           .send(newUser2)
           .set('Authorization', firstUserToken);
-        expect(response.body.message).to.equal(
-          'User Updated Successfully');
-        expect(response.body.responseObject.username).to.equal('talktoat');
-        expect(response.body.responseObject.email).to.equal('talkto@gmail.com');
-        expect(response.body.responseObject.isMentor).to.equal(false);
+        expect(response.body.error).to.equal(
+          'password must contain only numbers and alphabet');
       });
   });
 });
