@@ -29,6 +29,7 @@ const {
 
 const {
   twitterAuthenticate,
+  twitterRedirect,
   twitterOnAuthSuccess,
 } = twitterStrategy;
 
@@ -64,6 +65,6 @@ router.route('/twitter')
   .get(twitterAuthenticate);
 
 router.route('/twitter/redirect')
-  .get(twitterOnAuthSuccess);
+  .get(twitterRedirect, twitterOnAuthSuccess);
 
 export default router;
