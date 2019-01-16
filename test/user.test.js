@@ -421,8 +421,8 @@ describe('USER TEST SUITE', () => {
         expect(response.body.error).to.equal('Invalid token');
       });
 
-    it('should return User Updated Successfully,with correct parameters',
 
+    it('should return User Updated Successfully,with correct parameters',
       async () => {
         const newUser2 = {
           email: 'talkto@gmail.com',
@@ -434,13 +434,10 @@ describe('USER TEST SUITE', () => {
           .send(newUser2)
           .set('Authorization', firstUserToken);
         expect(response.body.message).to.equal('User Updated Successfully');
-        // expect(response.body.username).to.equal('talktoat');
-        // expect(response.body.email).to.equal('talkto@gmail.com');
-        // expect(response.body.password).to.equal('htryuufhfhdgsgggx');
       });
 
-    it('should return username already exist,for existing Username',
 
+    it('should return username already exist,for existing Username',
       async () => {
         const newUser2 = {
           email: 'talkto2@gmail.com',
@@ -454,8 +451,8 @@ describe('USER TEST SUITE', () => {
         expect(response.body.error).to.equal('Username already in use');
       });
 
-    it('should return username already exist,when charcters less than 6',
 
+    it('should return username already exist,when charcters less than 6',
       async () => {
         const newUser2 = {
           email: 'talkto2@gmail.com',
@@ -469,8 +466,9 @@ describe('USER TEST SUITE', () => {
         expect(response.body.error).to.equal(
           'Your username must be at least 6 characters');
       });
-    it('username must contain only alphabets and numbers',
 
+
+    it('username must contain only alphabets and numbers',
       async () => {
         const newUser2 = {
           email: 'talkto2@gmail.com',
@@ -484,8 +482,9 @@ describe('USER TEST SUITE', () => {
         expect(response.body.error).to.equal(
           'username must contain only alphabets and numbers');
       });
-    it('should return Email already in use,for existing Email',
 
+
+    it('should return Email already in use,for existing Email',
       async () => {
         const newUser2 = {
           email: 'talkto@gmail.com',
@@ -500,8 +499,8 @@ describe('USER TEST SUITE', () => {
           'Email already in use');
       });
 
-    it('should return please Enter a valid Email,for invalid Email',
 
+    it('should return please Enter a valid Email,for invalid Email',
       async () => {
         const newUser2 = {
           email: 'talktogmail.com',
@@ -515,8 +514,9 @@ describe('USER TEST SUITE', () => {
         expect(response.body.error).to.equal(
           'please Enter a valid Email');
       });
-    it('should return Your password must be at least 8 characters',
 
+
+    it('should return Your password must be at least 8 characters',
       async () => {
         const newUser2 = {
           email: 'talktogmail.com',
@@ -531,8 +531,8 @@ describe('USER TEST SUITE', () => {
           'Your password must be at least 8 characters');
       });
 
-    it('should return password must contain only numbers and alphabet',
 
+    it('should return password must contain only numbers and alphabet',
       async () => {
         const newUser2 = {
           email: 'talktogmail.com',
