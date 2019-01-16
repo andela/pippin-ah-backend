@@ -35,7 +35,7 @@ describe('USER TEST SUITE', () => {
           .end((err, res) => {
             expect(res.status).to.equal(400);
             expect(res.body.error).to.equal(
-              'password must contain only numbers and alphabet');
+              'password must contain only numbers and alphabets');
             done();
           });
       });
@@ -403,7 +403,7 @@ describe('USER TEST SUITE', () => {
   });
 
   describe('User Update Validations', () => {
-    it('should return No token provided, when No token is provided',
+    it('Should not allow update when no token is provided',
       async () => {
         const response = await chai.request(server)
           .patch('/api/v1/user');
@@ -412,7 +412,7 @@ describe('USER TEST SUITE', () => {
       });
 
 
-    it('should return Invalid token, when token is Invalid',
+    it('Should not allow update when token is Invalid',
       async () => {
         const response = await chai.request(server)
           .patch('/api/v1/user')
@@ -422,7 +422,7 @@ describe('USER TEST SUITE', () => {
       });
 
 
-    it('should return User Updated Successfully,with correct parameters',
+    it('Should successfully update when correct parameters are provided',
       async () => {
         const newUser2 = {
           email: 'talkto@gmail.com',
@@ -440,12 +440,10 @@ describe('USER TEST SUITE', () => {
       });
 
 
-    it('should return username already exist,for existing Username',
+    it('Should not allow update when username already exists',
       async () => {
         const newUser2 = {
-          email: 'talkto2@gmail.com',
           username: 'talktoat',
-          password: 'tyuiiooooosgffshh'
         };
         const response = await chai.request(server)
           .patch('/api/v1/user')
@@ -454,45 +452,10 @@ describe('USER TEST SUITE', () => {
         expect(response.body.error).to.equal('Username already in use');
       });
 
-
-    it('should return username must be at least 6 ,when charcters less than 6',
-      async () => {
-        const newUser2 = {
-          email: 'talkto2@gmail.com',
-          username: 'Angel',
-          password: 'tyuiiooooosgffshh'
-        };
-        const response = await chai.request(server)
-          .patch('/api/v1/user')
-          .send(newUser2)
-          .set('Authorization', firstUserToken);
-        expect(response.body.error).to.equal(
-          'Your username must be at least 6 characters');
-      });
-
-
-    it('username must contain only alphabets and numbers',
-      async () => {
-        const newUser2 = {
-          email: 'talkto2@gmail.com',
-          username: '*&^%$#@&*',
-          password: 'tyuiiooooosgffshh'
-        };
-        const response = await chai.request(server)
-          .patch('/api/v1/user')
-          .send(newUser2)
-          .set('Authorization', firstUserToken);
-        expect(response.body.error).to.equal(
-          'username must contain only alphabets and numbers');
-      });
-
-
-    it('should return Email already in use,for existing Email',
+    it('Should not allow update when email already exists',
       async () => {
         const newUser2 = {
           email: 'talkto@gmail.com',
-          username: 'Andela',
-          password: 'tyuiiooooosgffshh'
         };
         const response = await chai.request(server)
           .patch('/api/v1/user')
@@ -502,40 +465,7 @@ describe('USER TEST SUITE', () => {
           'Email already in use');
       });
 
-
-    it('should return please Enter a valid Email,for invalid Email',
-      async () => {
-        const newUser2 = {
-          email: 'talktogmail.com',
-          username: 'Andela2',
-          password: 'tyuiiooooosgffshh'
-        };
-        const response = await chai.request(server)
-          .patch('/api/v1/user')
-          .send(newUser2)
-          .set('Authorization', firstUserToken);
-        expect(response.body.error).to.equal(
-          'please Enter a valid Email');
-      });
-
-
-    it('should return Your password must be at least 8 characters',
-      async () => {
-        const newUser2 = {
-          email: 'talktogmail.com',
-          username: 'Andela2',
-          password: 'tyui'
-        };
-        const response = await chai.request(server)
-          .patch('/api/v1/user')
-          .send(newUser2)
-          .set('Authorization', firstUserToken);
-        expect(response.body.error).to.equal(
-          'Your password must be at least 8 characters');
-      });
-
-
-    it('should return password must contain only numbers and alphabet',
+    it('Should not allow update when password fails to meet rules',
       async () => {
         const newUser2 = {
           email: 'talktogmail.com',
@@ -547,23 +477,16 @@ describe('USER TEST SUITE', () => {
           .send(newUser2)
           .set('Authorization', firstUserToken);
         expect(response.body.error).to.equal(
-          'password must contain only numbers and alphabet');
+          'password must contain only numbers and alphabets');
       });
 
-
-    it('should return password must contain only numbers and alphabet,',
+    it('Should allow update even if no details are changed',
       async () => {
-        const newUser2 = {
-          email: '',
-          username: '',
-          password: ''
-        };
         const response = await chai.request(server)
           .patch('/api/v1/user')
-          .send(newUser2)
+          .send({})
           .set('Authorization', firstUserToken);
-        expect(response.body.error).to.equal(
-          'password must contain only numbers and alphabet');
+        expect(response.status).to.equal(200);
       });
   });
 });

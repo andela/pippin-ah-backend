@@ -112,7 +112,7 @@ export default {
     if ('password' in req.body) {
       if (!validation.isAlphanumeric(req.body.password)) {
         const error = new Error(
-          'password must contain only numbers and alphabet');
+          'password must contain only numbers and alphabets');
         error.status = 400;
         return next(error);
       }
