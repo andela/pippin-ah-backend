@@ -2,6 +2,7 @@ import express from 'express';
 import Users from '../controllers/user';
 import { userValidations } from '../middlewares';
 import googleStrategy from '../config/strategies';
+import twitterStrategy from '../config/strategies';
 
 const {
   expectedParamsValidator,
@@ -22,9 +23,9 @@ const {
 } = Users;
 
 const {
-  authenticate,
-  redirect,
-  onAuthSuccess
+  googleAuthenticate,
+  googleRedirect,
+  googleOnAuthSuccess
 } = googleStrategy;
 
 const router = express.Router();
@@ -50,9 +51,15 @@ router.route('/login')
   );
 
 router.route('/google')
-  .get(authenticate);
+  .get(googleAuthenticate);
 
 router.route('/google/redirect')
-  .get(redirect, onAuthSuccess);
+  .get(googleRedirect, googleOnAuthSuccess);
+
+/* router.route('/twitter')
+  .get(authenticate); */
+
+/* router.route('/twitter/redirect')
+  .get(redirect, onAuthSuccess); */
 
 export default router;
