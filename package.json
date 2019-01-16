@@ -4,7 +4,7 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build && node ./build/server.js",
+    "start": "node ./build/server.js",
     "dev:start": "babel-watch server.js",
     "build": "npm run clean && mkdir build && babel ./ --ignore 'node_modules,build,.github,.nyc_output' -s -d build",
     "clean": "rm -rf build",

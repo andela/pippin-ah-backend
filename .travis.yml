@@ -1,15 +1,24 @@
 language: node_js
+
 node_js:
 - 10.14.1
+
 services:
 - postgresql
+
 before_script:
 - psql -c 'create database authors_haven;' -U postgres
 - npm run db:migrate
+
 after_success:
 - npm run coverage
+
 before_deploy:
 - npm run build
+
+addons:
+  artifacts: true
+  
 deploy:
   provider: heroku
   api_key:

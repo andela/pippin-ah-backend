@@ -35,7 +35,7 @@ describe('USER TEST SUITE', () => {
           .end((err, res) => {
             expect(res.status).to.equal(400);
             expect(res.body.error).to.equal(
-              'password must contain only numbers and alphabet');
+              'password must contain only numbers and alphabets');
             done();
           });
       });
@@ -399,6 +399,94 @@ describe('USER TEST SUITE', () => {
         const response = await chai.request(server).get('/api/v1/user')
           .set('Authorization', 'fjjdfjdjfdjfjf');
         expect(response.body.error).to.equal('Invalid token');
+      });
+  });
+
+  describe('User Update Validations', () => {
+    it('Should not allow update when no token is provided',
+      async () => {
+        const response = await chai.request(server)
+          .patch('/api/v1/user');
+        expect(response.status).to.equal(400);
+        expect(response.body.error).to.equal('No token provided');
+      });
+
+
+    it('Should not allow update when token is Invalid',
+      async () => {
+        const response = await chai.request(server)
+          .patch('/api/v1/user')
+          .set('Authorization', 'invalidtoken');
+        expect(response.status).to.equal(401);
+        expect(response.body.error).to.equal('Invalid token');
+      });
+
+
+    it('Should successfully update when correct parameters are provided',
+      async () => {
+        const userObject = {
+          email: 'talkto@gmail.com',
+          username: 'talktoat',
+          password: 'htryuufhfhdgsgggx'
+        };
+        const response = await chai.request(server)
+          .patch('/api/v1/user')
+          .send(userObject)
+          .set('Authorization', firstUserToken);
+        expect(response.body.message).to.equal('User Updated Successfully');
+        expect(response.body.username).to.equal('talktoat');
+        expect(response.body.email).to.equal('talkto@gmail.com');
+        expect(response.body.isMentor).to.equal(false);
+      });
+
+
+    it('Should not allow update when username already exists',
+      async () => {
+        const newUser2 = {
+          username: 'talktoat',
+        };
+        const response = await chai.request(server)
+          .patch('/api/v1/user')
+          .send(newUser2)
+          .set('Authorization', firstUserToken);
+        expect(response.body.error).to.equal('Username already in use');
+      });
+
+    it('Should not allow update when email already exists',
+      async () => {
+        const newUser2 = {
+          email: 'talkto@gmail.com',
+        };
+        const response = await chai.request(server)
+          .patch('/api/v1/user')
+          .send(newUser2)
+          .set('Authorization', firstUserToken);
+        expect(response.body.error).to.equal(
+          'Email already in use');
+      });
+
+    it('Should not allow update when password fails to meet rules',
+      async () => {
+        const newUser2 = {
+          email: 'talktogmail.com',
+          username: 'Andela2',
+          password: '*&^%$#@$%^^'
+        };
+        const response = await chai.request(server)
+          .patch('/api/v1/user')
+          .send(newUser2)
+          .set('Authorization', firstUserToken);
+        expect(response.body.error).to.equal(
+          'password must contain only numbers and alphabets');
+      });
+
+    it('Should allow update even if no details are changed',
+      async () => {
+        const response = await chai.request(server)
+          .patch('/api/v1/user')
+          .send({})
+          .set('Authorization', firstUserToken);
+        expect(response.status).to.equal(200);
       });
   });
 });
