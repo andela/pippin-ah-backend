@@ -4,7 +4,7 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "start": "node ./build/server.js",
+    "start": " npm run build && node ./build/server.js",
     "dev:start": "babel-watch server.js",
     "build": "npm run clean && mkdir build && babel ./ --ignore 'node_modules,build,.github,.nyc_output' -s -d build",
     "clean": "rm -rf build",
@@ -37,6 +37,7 @@
     "jsonwebtoken": "^8.4.0",
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
+    "passport-facebook": "^2.1.1",
     "passport-google-oauth": "^1.0.0",
     "passport-local": "^1.0.0",
     "pg": "^7.7.1",

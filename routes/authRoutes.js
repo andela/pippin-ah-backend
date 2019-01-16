@@ -1,7 +1,7 @@
 import express from 'express';
 import Users from '../controllers/user';
 import { userValidations } from '../middlewares';
-import googleStrategy from '../config/strategies';
+import { googleStrategy, facebookStrategy } from '../config/strategies';
 
 const {
   expectedParamsValidator,
@@ -26,6 +26,11 @@ const {
   redirect,
   onAuthSuccess
 } = googleStrategy;
+const {
+  fbAuthenticate,
+  fbRedirect,
+  fbOnAuthSuccess
+} = facebookStrategy;
 
 const router = express.Router();
 
@@ -54,5 +59,12 @@ router.route('/google')
 
 router.route('/google/redirect')
   .get(redirect, onAuthSuccess);
+
+router.route('/facebook')
+  .get(fbAuthenticate);
+
+router.route('/facebook/redirect')
+  .get(fbRedirect, fbOnAuthSuccess);
+
 
 export default router;

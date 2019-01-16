@@ -49,4 +49,14 @@ describe('AUTHENTICATION TEST SUITE', () => {
       expect(redirectUrl.includes(redirectUrlSubstring)).to.equal(true);
     });
   });
+
+  describe('FACE AUTHENTICATION', () => {
+    it('should redirect to facebook login page', async () => {
+      const response = await chai.request(server).get('/api/v1/users/facebook');
+      const redirectUrlSubstring = 'https://www.facebook.com/dialog/oauth';
+      const redirectUrl = response.redirects[0];
+      expect(200);
+      expect(redirectUrl.includes(redirectUrlSubstring)).to.equal(true);
+    });
+  });
 });
