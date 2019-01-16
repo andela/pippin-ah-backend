@@ -10,7 +10,7 @@ describe('404 TEST SUITE', () => {
       .get('/random-rounte')
       .end((err, res) => {
         expect(res).to.have.status(404);
-        expect(res.body.errors.body[0]).to.equal('Route not Found');
+        expect(res.body.error).to.equal('Route not found');
         done();
       });
   });

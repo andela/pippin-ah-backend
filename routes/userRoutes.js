@@ -1,5 +1,6 @@
 import express from 'express';
 import Users from '../controllers/user';
+import { verifyToken } from '../middlewares';
 
 const {
   getUser,
@@ -8,7 +9,8 @@ const {
 
 const router = express.Router();
 
-router.route('/:userId')
+router.route('/user')
+  .all(verifyToken)
   .get(getUser)
   .put(updateUser);
 
