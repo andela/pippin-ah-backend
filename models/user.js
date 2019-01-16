@@ -22,7 +22,9 @@ module.exports = (sequelize, DataTypes) => {
       beforeCreate: async (user) => {
         await user.hashPassword();
       },
-      beforeUpdate: (user) => { user.hashPassword(); }
+      beforeUpdate: async (user) => {
+        await user.hashPassword();
+      }
     }
   }
   );
@@ -40,12 +42,11 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   User.prototype.hashPassword = async function hashPassword() {
-    if (!this.password) {
-      return;
+    if (this.password) {
+      const saltRounds = 10;
+      this.password = await bcrypt.hash(this.password, saltRounds);
+      return this.password;
     }
-    const saltRounds = 10;
-    this.password = await bcrypt.hash(this.password, saltRounds);
-    return this.password;
   };
 
   User.prototype.validPassword = function validPassword(password) {

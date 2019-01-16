@@ -424,14 +424,14 @@ describe('USER TEST SUITE', () => {
 
     it('Should successfully update when correct parameters are provided',
       async () => {
-        const newUser2 = {
+        const userObject = {
           email: 'talkto@gmail.com',
           username: 'talktoat',
           password: 'htryuufhfhdgsgggx'
         };
         const response = await chai.request(server)
           .patch('/api/v1/user')
-          .send(newUser2)
+          .send(userObject)
           .set('Authorization', firstUserToken);
         expect(response.body.message).to.equal('User Updated Successfully');
         expect(response.body.username).to.equal('talktoat');

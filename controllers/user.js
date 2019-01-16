@@ -39,13 +39,12 @@ class Users {
     * @param {object} res - The response object.
     */
   static async updateUser(req, res) {
-    const updateUser = await User.findByPk(req.params.userId);
-    const userpassword = await updateUser.hashPassword(req.body.password);
-    const userResponse = await updateUser
+    const user = await User.findByPk(req.decoded.id);
+    const userResponse = await user
       .update({
-        username: req.body.username || updateUser.username,
-        email: req.body.email || updateUser.email,
-        password: userpassword || updateUser.password
+        username: req.body.username || user.username,
+        email: req.body.email || user.email,
+        password: req.body.password || user.password
       });
 
     const responseObject = {
