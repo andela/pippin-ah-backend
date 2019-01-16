@@ -1,14 +1,27 @@
 language: node_js
 
 node_js:
- - "10.14.1"
+- 10.14.1
 
 services:
-  - postgresql
+- postgresql
 
 before_script:
-  - psql -c 'create database authors_haven;' -U postgres
-  - npm run db:migrate
-  
+- psql -c 'create database authors_haven;' -U postgres
+- npm run db:migrate
+
 after_success:
-  - npm run coverage
+- npm run coverage
+
+before_deploy:
+- npm run build
+
+deploy:
+  provider: heroku
+  api_key:
+    secure: jsL5p3goyK5il9N3LTCn2v4TEJZYITnmik+HBDS0/ZHDRq8FAgvNIR0ADJaOxLODSyK2v37H1mQYmGMEFAWuypU2QYx1ruByJqbsDcFZlbeDAd2Xkt8vqB/Bx9iTSHI8IIqPFgvbTvqd1gAGP/AK4oUD3RP8+ffDYwDlQxs1/2eSV5zzo3Fnd0fs0/0jzmgmHP7TvQlDcVon35EM+Jtjcj5OmeeOHItnw8GjauaEh6acTzuezfEp8n7fQPxQ2XZLVNT8+MJ9UdTbtarjc9HuoyiG7XCn0L8tp38MafHwu+zcjcFsxtZSXW5APDl5R1XiezEukqzPj1pZZ67e53zuWTFHdj6AI/omIrdlRVOiB/G1NJP8f/SYt0vZt4Np9xg7klUe5MPMtCMzgU+mDQIeT0ZwzXSTW0fCzOnIS0KxS/3Lr6JIodn3RZHcQtwsbU8jRF34CXzcFZYd5erIJVErJqmIPKdO2Pets0U8kopVQ1OiLrUI4OLsZBHA2yfGJhf2acpeozh96gC0UCAwlf5I/A3t1kBZ8lZ9DlFqtumyObWMyb+LmWcUCowUrKT8Szx+grAgzZdrpgoWFFYw80vgfPIVyTX7BntbIatY6IeTnvBwnp3rDDkxV0DK+QIh0rPY5xJ+jhkhy2y7KzzN1L/k2DuURCxbTldQMuTLC8H1j8o=
+  run: "npm run db:migrate"
+  app: authors-haaven
+  on:
+    repo: andela/pippin-ah-backend
+    branch: feat/162727545/deploy
