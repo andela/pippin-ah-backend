@@ -50,7 +50,7 @@ describe('AUTHENTICATION TEST SUITE', () => {
     });
   });
 
-  describe('FACE AUTHENTICATION', () => {
+  describe('FACEBOOK AUTHENTICATION', () => {
     it('should redirect to facebook login page', async () => {
       const response = await chai.request(server).get('/api/v1/users/facebook');
       const redirectUrlSubstring = 'https://www.facebook.com/dialog/oauth';

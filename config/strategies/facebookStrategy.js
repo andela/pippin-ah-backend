@@ -14,7 +14,6 @@ export default {
       profileFields: ['id', 'emails', 'name']
     },
     (accessToken, refreshToken, profile, done) => {
-      console.log('Profile', profile);
       done(null, { email: profile.emails[0].value });
     }));
   },
