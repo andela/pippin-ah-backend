@@ -403,15 +403,22 @@ describe('USER TEST SUITE', () => {
   });
 
   describe('User Update Validations', () => {
-    it('should return User not found if Id not found',
-      (done) => {
-        chai.request(server)
-          .put('/api/v1/user/1000000000')
-          .end((err, res) => {
-            expect(res.status).to.equal(400);
-            expect(res.body.errors.body[0]).to.equal('User Not Found');
-            done();
-          });
+    it('should return No token provided, when No token is provided',
+      async () => {
+        const response = await chai.request(server)
+          .patch('/api/v1/user');
+        expect(response.status).to.equal(400);
+        expect(response.body.error).to.equal('No token provided');
+      });
+
+
+    it('should return No token provided, when No token is provided',
+      async () => {
+        const response = await chai.request(server)
+          .patch('/api/v1/user')
+          .set('Authorization', 'invalidtoken');
+        expect(response.status).to.equal(401);
+        expect(response.body.error).to.equal('Invalid token');
       });
   });
 });
