@@ -1,8 +1,7 @@
 import express from 'express';
 import Users from '../controllers/user';
 import { userValidations } from '../middlewares';
-import googleStrategy from '../config/strategies';
-import twitterStrategy from '../config/strategies';
+import { googleStrategy, twitterStrategy } from '../config/strategies';
 
 const {
   expectedParamsValidator,
@@ -27,6 +26,11 @@ const {
   googleRedirect,
   googleOnAuthSuccess
 } = googleStrategy;
+
+const {
+  twitterAuthenticate,
+  twitterOnAuthSuccess,
+} = twitterStrategy;
 
 const router = express.Router();
 
@@ -56,10 +60,10 @@ router.route('/google')
 router.route('/google/redirect')
   .get(googleRedirect, googleOnAuthSuccess);
 
-/* router.route('/twitter')
-  .get(authenticate); */
+router.route('/twitter')
+  .get(twitterAuthenticate);
 
-/* router.route('/twitter/redirect')
-  .get(redirect, onAuthSuccess); */
+router.route('/twitter/redirect')
+  .get(twitterOnAuthSuccess);
 
 export default router;
