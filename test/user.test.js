@@ -546,5 +546,24 @@ describe('USER TEST SUITE', () => {
         expect(response.body.error).to.equal(
           'password must contain only numbers and alphabet');
       });
+
+
+    it('should return User Updated Successfully, if nothing is Entered',
+      async () => {
+        const newUser2 = {
+          email: '',
+          username: '',
+          password: ''
+        };
+        const response = await chai.request(server)
+          .patch('/api/v1/user')
+          .send(newUser2)
+          .set('Authorization', firstUserToken);
+        expect(response.body.message).to.equal(
+          'User Updated Successfully');
+        expect(response.body.responseObject.username).to.equal('talktoat');
+        expect(response.body.responseObject.email).to.equal('talkto@gmail.com');
+        expect(response.body.responseObject.isMentor).to.equal(false);
+      });
   });
 });
