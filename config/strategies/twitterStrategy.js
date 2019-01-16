@@ -21,3 +21,5 @@ const twitterAuthenticate = () => passport.authenticate('twitter');
 
 console.log(Strategy);
 console.log(processTwitterUser);
+
+export default twitterAuthenticate;
