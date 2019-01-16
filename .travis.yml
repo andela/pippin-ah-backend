@@ -24,4 +24,4 @@ deploy:
   app: authors-haaven
   on:
     repo: andela/pippin-ah-backend
-    branch: feat/162727545/deploy
+    branch: develop
