@@ -53,7 +53,7 @@ class Users {
       email: userResponse.email,
       isMentor: userResponse.isMentor
     };
-    return res.json({
+    return res.send({
       message: 'User Updated Successfully',
       responseObject
     });
