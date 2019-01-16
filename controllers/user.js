@@ -41,15 +41,21 @@ class Users {
   static async updateUser(req, res) {
     const updateUser = await User.findByPk(req.params.userId);
     const userpassword = await updateUser.hashPassword(req.body.password);
-    const updatedUser = await updateUser
+    const userResponse = await updateUser
       .update({
         username: req.body.username || updateUser.username,
         email: req.body.email || updateUser.email,
         password: userpassword || updateUser.password
       });
+
+    const responseObject = {
+      username: userResponse.username,
+      email: userResponse.email,
+      isMentor: userResponse.isMentor
+    };
     return res.json({
-      updatedUser,
-      message: 'User has been updated'
+      message: 'User Updated Successfully',
+      responseObject
     });
   }
 
