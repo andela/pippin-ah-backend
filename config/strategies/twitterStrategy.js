@@ -1,5 +1,5 @@
 import passport from 'passport';
-import { Strategy as TwitterStrategy } from 'passport-twitter';
+import Strategy from 'passport-twitter';
 import Users from '../../controllers';
 
 const { processTwitterUser } = Users;
@@ -7,14 +7,14 @@ const { processTwitterUser } = Users;
 export default {
 
   init() {
-    passport.use(new TwitterStrategy({
+    passport.use(new Strategy({
       consumerKey: process.env.TWITTER_CONSUMER_KEY,
       consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
       callbackURL: '/api/v1/users/twitter/redirect'
     },
     (accessToken, refreshToken, profile, done) => {
       console.log(process.env.TWITTER_CONSUMER_KEY);
-      /* console.log('==========', profile); */
+      console.log('==========', profile);
       console.log('==========', profile.id);
       console.log('***==========', profile.email);
       done(null, {
@@ -35,5 +35,5 @@ export default {
 
 };
 
-console.log(TwitterStrategy);
+console.log(Strategy);
 console.log(processTwitterUser);
