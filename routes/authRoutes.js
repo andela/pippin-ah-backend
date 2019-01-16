@@ -1,6 +1,7 @@
 import express from 'express';
 import Users from '../controllers/user';
 import { userValidations } from '../middlewares';
+import googleStrategy from '../config/strategies';
 
 const {
   expectedParamsValidator,
@@ -19,6 +20,12 @@ const {
   login,
   register
 } = Users;
+
+const {
+  authenticate,
+  redirect,
+  onAuthSuccess
+} = googleStrategy;
 
 const router = express.Router();
 
@@ -41,5 +48,11 @@ router.route('/login')
     invalidCredentials,
     login
   );
+
+router.route('/google')
+  .get(authenticate);
+
+router.route('/google/redirect')
+  .get(redirect, onAuthSuccess);
 
 export default router;
