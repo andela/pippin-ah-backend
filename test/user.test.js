@@ -434,9 +434,9 @@ describe('USER TEST SUITE', () => {
           .send(newUser2)
           .set('Authorization', firstUserToken);
         expect(response.body.message).to.equal('User Updated Successfully');
-        expect(response.body.responseObject.username).to.equal('talktoat');
-        expect(response.body.responseObject.email).to.equal('talkto@gmail.com');
-        expect(response.body.responseObject.isMentor).to.equal(false);
+        expect(response.body.username).to.equal('talktoat');
+        expect(response.body.email).to.equal('talkto@gmail.com');
+        expect(response.body.isMentor).to.equal(false);
       });
 
 
@@ -455,7 +455,7 @@ describe('USER TEST SUITE', () => {
       });
 
 
-    it('should return username already exist,when charcters less than 6',
+    it('should return username must be at least 6 ,when charcters less than 6',
       async () => {
         const newUser2 = {
           email: 'talkto2@gmail.com',
@@ -551,7 +551,7 @@ describe('USER TEST SUITE', () => {
       });
 
 
-    it('should return User Updated Successfully, if nothing is Entered',
+    it('should return password must contain only numbers and alphabet,',
       async () => {
         const newUser2 = {
           email: '',

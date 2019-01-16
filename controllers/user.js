@@ -51,12 +51,11 @@ class Users {
     const responseObject = {
       username: userResponse.username,
       email: userResponse.email,
-      isMentor: userResponse.isMentor
+      isMentor: userResponse.isMentor,
+      message: 'User Updated Successfully'
     };
-    return res.send({
-      message: 'User Updated Successfully',
-      responseObject
-    });
+
+    return res.send(responseObject);
   }
 
 

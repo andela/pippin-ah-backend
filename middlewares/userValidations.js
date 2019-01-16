@@ -49,67 +49,82 @@ export default {
 
   async emailExistsValidator(req, res, next) {
     const { email } = req.body;
-    const used = await User.findOne({ where: { email: { [iLike]: email } } });
-    if (used) {
-      const error = new Error('Email already in use');
-      error.status = 409;
-      return next(error);
+    if (email) {
+      const used = await User.findOne({ where: { email: { [iLike]: email } } });
+      if (used) {
+        const error = new Error('Email already in use');
+        error.status = 409;
+        return next(error);
+      }
+      return next();
     }
-    next();
+    return next();
   },
 
   async usernameExistsValidator(req, res, next) {
     const { username } = req.body;
-    const usernameIsInUse = await User
-      .findOne({ where: { username: { [iLike]: username } } });
-    if (usernameIsInUse) {
-      const error = new Error('Username already in use');
-      error.status = 409;
-      return next(error);
+    if (username) {
+      const usernameIsInUse = await User
+        .findOne({ where: { username: { [iLike]: username } } });
+      if (usernameIsInUse) {
+        const error = new Error('Username already in use');
+        error.status = 409;
+        return next(error);
+      }
+      return next();
     }
-    next();
+    return next();
   },
 
   emailIsValid(req, res, next) {
-    if (!validation.isEmail(req.body.email)) {
-      const error = new Error('please Enter a valid Email');
-      error.status = 400;
-      return next(error);
+    if ('email' in req.body) {
+      if (!validation.isEmail(req.body.email)) {
+        const error = new Error('please Enter a valid Email');
+        error.status = 400;
+        return next(error);
+      }
+      return next();
     }
-    next();
+    return next();
   },
 
   isUsernameValidator(req, res, next) {
-    if (!validation.isAlphanumeric(req.body.username)) {
-      const error = new Error(
-        'username must contain only alphabets and numbers');
-      error.status = 400;
-      return next(error);
-    }
+    if (Object.keys(req.body).includes('username')) {
+      if (!validation.isAlphanumeric(req.body.username)) {
+        const error = new Error(
+          'username must contain only alphabets and numbers');
+        error.status = 400;
+        return next(error);
+      }
 
-    if (req.body.username.length < 6) {
-      const error = new Error(
-        'Your username must be at least 6 characters');
-      error.status = 400;
-      return next(error);
+      if (req.body.username.length < 6) {
+        const error = new Error(
+          'Your username must be at least 6 characters');
+        error.status = 400;
+        return next(error);
+      }
+      return next();
     }
-    next();
+    return next();
   },
 
   passwordValidator(req, res, next) {
-    if (!validation.isAlphanumeric(req.body.password)) {
-      const error = new Error(
-        'password must contain only numbers and alphabet');
-      error.status = 400;
-      return next(error);
+    if ('password' in req.body) {
+      if (!validation.isAlphanumeric(req.body.password)) {
+        const error = new Error(
+          'password must contain only numbers and alphabet');
+        error.status = 400;
+        return next(error);
+      }
+      if (req.body.password.length < 8) {
+        const error = new Error(
+          'Your password must be at least 8 characters');
+        error.status = 400;
+        return next(error);
+      }
+      return next();
     }
-    if (req.body.password.length < 8) {
-      const error = new Error(
-        'Your password must be at least 8 characters');
-      error.status = 400;
-      return next(error);
-    }
-    next();
+    return next();
   },
 
   loginParamsValidator(req, res, next) {
