@@ -17,30 +17,24 @@ class Profiles {
     * @param {object} res - The response object.
     */
   static async createProfile(req, res) {
-    const { id } = req.decoded;
-    const {
-      firstName,
-      lastName,
-      bio,
-      category,
-      imageURL
-    } = req.body;
-    const profile = await Profile
-      .create({
-        firstName,
-        lastName,
-        bio,
-        category,
-        imageURL,
-        userId: id
+    const profile = await Profile.findOne({
+      where: { userId: req.decoded.id }
+    });
+    const userProfile = await profile
+      .update({
+        firstName: req.body.firstName || profile.firstName,
+        lastName: req.body.lastName || profile.lastName,
+        bio: req.body.bio || profile.bio,
+        category: req.body.category || profile.category,
+        imageUrl: req.body.imageUrl || profile.imageUrl
       });
-    return res.status(201).json({
-      message: 'Profile created successfully',
-      firstName: profile.firstName,
-      lastName: profile.lastName,
-      bio: profile.bio,
-      category: profile.category,
-      imageURL: profile.imageURL
+    return res.status(200).json({
+      message: 'Profile updated successfully',
+      firstName: userProfile.firstName,
+      lastName: userProfile.lastName,
+      bio: userProfile.bio,
+      category: userProfile.category,
+      imageURL: userProfile.imageURL
     });
   }
 }

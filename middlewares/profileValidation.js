@@ -52,7 +52,7 @@ export default {
     const found = await Profile.findOne({ where: { userId: id } });
     if (found) {
       const error = new Error(
-        'Already have a profile, can only have one profile,Go update.'
+        'Already have a profile, Can only have one profile,Go update.'
       );
       error.status = 409;
       return next(error);

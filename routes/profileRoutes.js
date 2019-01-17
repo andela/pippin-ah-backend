@@ -4,8 +4,7 @@ import { verifyToken, profileValidation } from '../middlewares';
 
 const {
   categoryValidator,
-  nameValidator,
-  searchExistence
+  nameValidator
 } = profileValidation;
 const {
   createProfile
@@ -15,8 +14,7 @@ const router = express.Router();
 
 router.route('/profile')
   .all(verifyToken)
-  .post(
-    searchExistence,
+  .patch(
     categoryValidator,
     nameValidator,
     createProfile
