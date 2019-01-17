@@ -5,6 +5,7 @@ import Users from '../../controllers';
 
 const { processSocialUser } = Users;
 
+// Passport methods
 export default {
   init() {
     passport.use(new FacebookStrategy({
