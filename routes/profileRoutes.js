@@ -1,13 +1,13 @@
 import express from 'express';
 import Profile from '../controllers/profile';
-import { verifyToken, profileValidation } from '../middlewares';
+import { verifyToken, profileValidations } from '../middlewares';
 
 const {
   categoryValidator,
   nameValidator
-} = profileValidation;
+} = profileValidations;
 const {
-  createProfile
+  updateProfile
 } = Profile;
 
 const router = express.Router();
@@ -17,6 +17,6 @@ router.route('/profile')
   .patch(
     categoryValidator,
     nameValidator,
-    createProfile
+    updateProfile
   );
 export default router;

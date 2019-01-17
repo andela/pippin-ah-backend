@@ -16,7 +16,7 @@ class Profiles {
     * @param {object} req - The request object.
     * @param {object} res - The response object.
     */
-  static async createProfile(req, res) {
+  static async updateProfile(req, res) {
     const profile = await Profile.findOne({
       where: { userId: req.decoded.id }
     });
@@ -28,7 +28,7 @@ class Profiles {
         category: req.body.category || profile.category,
         imageUrl: req.body.imageUrl || profile.imageUrl
       });
-    return res.status(200).json({
+    return res.json({
       message: 'Profile updated successfully',
       firstName: userProfile.firstName,
       lastName: userProfile.lastName,
