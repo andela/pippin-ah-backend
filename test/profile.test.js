@@ -32,7 +32,7 @@ describe('USER TEST SUITE', () => {
   });
 
   describe('TEST SUITS FOR PROFILE', () => {
-    it('Should create profile when Valid inputs are supplied',
+    it('Should update profile when Valid inputs are supplied',
       async () => {
         const newProfile = {
           category: 'Science',
@@ -41,35 +41,33 @@ describe('USER TEST SUITE', () => {
           bio: 'sofware developer at google'
         };
         const response = await chai.request(server)
-          .post('/api/v1/profile')
+          .patch('/api/v1/profile')
           .set('Authorization', profileToken)
           .send(newProfile);
-        expect(response.status).to.equal(201);
+        expect(response.body.category).to.equal('Science');
+        expect(response.body.firstName).to.equal('Moses');
+        expect(response.body.lastName).to.equal('Ezen');
+        expect(response.body.bio).to.equal('sofware developer at google');
+
+        expect(response.body.message).to.equal(
+          'Profile updated successfully');
+      });
+
+    it('Should update profile when few Valid inputs are supplied',
+      async () => {
+        const newProfile = {
+          imageUrl: true
+        };
+        const response = await chai.request(server)
+          .patch('/api/v1/profile')
+          .set('Authorization', profileToken)
+          .send(newProfile);
         expect(response.body.message).to.equal(
           'Profile updated successfully');
       });
 
 
-    // it('Should not create profile if user profile already exist',
-    //   async () => {
-    //     const newProfile = {
-    //       category: 'Science',
-    //       firstName: 'Chidinma',
-    //       lastName: 'Ezen',
-    //       bio: 'sofware developer at google'
-    //     };
-    //     const response = await chai.request(server)
-    //       .post('/api/v1/profile')
-    //       .set('Authorization', profileToken)
-    //       .send(newProfile);
-    //     expect(response.status).to.equal(409);
-    //     expect(response.body.error)
-    //       .to.equal(
-    //         'Already have a profile, can only have one profile,Go update.');
-    //   });
-
-
-    it('Should not create profile if first Name is not alphabetic',
+    it('Should not update profile if first Name is not alphabetic',
       async () => {
         const newProfile = {
           category: 'Science',
@@ -78,7 +76,7 @@ describe('USER TEST SUITE', () => {
           bio: 'sofware developer at google'
         };
         const response = await chai.request(server)
-          .post('/api/v1/profile')
+          .patch('/api/v1/profile')
           .set('Authorization', profileToken2)
           .send(newProfile);
         expect(response.status).to.equal(400);
@@ -88,7 +86,7 @@ describe('USER TEST SUITE', () => {
       });
 
 
-    it('Should not create profile if last Name is not alphabetic',
+    it('Should not update profile if last Name is not alphabetic',
       async () => {
         const newProfile = {
           category: 'Science',
@@ -97,7 +95,7 @@ describe('USER TEST SUITE', () => {
           bio: 'sofware developer at google'
         };
         const response = await chai.request(server)
-          .post('/api/v1/profile')
+          .patch('/api/v1/profile')
           .set('Authorization', profileToken2)
           .send(newProfile);
         expect(response.status).to.equal(400);
@@ -107,7 +105,7 @@ describe('USER TEST SUITE', () => {
       });
 
 
-    it('Should not create profile if characters less than 2',
+    it('Should not update profile if characters less than 2',
       async () => {
         const newProfile = {
           category: 'Science',
@@ -116,7 +114,25 @@ describe('USER TEST SUITE', () => {
           bio: 'sofware developer at google'
         };
         const response = await chai.request(server)
-          .post('/api/v1/profile')
+          .patch('/api/v1/profile')
+          .set('Authorization', profileToken2)
+          .send(newProfile);
+        expect(response.status).to.equal(400);
+        expect(response.body.error)
+          .to.equal(
+            'first Name and Last name must be atleast 2 chracter long');
+      });
+
+    it('Should not update profile if characters less than 2',
+      async () => {
+        const newProfile = {
+          category: 'Science',
+          firstName: 'j',
+          lastName: 'Samuel',
+          bio: 'sofware developer at google'
+        };
+        const response = await chai.request(server)
+          .patch('/api/v1/profile')
           .set('Authorization', profileToken2)
           .send(newProfile);
         expect(response.status).to.equal(400);
@@ -126,7 +142,7 @@ describe('USER TEST SUITE', () => {
       });
 
 
-    it('Should not create profile if given an Invalid Category',
+    it('Should not update profile if given an Invalid Category',
       async () => {
         const newProfile = {
           category: 'Programing',
@@ -135,7 +151,7 @@ describe('USER TEST SUITE', () => {
           bio: 'sofware developer at google'
         };
         const response = await chai.request(server)
-          .post('/api/v1/profile')
+          .patch('/api/v1/profile')
           .set('Authorization', profileToken2)
           .send(newProfile);
         expect(response.status).to.equal(400);
