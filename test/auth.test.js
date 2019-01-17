@@ -39,24 +39,4 @@ describe('AUTHENTICATION TEST SUITE', () => {
         });
     });
   });
-
-  describe('GOOGLE AUTHENTICATION', () => {
-    it('should redirect to google login page', async () => {
-      const response = await chai.request(server).get('/api/v1/users/google');
-      const redirectUrlSubstring = 'https://accounts.google.com/o/oauth2';
-      const redirectUrl = response.redirects[0];
-      expect(200);
-      expect(redirectUrl.includes(redirectUrlSubstring)).to.equal(true);
-    });
-  });
-
-  describe('FACEBOOK AUTHENTICATION', () => {
-    it('should redirect to facebook login page', async () => {
-      const response = await chai.request(server).get('/api/v1/users/facebook');
-      const redirectUrlSubstring = 'https://www.facebook.com/dialog/oauth';
-      const redirectUrl = response.redirects[0];
-      expect(200);
-      expect(redirectUrl.includes(redirectUrlSubstring)).to.equal(true);
-    });
-  });
 });
