@@ -15,8 +15,8 @@ export default {
     (accessToken, refreshToken, profile, done) => {
       done(null, {
         email: profile.emails[0].value,
-        firstName: profile.givenName,
-        lastName: profile.familyName,
+        firstName: profile.name.givenName,
+        lastName: profile.namefamilyName,
         imageUrl: profile.photos[0].value
       });
     }));
