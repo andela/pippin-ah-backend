@@ -2,7 +2,9 @@ import express from 'express';
 import Users from '../controllers/user';
 import { userValidations } from '../middlewares';
 import {
-  googleStrategy, facebookStrategy, twitterStrategy
+  googleStrategy,
+  facebookStrategy,
+  twitterStrategy
 } from '../config/strategies';
 
 const {
