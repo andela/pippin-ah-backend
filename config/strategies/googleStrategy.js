@@ -2,7 +2,7 @@ import passport from 'passport';
 import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import Users from '../../controllers';
 
-const { processSocailUser } = Users;
+const { processSocialUser } = Users;
 
 export default {
 
@@ -27,6 +27,6 @@ export default {
       session: false
     }),
 
-  googleOnAuthSuccess: processSocailUser
+  googleOnAuthSuccess: processSocialUser
 
 };
