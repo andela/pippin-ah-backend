@@ -6,7 +6,7 @@ import models from '../models';
 
 dotenv.config();
 const { iLike, or } = Sequelize.Op;
-const { User } = models;
+const { User, Profile } = models;
 const secret = process.env.SECRET_KEY;
 const time = { expiresIn: '72hrs' };
 const generateToken = payload => jwt.sign(payload, secret, time);
@@ -24,11 +24,22 @@ class Users {
     */
   static async getUser(req, res) {
     const { id } = req.decoded;
-    const user = await User.findOne({ where: { id } });
+    const user = await User.findOne(
+      {
+        where: { id },
+        include: [{ model: Profile }]
+      });
+    const profile = user.Profile;
     return res.json({
       username: user.username,
       email: user.email,
       isMentor: user.isMentor,
+      profile: {
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        bio: profile.bio,
+        imageUrl: profile.imageUrl
+      }
     });
   }
 
@@ -103,7 +114,8 @@ class Users {
         email,
         password
       });
-
+    const profile = new Profile();
+    await profile.setUser(user);
     const tokenPayload = {
       id: user.id,
       isMentor: user.isMentor
@@ -124,7 +136,9 @@ class Users {
     * @param {object} res - The response object.
     */
   static async processSocialUser(req, res) {
-    const { email } = req.user;
+    const {
+      email, lastName, firstName, imageUrl
+    } = req.user;
 
     const user = await User
       .findOne({ where: { email: { [iLike]: email } } });
@@ -143,6 +157,8 @@ class Users {
 
     const newUser = await User
       .create({ email });
+    const profile = new Profile({ lastName, firstName, imageUrl });
+    await newUser.setProfile(profile);
     const tokenPayload = {
       id: newUser.id,
       isMentor: false

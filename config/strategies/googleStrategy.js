@@ -13,7 +13,12 @@ export default {
       callbackURL: '/api/v1/users/google/redirect'
     },
     (accessToken, refreshToken, profile, done) => {
-      done(null, { email: profile.emails[0].value });
+      done(null, {
+        email: profile.emails[0].value,
+        firstName: profile.name.givenName,
+        lastName: profile.name.familyName,
+        imageUrl: profile.photos[0].value
+      });
     }));
   },
 
