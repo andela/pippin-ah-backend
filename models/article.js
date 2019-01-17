@@ -8,6 +8,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.String,
       allowNull: false
     },
+    description: {
+      type: DataTypes.String,
+      allowNull: false
+    },
     likes: {
       type: DataTypes.INTEGER,
       defaultValue: 0
