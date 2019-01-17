@@ -24,11 +24,22 @@ class Users {
     */
   static async getUser(req, res) {
     const { id } = req.decoded;
-    const user = await User.findOne({ where: { id }, include: [{ model: Profile }] });
+    const user = await User.findOne(
+      {
+        where: { id },
+        include: [{ model: Profile }]
+      });
+    const profile = user.Profile;
     return res.json({
       username: user.username,
       email: user.email,
       isMentor: user.isMentor,
+      profile: {
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        bio: profile.bio,
+        imageUrl: profile.imageUrl
+      }
     });
   }
 
