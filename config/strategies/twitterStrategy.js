@@ -2,7 +2,7 @@ import passport from 'passport';
 import Strategy from 'passport-twitter';
 import Users from '../../controllers';
 
-const { processTwitterUser } = Users;
+const { processSocialUser } = Users;
 
 export default {
 
@@ -30,6 +30,6 @@ export default {
       session: false
     }),
 
-  twitterOnAuthSuccess: processTwitterUser
+  twitterOnAuthSuccess: processSocialUser
 
 };
