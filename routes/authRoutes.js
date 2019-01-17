@@ -1,7 +1,11 @@
 import express from 'express';
 import Users from '../controllers/user';
 import { userValidations } from '../middlewares';
-import { googleStrategy, twitterStrategy } from '../config/strategies';
+import {
+  googleStrategy,
+  facebookStrategy,
+  twitterStrategy
+} from '../config/strategies';
 
 const {
   expectedParamsValidator,
@@ -27,6 +31,11 @@ const {
   googleOnAuthSuccess
 } = googleStrategy;
 
+const {
+  fbAuthenticate,
+  fbRedirect,
+  fbOnAuthSuccess
+} = facebookStrategy;
 const {
   twitterAuthenticate,
   twitterRedirect,
@@ -66,5 +75,12 @@ router.route('/twitter')
 
 router.route('/twitter/redirect')
   .get(twitterRedirect, twitterOnAuthSuccess);
+
+router.route('/facebook')
+  .get(fbAuthenticate);
+
+router.route('/facebook/redirect')
+  .get(fbRedirect, fbOnAuthSuccess);
+
 
 export default router;
