@@ -26,6 +26,7 @@ const {
   redirect,
   onAuthSuccess
 } = googleStrategy;
+
 const {
   fbAuthenticate,
   fbRedirect,

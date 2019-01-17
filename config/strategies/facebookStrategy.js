@@ -2,15 +2,16 @@ import passport from 'passport';
 import FacebookStrategy from 'passport-facebook';
 import Users from '../../controllers';
 
-const { processGoogleUser } = Users;
+
+const { processSocialUser } = Users;
 
 export default {
-
   init() {
     passport.use(new FacebookStrategy({
       clientID: process.env.FACEBOOK_ID,
       clientSecret: process.env.FACEBOOK_SECRET,
-      callbackURL: 'http://localhost:3000/api/v1/users/facebook/redirect',
+      callbackURL:
+      `${process.env.FACEBOOK_CALLBACK}/api/v1/users/facebook/redirect`,
       profileFields: ['id', 'emails', 'name']
     },
     (accessToken, refreshToken, profile, done) => {
@@ -28,6 +29,6 @@ export default {
       session: false
     }),
 
-  fbOnAuthSuccess: processGoogleUser,
+  fbOnAuthSuccess: processSocialUser,
 
 };
