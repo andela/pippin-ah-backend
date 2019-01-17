@@ -24,7 +24,7 @@ class Users {
     */
   static async getUser(req, res) {
     const { id } = req.decoded;
-    const user = await User.findOne({ where: { id } });
+    const user = await User.findOne({ where: { id }, include: [{ model: Profile }] });
     return res.json({
       username: user.username,
       email: user.email,
