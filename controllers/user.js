@@ -6,7 +6,7 @@ import models from '../models';
 
 dotenv.config();
 const { iLike, or } = Sequelize.Op;
-const { User } = models;
+const { User, Profile } = models;
 const secret = process.env.SECRET_KEY;
 const time = { expiresIn: '72hrs' };
 const generateToken = payload => jwt.sign(payload, secret, time);
@@ -103,7 +103,8 @@ class Users {
         email,
         password
       });
-
+    const profile = new Profile();
+    await profile.setUser(user);
     const tokenPayload = {
       id: user.id,
       isMentor: user.isMentor
