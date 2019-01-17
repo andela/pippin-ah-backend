@@ -32,6 +32,6 @@ export default {
       session: false
     }),
 
-  onAuthSuccess: processSocialUser
+  googleOnAuthSuccess: processSocialUser
 
 };
