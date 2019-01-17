@@ -124,7 +124,7 @@ class Users {
     * @param {object} req - The request object.
     * @param {object} res - The response object.
     */
-  static async processGoogleUser(req, res) {
+  static async processSocialUser(req, res) {
     const { email } = req.user;
 
     const user = await User
