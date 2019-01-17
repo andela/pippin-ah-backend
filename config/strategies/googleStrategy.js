@@ -2,7 +2,7 @@ import passport from 'passport';
 import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import Users from '../../controllers';
 
-const { processGoogleUser } = Users;
+const { processSocialUser } = Users;
 
 export default {
 
@@ -17,16 +17,16 @@ export default {
     }));
   },
 
-  authenticate: passport.authenticate(
+  googleAuthenticate: passport.authenticate(
     'google', { scope: ['profile', 'email'] }
   ),
 
-  redirect: passport.authenticate('google',
+  googleRedirect: passport.authenticate('google',
     {
       failureRedirect: '/api/v1/users/google',
       session: false
     }),
 
-  onAuthSuccess: processGoogleUser
+  googleOnAuthSuccess: processSocialUser
 
 };
