@@ -1,6 +1,8 @@
 
 import {
-  googleStrategy, facebookStrategy, twitterStrategy,
+  googleStrategy,
+  facebookStrategy,
+  twitterStrategy,
 } from './strategies';
 
 export default () => {
