@@ -136,7 +136,9 @@ class Users {
     * @param {object} res - The response object.
     */
   static async processGoogleUser(req, res) {
-    const { email } = req.user;
+    const {
+      email, lastName, firstName, imageUrl
+    } = req.user;
 
     const user = await User
       .findOne({ where: { email: { [iLike]: email } } });
@@ -155,6 +157,8 @@ class Users {
 
     const newUser = await User
       .create({ email });
+    const profile = new Profile({ lastName, firstName, imageUrl });
+    await newUser.setProfile(profile);
     const tokenPayload = {
       id: newUser.id,
       isMentor: false
