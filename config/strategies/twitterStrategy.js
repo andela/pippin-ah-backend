@@ -33,6 +33,3 @@ export default {
   twitterOnAuthSuccess: processTwitterUser
 
 };
-
-console.log(Strategy);
-console.log(processTwitterUser);
