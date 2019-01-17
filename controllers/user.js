@@ -126,44 +126,7 @@ class Users {
     * @param {object} req - The request object.
     * @param {object} res - The response object.
     */
-  static async processGoogleUser(req, res) {
-    const { email } = req.user;
-
-    const user = await User
-      .findOne({ where: { email: { [iLike]: email } } });
-    if (user) {
-      const tokenPayload = {
-        id: user.id,
-        isMentor: user.isMentor
-      };
-      const token = generateToken(tokenPayload);
-      return res.json({
-        username: user.username,
-        email: user.email,
-        token
-      });
-    }
-
-    const newUser = await User
-      .create({ email });
-    const tokenPayload = {
-      id: newUser.id,
-      isMentor: false
-    };
-    const token = generateToken(tokenPayload);
-    return res.status(201).json({
-      email: newUser.email,
-      token
-    });
-  }
-
-  /**
-    * Represents a controller.
-    * @constructor
-    * @param {object} req - The request object.
-    * @param {object} res - The response object.
-    */
-  static async processTwitterUser(req, res) {
+  static async processSocialUser(req, res) {
     const { email } = req.user;
 
     const user = await User
