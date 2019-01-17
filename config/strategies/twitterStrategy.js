@@ -14,12 +14,8 @@ export default {
       includeEmail: true
     },
     (accessToken, refreshToken, profile, done) => {
-      console.log(process.env.TWITTER_CONSUMER_KEY);
-      console.log('==========', profile);
-      console.log('==========', profile.id);
-      console.log('***==========', profile.email);
       done(null, {
-        email: profile.email
+        email: profile.emails[0].value
       });
     }));
   },
