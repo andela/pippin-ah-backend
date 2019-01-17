@@ -16,7 +16,7 @@ export default {
       done(null, {
         email: profile.emails[0].value,
         firstName: profile.name.givenName,
-        lastName: profile.namefamilyName,
+        lastName: profile.name.familyName,
         imageUrl: profile.photos[0].value
       });
     }));
