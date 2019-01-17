@@ -4,6 +4,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    body: {
+      type: DataTypes.String,
+      allowNull: false
+    },
     likes: {
       type: DataTypes.INTEGER,
       defaultValue: 0
