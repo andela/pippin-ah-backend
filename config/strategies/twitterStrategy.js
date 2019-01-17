@@ -10,7 +10,8 @@ export default {
     passport.use(new Strategy({
       consumerKey: process.env.TWITTER_CONSUMER_KEY,
       consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-      callbackURL: '/api/v1/users/twitter/redirect'
+      callbackURL: '/api/v1/users/twitter/redirect',
+      includeEmail: true
     },
     (accessToken, refreshToken, profile, done) => {
       console.log(process.env.TWITTER_CONSUMER_KEY);
@@ -23,7 +24,9 @@ export default {
     }));
   },
 
-  twitterAuthenticate: passport.authenticate('twitter'),
+  twitterAuthenticate: passport.authenticate(
+    'twitter', { scope: ['include_email =true'] }
+  ),
 
   twitterRedirect: passport.authenticate('twitter',
     {
