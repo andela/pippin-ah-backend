@@ -79,10 +79,11 @@ describe('USER TEST SUITE', () => {
           .patch('/api/v1/profile')
           .set('Authorization', profileToken2)
           .send(newProfile);
+        const errorResult = JSON.parse(response.body.error);
         expect(response.status).to.equal(400);
-        expect(response.body.error)
+        expect(errorResult[0])
           .to.equal(
-            'first Name  must be alphabet');
+            'firstName must be alphabet');
       });
 
 
@@ -98,14 +99,15 @@ describe('USER TEST SUITE', () => {
           .patch('/api/v1/profile')
           .set('Authorization', profileToken2)
           .send(newProfile);
+        const errorResult = JSON.parse(response.body.error);
         expect(response.status).to.equal(400);
-        expect(response.body.error)
+        expect(errorResult[0])
           .to.equal(
-            'last Name  must be alphabet');
+            'lastName must be alphabet');
       });
 
 
-    it('Should not update profile If the firstname is less than 2 characters',
+    it('Should not update profile If the lasttname is less than 2 characters',
       async () => {
         const newProfile = {
           category: 'Science',
