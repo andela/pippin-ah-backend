@@ -27,6 +27,8 @@ export default {
   },
 
   nameValidator(req, res, next) {
+    const nameParams = ['firstName', 'lastName'];
+    const errorArray = [];
     if (Object.keys(req.body).includes('firstName')) {
       if (!validation.isAlpha(req.body.firstName)) {
         const error = new Error('first Name  must be alphabet');
@@ -41,30 +43,23 @@ export default {
         return next(error);
       }
     }
-
-    if (Object.keys(req.body).includes('firstName')
-    || Object.keys(req.body).includes('lastName')) {
-      if (Object.keys(req.body).includes('firstName')) {
-        if (req.body.firstName.trim().length < 2) {
-          const error = new Error(
-            'first Name and Last name must be at least 2 characters long');
-          error.status = 400;
-          return next(error);
+    nameParams.forEach((param) => {
+      if (Object.keys(req.body).includes(param)) {
+        if (req.body[param].trim().length < 2) {
+          errorArray.push(`${param} must be at least 2 characters long`);
         }
-
-        if (Object.keys(req.body).includes('lastName')) {
-          if (req.body.lastName.trim().length < 2) {
-            const error = new Error(
-              'first Name and Last name must be at least 2 characters long');
-            error.status = 400;
-            return next(error);
-          }
-          return next();
-        }
-        return next();
       }
+    });
+
+    if (!errorArray.length) {
+      return next();
     }
-    return next();
+
+    const errorMessage = JSON.stringify(errorArray);
+    const error = new Error(errorMessage);
+    error.status = 400;
+    return next(error);
   }
+
 
 };

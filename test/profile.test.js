@@ -117,10 +117,11 @@ describe('USER TEST SUITE', () => {
           .patch('/api/v1/profile')
           .set('Authorization', profileToken2)
           .send(newProfile);
+        const errorResult = JSON.parse(response.body.error);
         expect(response.status).to.equal(400);
-        expect(response.body.error)
+        expect(errorResult[0])
           .to.equal(
-            'first Name and Last name must be at least 2 characters long');
+            'lastName must be at least 2 characters long');
       });
 
     it('Should not update profile If the firstname is less than 2 characters',
@@ -135,10 +136,11 @@ describe('USER TEST SUITE', () => {
           .patch('/api/v1/profile')
           .set('Authorization', profileToken2)
           .send(newProfile);
+        const errorResult = JSON.parse(response.body.error);
         expect(response.status).to.equal(400);
-        expect(response.body.error)
+        expect(errorResult[0])
           .to.equal(
-            'first Name and Last name must be at least 2 characters long');
+            'firstName must be at least 2 characters long');
       });
 
 
