@@ -16,7 +16,7 @@ class Articles {
       */
   static async createArticle(req, res) {
     const {
-      title, body, description, category
+      title, body, description, category, slug
     } = req.body;
 
     const userId = req.decoded.id;
@@ -26,6 +26,7 @@ class Articles {
         body,
         description,
         category,
+        slug,
         userId,
       });
     return res.status(201).json({

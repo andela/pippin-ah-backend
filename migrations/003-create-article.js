@@ -6,7 +6,15 @@ module.exports = {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    post: {
+    title: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    body: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    description: {
       type: Sequelize.STRING,
       allowNull: false
     },
@@ -26,6 +34,10 @@ module.exports = {
       type: Sequelize.STRING,
       allowNull: false
     },
+    slug: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
     userId: {
       type: Sequelize.INTEGER,
       allowNull: false,
@@ -36,7 +48,6 @@ module.exports = {
         as: 'userId'
       }
     },
-
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE
