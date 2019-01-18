@@ -1,6 +1,6 @@
 import passport from 'passport';
 import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
-import Users from '../../controllers';
+import { Users } from '../../controllers';
 
 const { processSocialUser } = Users;
 
