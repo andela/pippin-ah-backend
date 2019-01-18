@@ -5,11 +5,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     body: {
-      type: DataTypes.String,
+      type: DataTypes.STRING,
       allowNull: false
     },
     description: {
-      type: DataTypes.String,
+      type: DataTypes.STRING,
       allowNull: false
     },
     likes: {

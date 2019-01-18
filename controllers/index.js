@@ -1,2 +1,2 @@
 export { default as Users } from './user';
-export { default as Articles } from './article';
+export { default as Article } from './article';
