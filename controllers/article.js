@@ -17,11 +17,13 @@ class Articles {
       */
   static async createArticle(req, res) {
     const { title, body, description } = req.body;
+    const { id } = req.decoded;
     const article = await Article
       .create({
         title,
         body,
         description,
+        id,
       });
     return res.status(201).json({
       title: article.title,
