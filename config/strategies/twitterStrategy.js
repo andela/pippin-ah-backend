@@ -1,6 +1,6 @@
 import passport from 'passport';
 import Strategy from 'passport-twitter';
-import Users from '../../controllers';
+import { Users } from '../../controllers';
 
 const { processSocialUser } = Users;
 

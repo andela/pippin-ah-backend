@@ -1,6 +1,6 @@
 import passport from 'passport';
 import FacebookStrategy from 'passport-facebook';
-import Users from '../../controllers';
+import { Users } from '../../controllers';
 
 
 const { processSocialUser } = Users;
