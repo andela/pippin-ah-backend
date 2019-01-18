@@ -1,8 +1,7 @@
-import Sequelize from 'sequelize';
 import 'babel-polyfill';
 import models from '../models';
 
-const { User, Article } = models;
+const { Article } = models;
 
 /**
  * @class
@@ -16,19 +15,26 @@ class Articles {
       * @param {object} next -The next middleware
       */
   static async createArticle(req, res) {
-    const { title, body, description } = req.body;
-    const { id } = req.decoded;
+    const {
+      title, body, description, category
+    } = req.body;
+
+    const userId = req.decoded.id;
     const article = await Article
       .create({
         title,
         body,
         description,
-        id,
+        category,
+        userId,
       });
     return res.status(201).json({
       title: article.title,
       body: article.body,
-      description: article.description
+      description: article.description,
+      createdAt: article.createdAt
     });
   }
 }
+
+export default Articles;
