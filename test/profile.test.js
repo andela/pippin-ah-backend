@@ -67,7 +67,7 @@ describe('USER TEST SUITE', () => {
       });
 
 
-    it('Should not update profile if first Name is not alphabetic',
+    it('Should not update if the first name is not all letters',
       async () => {
         const newProfile = {
           category: 'Science',
@@ -82,11 +82,11 @@ describe('USER TEST SUITE', () => {
         expect(response.status).to.equal(400);
         expect(response.body.error)
           .to.equal(
-            'first Name  must be alphabets');
+            'first Name  must be alphabet');
       });
 
 
-    it('Should not update profile if last Name is not alphabetic',
+    it('Should not update if the last name is not all letters',
       async () => {
         const newProfile = {
           category: 'Science',
@@ -101,11 +101,11 @@ describe('USER TEST SUITE', () => {
         expect(response.status).to.equal(400);
         expect(response.body.error)
           .to.equal(
-            'last Name  must be alphabets');
+            'last Name  must be alphabet');
       });
 
 
-    it('Should not update profile if characters less than 2',
+    it('Should not update profile If the firstname is less than 2 characters',
       async () => {
         const newProfile = {
           category: 'Science',
@@ -120,10 +120,10 @@ describe('USER TEST SUITE', () => {
         expect(response.status).to.equal(400);
         expect(response.body.error)
           .to.equal(
-            'first Name and Last name must be atleast 2 chracter long');
+            'first Name and Last name must be at least 2 characters long');
       });
 
-    it('Should not update profile if characters less than 2',
+    it('Should not update profile If the firstname is less than 2 characters',
       async () => {
         const newProfile = {
           category: 'Science',
@@ -138,11 +138,11 @@ describe('USER TEST SUITE', () => {
         expect(response.status).to.equal(400);
         expect(response.body.error)
           .to.equal(
-            'first Name and Last name must be atleast 2 chracter long');
+            'first Name and Last name must be at least 2 characters long');
       });
 
 
-    it('Should not update profile if given an Invalid Category',
+    it('Should not update profile If an invalid category is supplied',
       async () => {
         const newProfile = {
           category: 'Programing',
@@ -156,8 +156,8 @@ describe('USER TEST SUITE', () => {
           .send(newProfile);
         expect(response.status).to.equal(400);
         expect(response.body.error)
-          .to.equal(
-            'Invalid category, Enter Science,Technology...');
+          // eslint-disable-next-line max-len
+          .to.equal('Invalid category. Allowed categories are ["Science","Technology","Engineering","Arts","Mathematic"]');
       });
   });
 });
