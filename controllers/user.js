@@ -1,10 +1,8 @@
 import Sequelize from 'sequelize';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 import 'babel-polyfill';
 import models from '../models';
 
-dotenv.config();
 const { iLike, or } = Sequelize.Op;
 const { User, Profile } = models;
 const secret = process.env.SECRET_KEY;
