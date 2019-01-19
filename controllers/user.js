@@ -18,7 +18,6 @@ class Users {
     * @constructor
     * @param {object} req - The request object.
     * @param {object} res - The response object.
-    * @param {object} next -The next middleware
     */
   static async getUser(req, res) {
     const { id } = req.decoded;
