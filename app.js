@@ -4,12 +4,13 @@ import session from 'express-session';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import initPassport from './config';
-<<<<<<< HEAD
-import { authRoutes, userRoutes, articleRoutes } from './routes';
-=======
-import { authRoutes, userRoutes, profileRoutes } from './routes';
->>>>>>> d7d157867772aaba5369982e26597c3468bcd01b
 import { errorHandler, notFoundRoute } from './middlewares';
+import {
+  authRoutes,
+  userRoutes,
+  articleRoutes,
+  profileRoutes
+} from './routes';
 
 dotenv.config();
 
