@@ -3,18 +3,8 @@ import models from '../models';
 
 const { Article, User, Profile } = models;
 
-/**
- * @class
- */
-class Articles {
-  /**
-      * Represents getUser controller
-      * @constructor
-      * @param {object} req - The request object.
-      * @param {object} res - The response object.
-      * @param {object} next -The next middleware
-      */
-  static async createArticle(req, res) {
+export default {
+  createArticle: async (req, res) => {
     const {
       title, body, description, category, slug
     } = req.body;
@@ -47,6 +37,4 @@ class Articles {
       }
     });
   }
-}
-
-export default Articles;
+};
