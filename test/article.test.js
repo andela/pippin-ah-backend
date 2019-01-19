@@ -77,7 +77,8 @@ describe('ARTICLE TEST SUITE', () => {
           title: 'New Article',
           body: 'Article Body',
           description: 'Article Description',
-          category: 'Article Category'
+          category: 'Article Category',
+          slug: 'new-article'
         };
         chai.request(server)
           .post('/api/v1/articles')
@@ -89,7 +90,6 @@ describe('ARTICLE TEST SUITE', () => {
             expect(res.body.description).to.equal('Article Description');
             done();
           });
-        done();
       });
   });
 });
