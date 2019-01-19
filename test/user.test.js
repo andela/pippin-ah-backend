@@ -407,7 +407,7 @@ describe('USER TEST SUITE', () => {
       async () => {
         const response = await chai.request(server)
           .patch('/api/v1/user');
-        expect(response.status).to.equal(400);
+        expect(response.status).to.equal(401);
         expect(response.body.error).to.equal('No token provided');
       });
 
