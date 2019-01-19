@@ -2,6 +2,7 @@ const tableName = 'Articles';
 
 module.exports = {
   up: (queryInterface, Sequelize) => Promise.all([
+    queryInterface.removeColumn(tableName, 'post'),
 
     queryInterface.addColumn(tableName, 'title', {
       type: Sequelize.STRING,

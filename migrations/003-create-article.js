@@ -6,15 +6,7 @@ module.exports = {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    title: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
-    body: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
-    description: {
+    post: {
       type: Sequelize.STRING,
       allowNull: false
     },
@@ -31,10 +23,6 @@ module.exports = {
       allowNull: true
     },
     category: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
-    slug: {
       type: Sequelize.STRING,
       allowNull: false
     },
