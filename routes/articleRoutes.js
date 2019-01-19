@@ -12,7 +12,8 @@ const {
 
 router.route('/articles')
   .all(verifyToken)
-  .post(expectedParamsValidator,
+  .post(
+    expectedParamsValidator,
     nonEmptyParamsValidator,
     createArticle);
 
