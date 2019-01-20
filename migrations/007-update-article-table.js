@@ -2,7 +2,6 @@ const tableName = 'Articles';
 
 module.exports = {
   up: (queryInterface, Sequelize) => Promise.all([
-    queryInterface.removeColumn(tableName, 'post'),
 
     queryInterface.addColumn(tableName, 'title', {
       type: Sequelize.STRING,
@@ -32,7 +31,6 @@ module.exports = {
 
   /* eslint-disable no-unused-vars */
   down: (queryInterface, Sequelize) => Promise.all([
-    queryInterface.removeColumn(tableName, 'slug'),
-    queryInterface.removeColumn(tableName, 'tags')
+    queryInterface.removeColumn(tableName, 'post')
   ])
 };
