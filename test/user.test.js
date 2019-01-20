@@ -51,6 +51,8 @@ describe('USER TEST SUITE', () => {
           .post('/api/v1/users')
           .send(newUser2)
           .end((err, res) => {
+            expect(res.body.message).to.equal(
+              'An Email has been sent to Your account Email Account');
             expect(res.status).to.equal(201);
             done();
           });

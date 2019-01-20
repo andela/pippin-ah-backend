@@ -4,7 +4,9 @@ import session from 'express-session';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import initPassport from './config';
-import { authRoutes, userRoutes, profileRoutes } from './routes';
+import {
+  authRoutes, userRoutes, profileRoutes
+} from './routes';
 import { errorHandler, notFoundRoute } from './middlewares';
 
 dotenv.config();
@@ -30,6 +32,7 @@ app.use(
     saveUninitialized: false
   })
 );
+
 
 app.use('/api/v1/users', authRoutes);
 app.use('/api/v1', userRoutes);
