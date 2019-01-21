@@ -1,5 +1,5 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('Bookmark', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Bookmarks', {
     id: {
       allowNull: false,
       primaryKey: true,
@@ -35,5 +35,5 @@ module.exports = {
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('Bookmark')
+  down: queryInterface => queryInterface.dropTable('Bookmarks')
 };
