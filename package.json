@@ -14,7 +14,7 @@
     "db:migrate": "sequelize db:migrate",
     "db:migrate:testdb": "NODE_ENV=test npm run db:migrate",
     "undo:migrations": "sequelize db:migrate:undo:all",
-    "undo:migrations:testdb": "NODE_ENV=test npm run undo:migration"
+    "undo:migrations:testdb": "NODE_ENV=test npm run undo:migrations"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",

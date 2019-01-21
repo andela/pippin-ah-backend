@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const Connection = sequelize.define('Connection', {
+  const Follow = sequelize.define('Follow', {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -13,11 +13,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID
     },
   });
-  Connection.associate = (models) => {
-    Connection.belongsTo(models.User, {
+  Follow.associate = (models) => {
+    Follow.belongsTo(models.User, {
       foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
   };
-  return Connection;
+  return Follow;
 };
