@@ -2,12 +2,12 @@ import Sequelize from 'sequelize';
 import models from '../models';
 
 const { iLike } = Sequelize.Op;
-const { User, Connection, Profile } = models;
+const { User, Follow, Profile } = models;
 
 /**
  * @class
  */
-class Follow {
+class Followse {
   /**
    * Represents a controller.
    * @constructor
@@ -24,7 +24,7 @@ class Follow {
         }
       ]
     });
-    await Connection.create({
+    await Follow.create({
       followerId: req.decoded.id,
       userId: userToFollow.id
     });
@@ -46,7 +46,7 @@ class Follow {
    * @param {object} res - The response object.
    */
   static async getFollowing(req, res) {
-    const following = await Connection.findAll({
+    const following = await Follow.findAll({
       where: { followerId: req.decoded.id },
       attributes: [],
       include: [
@@ -82,7 +82,7 @@ class Follow {
    * @param {object} res - The response object.
    */
   static async getFollowers(req, res) {
-    const followers = await Connection.findAll({
+    const followers = await Follow.findAll({
       where: { userId: req.decoded.id },
       attributes: [],
       include: [
@@ -112,4 +112,4 @@ class Follow {
   }
 }
 
-export default Follow;
+export default Followse;
