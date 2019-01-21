@@ -1,5 +1,5 @@
 import express from 'express';
-import Articles from '../controllers/article';
+import { Article } from '../controllers';
 import {
   verifyToken,
   articleValidation,
@@ -8,7 +8,7 @@ import {
 
 const router = express.Router();
 
-const { createArticle } = Articles;
+const { createArticle } = Article;
 const { categoryValidator } = profileValidations;
 const {
   expectedParamsValidator,
