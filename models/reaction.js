@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       allowNull: false
     },
-    ReactionId: {
+    articleId: {
       type: DataTypes.UUID
     },
     likedOrDislikedBy: {
