@@ -1,6 +1,28 @@
 module.exports = (sequelize, DataTypes) => {
   const Article = sequelize.define('Article', {
-    post: {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+      allowNull: false
+    },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    body: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    tags: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    slug: {
       type: DataTypes.STRING,
       allowNull: false
     },

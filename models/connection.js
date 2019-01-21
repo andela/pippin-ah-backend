@@ -1,5 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
   const Connection = sequelize.define('Connection', {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+      allowNull: false
+    },
     userId: {
       type: DataTypes.INTEGER
     },

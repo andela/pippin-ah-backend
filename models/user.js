@@ -2,6 +2,12 @@ import bcrypt from 'bcrypt';
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+      allowNull: false
+    },
     username: {
       type: DataTypes.STRING,
     },
@@ -14,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     isMentor: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    isActive: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },

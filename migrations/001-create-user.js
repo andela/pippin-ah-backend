@@ -4,7 +4,8 @@ module.exports = {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: Sequelize.INTEGER
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.UUIDV4
     },
     username: {
       type: Sequelize.STRING
@@ -19,7 +20,10 @@ module.exports = {
       type: Sequelize.BOOLEAN,
       defaultValue: false
     },
-
+    isActive: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE
