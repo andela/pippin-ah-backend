@@ -21,19 +21,19 @@ module.exports = {
       allowNull: false
     },
     body: {
-      type: Sequelize.STRING,
+      type: Sequelize.TEXT,
       allowNull: false
     },
     description: {
-      type: Sequelize.STRING,
+      type: Sequelize.TEXT,
       allowNull: false
     },
     tags: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.TEXT,
       allowNull: true
     },
     slug: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.STRING,
       allowNull: true
     },
     rating: {
