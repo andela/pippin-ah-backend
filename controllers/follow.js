@@ -29,6 +29,7 @@ export default {
       }
     });
   },
+
   async getFollowing(req, res) {
     const following = await Follow.findAll({
       where: { followerId: req.decoded.id },
@@ -58,6 +59,7 @@ export default {
       count: following.length
     });
   },
+
   async getFollowers(req, res) {
     const followers = await Follow.findAll({
       where: { userId: req.decoded.id },
