@@ -5,7 +5,6 @@ const { iLike } = Sequelize.Op;
 const { User } = models;
 
 export default {
-
   async canFollowUser(req, res, next) {
     const userToFollow = await User.findOne({
       where: { username: { [iLike]: req.params.username } }
