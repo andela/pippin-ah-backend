@@ -28,7 +28,7 @@ describe('ARTICLE TEST SUITE', () => {
           title: 'New Article',
           body: 'Article Content',
           description: 'Article Description',
-          category: 'Article Category'
+          category: 'Science'
         };
         const response = await chai.request(server)
           .post('/api/v1/articles')
@@ -41,7 +41,7 @@ describe('ARTICLE TEST SUITE', () => {
       async () => {
         const articleObject = {
           description: 'Article Description',
-          category: 'Article Category'
+          category: 'Science'
         };
         const response = await chai.request(server)
           .post('/api/v1/articles')
@@ -77,8 +77,7 @@ describe('ARTICLE TEST SUITE', () => {
           title: 'New Article',
           body: 'Article Body',
           description: 'Article Description',
-          category: 'Article Category',
-          slug: 'new-article'
+          category: 'Science'
         };
         chai.request(server)
           .post('/api/v1/articles')
