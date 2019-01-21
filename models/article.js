@@ -26,14 +26,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    likes: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0
-    },
-    dislikes: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0
-    },
     rating: {
       type: DataTypes.INTEGER,
       allowNull: true
@@ -42,9 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     }
-
   });
-
 
   Article.associate = (models) => {
     Article.belongsTo(models.User, {
