@@ -4,17 +4,9 @@ import models from '../models';
 const { iLike } = Sequelize.Op;
 const { User, Follow, Profile } = models;
 
-/**
- * @class
- */
-class Followse {
-  /**
-   * Represents a controller.
-   * @constructor
-   * @param {object} req - The request object.
-   * @param {object} res - The response object.
-   */
-  static async addFollower(req, res) {
+export default {
+
+  async addFollower(req, res) {
     const userToFollow = await User.findOne({
       where: { username: { [iLike]: req.params.username } },
       include: [
@@ -37,15 +29,9 @@ class Followse {
         bio: userToFollow.Profile.bio
       }
     });
-  }
+  },
 
-  /**
-   * Represents a controller.
-   * @constructor
-   * @param {object} req - The request object.
-   * @param {object} res - The response object.
-   */
-  static async getFollowing(req, res) {
+  async getFollowing(req, res) {
     const following = await Follow.findAll({
       where: { followerId: req.decoded.id },
       attributes: [],
@@ -73,15 +59,9 @@ class Followse {
       message: 'Successfully fetched those you follow',
       following
     });
-  }
+  },
 
-  /**
-   * Represents a controller.
-   * @constructor
-   * @param {object} req - The request object.
-   * @param {object} res - The response object.
-   */
-  static async getFollowers(req, res) {
+  async getFollowers(req, res) {
     const followers = await Follow.findAll({
       where: { userId: req.decoded.id },
       attributes: [],
@@ -110,6 +90,4 @@ class Followse {
       followers
     });
   }
-}
-
-export default Followse;
+};
