@@ -3,6 +3,9 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import 'babel-polyfill';
 import models from '../models';
+import { listUsers } from '../middlewares';
+
+const { allUsers } = listUsers;
 
 dotenv.config();
 const { iLike, or } = Sequelize.Op;
@@ -106,6 +109,7 @@ class Users {
     * @param {object} res - The response object.
     */
   static async register(req, res) {
+    console.log('>>>>>>>>>>>>>>>>>>', `${await allUsers()}`);
     const { username, email, password } = req.body;
     const user = await User
       .create({
@@ -114,6 +118,7 @@ class Users {
         password
       });
     const profile = new Profile();
+    await allUsers; // Testing the all users module;
     await profile.setUser(user);
     const tokenPayload = {
       id: user.id,
