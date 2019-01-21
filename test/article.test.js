@@ -10,15 +10,26 @@ describe('ARTICLE TEST SUITE', () => {
   before(async () => {
     await models.sequelize.sync({ force: true });
 
-    const requestObject = {
+    const userRequestObject = {
       username: 'newusername',
       email: 'newaddress@email.com',
       password: 'newpassword'
     };
+    const articleRequestObject = {
+      title: 'Post to test if article already exists',
+      body: 'Article Body',
+      description: 'Article Description',
+      category: 'Science'
+    };
 
     const responseObject = await chai.request(server).post('/api/v1/users')
-      .send(requestObject);
+      .send(userRequestObject);
     accesstoken = responseObject.body.token;
+
+    await chai.request(server)
+      .post('/api/v1/articles')
+      .send(articleRequestObject)
+      .set('Authorization', accesstoken);
   });
 
   describe('Create Article', () => {
@@ -69,6 +80,23 @@ describe('ARTICLE TEST SUITE', () => {
         expect(response.status).to.equal(400);
         expect(errorResult[0]).to.equal('title must not be empty');
         expect(errorResult[1]).to.equal('body must not be empty');
+      });
+
+    it('should not create an article if title alreasy exists',
+      async () => {
+        const articleObject = {
+          title: 'Post to test if article already exists',
+          body: 'Article Body',
+          description: 'Article Description',
+          category: 'Science'
+        };
+        const response = await chai.request(server)
+          .post('/api/v1/articles')
+          .send(articleObject)
+          .set('Authorization', accesstoken);
+        const errorResult = 'User already has an article with this title';
+        expect(response.status).to.equal(400);
+        expect(response.body.error).to.equal(errorResult);
       });
 
     it('should create an article when required fields are provided',
