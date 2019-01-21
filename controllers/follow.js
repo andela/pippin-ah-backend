@@ -5,7 +5,6 @@ const { iLike } = Sequelize.Op;
 const { User, Follow, Profile } = models;
 
 export default {
-
   async addFollower(req, res) {
     const userToFollow = await User.findOne({
       where: { username: { [iLike]: req.params.username } },
@@ -30,7 +29,6 @@ export default {
       }
     });
   },
-
   async getFollowing(req, res) {
     const following = await Follow.findAll({
       where: { followerId: req.decoded.id },
@@ -60,7 +58,6 @@ export default {
       following
     });
   },
-
   async getFollowers(req, res) {
     const followers = await Follow.findAll({
       where: { userId: req.decoded.id },
