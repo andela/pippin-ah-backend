@@ -9,8 +9,7 @@ import {
 const { interestsValidator, categoryValidator, nameValidator } = profileValidations;
 const { updateProfile } = Profile;
 const { canFollowUser } = followValidations;
-const { addFollower, getFollowing, getFollowers } = Follow;
-
+const { followUser, getFollowing, getFollowers } = Follow;
 const router = express.Router();
 
 router.route('/profile')
@@ -23,7 +22,7 @@ router.route('/profile')
 
 router.route('/profiles/:username/follow')
   .all(verifyToken)
-  .post(canFollowUser, addFollower);
+  .post(canFollowUser, followUser);
 
 router.route('/profile/following')
   .get(verifyToken, getFollowing);
