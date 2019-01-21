@@ -54,8 +54,8 @@ export default {
       ]
     });
     return res.json({
-      message: 'Successfully fetched those you follow',
-      following
+      following,
+      count: following.length
     });
   },
   async getFollowers(req, res) {
@@ -83,8 +83,8 @@ export default {
       ]
     });
     return res.json({
-      message: 'Successfully fetched your followers',
-      followers
+      followers,
+      count: followers.length
     });
   }
 };
