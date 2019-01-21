@@ -46,7 +46,7 @@ export default {
 
   async existingTitleValidator(req, res, next) {
     const articleExists = await Article.findOne(
-      { where: { title: req.body.title, userId: req.decoded.id } }
+      { where: { title: req.body.title.trim(), userId: req.decoded.id } }
     );
 
     if (articleExists) {
