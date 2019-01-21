@@ -1,6 +1,24 @@
 module.exports = (sequelize, DataTypes) => {
   const Article = sequelize.define('Article', {
+<<<<<<< HEAD
     title: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    body: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    description: {
+=======
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+      allowNull: false
+    },
+    title: {
+>>>>>>> 163a4fd455af89201b3c6bdf659921e61b3e3ae9
       type: DataTypes.STRING,
       allowNull: false
     },
@@ -12,13 +30,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    likes: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0
+    tags: {
+      type: DataTypes.STRING,
+      allowNull: false
     },
-    dislikes: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0
+    slug: {
+      type: DataTypes.STRING,
+      allowNull: false
     },
     rating: {
       type: DataTypes.INTEGER,
@@ -36,9 +54,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     }
-
   });
-
 
   Article.associate = (models) => {
     Article.belongsTo(models.User, {

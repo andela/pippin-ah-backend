@@ -1,7 +1,13 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('Connections', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Follow', {
+    id: {
+      allowNull: false,
+      primaryKey: true,
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.UUIDV4
+    },
     userId: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.UUID,
       onDelete: 'CASCADE',
       references: {
         model: 'Users',
@@ -9,7 +15,7 @@ module.exports = {
       }
     },
     followerId: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.UUID,
       onDelete: 'CASCADE',
       references: {
         model: 'Users',
@@ -25,5 +31,5 @@ module.exports = {
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('Connections')
+  down: queryInterface => queryInterface.dropTable('Follow')
 };
