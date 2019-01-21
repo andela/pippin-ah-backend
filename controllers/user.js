@@ -151,9 +151,10 @@ class Users {
         token
       });
     }
-
+    const username = email.substring(0, email.indexOf('@')).replace('.', '')
+            + Math.random().toString(36).replace('0.', '');
     const newUser = await User
-      .create({ email });
+      .create({ email, username, isActive: true });
     const profile = new Profile({ lastName, firstName, imageUrl });
     await newUser.setProfile(profile);
     const tokenPayload = {
