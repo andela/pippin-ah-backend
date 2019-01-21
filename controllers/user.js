@@ -3,13 +3,10 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import 'babel-polyfill';
 import models from '../models';
-import { listUsers } from '../middlewares';
-
-const { allUsers } = listUsers;
 
 dotenv.config();
 const { iLike, or } = Sequelize.Op;
-const { User, Profile } = models;
+const { User, Profile, Article } = models;
 const secret = process.env.SECRET_KEY;
 const time = { expiresIn: '72hrs' };
 const generateToken = payload => jwt.sign(payload, secret, time);
@@ -109,7 +106,6 @@ class Users {
     * @param {object} res - The response object.
     */
   static async register(req, res) {
-    console.log('>>>>>>>>>>>>>>>>>>', `${await allUsers()}`);
     const { username, email, password } = req.body;
     const user = await User
       .create({
@@ -118,7 +114,6 @@ class Users {
         password
       });
     const profile = new Profile();
-    await allUsers; // Testing the all users module;
     await profile.setUser(user);
     const tokenPayload = {
       id: user.id,
@@ -172,6 +167,44 @@ class Users {
       email: newUser.email,
       token
     });
+  }
+
+  /**
+    * Represents a controller.
+    * @constructor
+    * @param {object} req - The request object.
+    * @param {object} res - The response object.
+    */
+  static async getAllAuthors(req, res) {
+    const authors = await Article.findAll({
+      include: [{
+        model: User,
+        attributes: ['username'],
+        include: [
+          {
+            model: Profile,
+            attributes: [
+              'firstName',
+              'lastName',
+              'bio',
+              'category',
+              'imageUrl'
+            ]
+          }
+        ]
+      }]
+    });
+
+    const responseArray = authors.map(item => ({
+      author: item.User.username,
+      firstName: item.User.Profile.firstName,
+      lastName: item.User.Profile.lastName,
+      bio: item.User.Profile.bio,
+      category: item.User.Profile.category,
+      imageUrl: item.User.Profile.imageUrl,
+    }));
+
+    return res.send(responseArray);
   }
 }
 
