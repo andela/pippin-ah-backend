@@ -6,16 +6,20 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       allowNull: false
     },
+    userId: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
     title: {
       type: DataTypes.STRING,
       allowNull: false
     },
     body: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false
     },
     description: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false
     },
     tags: {
