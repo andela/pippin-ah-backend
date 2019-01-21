@@ -5,9 +5,9 @@ import { generateSlug } from '../helpers';
 const { Article, User, Profile } = models;
 
 export default {
-  createArticle: async (req, res) => {
+  createArticle: async (req, res, next) => {
     const {
-      title, body, description, category, slug
+      title, body, description, category,
     } = req.body;
 
     const userId = req.decoded.id;
@@ -16,6 +16,17 @@ export default {
         where: { id: userId },
         include: [{ model: Profile }]
       });
+    const articleExists = await Article.findOne(
+      { where: { title, userId } }
+    );
+
+    if (articleExists) {
+      const errorMessage = 'User already created article with this title';
+      const error = new Error(errorMessage);
+      error.status = 400;
+      return next(error);
+    }
+
     const profile = user.Profile;
     const article = await Article
       .create({
