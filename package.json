@@ -5,15 +5,16 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run build && node ./build/server.js",
-    "dev:start": "babel-watch server.js",
+    "dev": "babel-watch server.js",
     "build": "npm run clean && mkdir build && babel ./ --ignore 'node_modules,build,.github,.nyc_output' -s -d build",
     "clean": "rm -rf build",
-    "test": "NODE_ENV=test nyc mocha --require babel-register --exit",
+    "test": "nyc mocha --require babel-register --exit",
+    "test:dev": "NODE_ENV=test npm run test",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "db:migrate": "sequelize db:migrate",
-    "undo:migration": "sequelize db:migrate:undo:all",
-    "db:migrate:testdb": "NODE_ENV=test sequelize db:migrate",
-    "undo:migrations:testdb": "NODE_ENV=test sequelize db:migrate:undo:all"
+    "db:migrate:testdb": "NODE_ENV=test npm run db:migrate",
+    "undo:migrations": "sequelize db:migrate:undo:all",
+    "undo:migrations:testdb": "NODE_ENV=test npm run undo:migration"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
