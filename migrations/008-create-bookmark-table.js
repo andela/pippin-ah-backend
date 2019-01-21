@@ -1,28 +1,30 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('Reports', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Bookmark', {
     id: {
       allowNull: false,
       primaryKey: true,
       type: Sequelize.UUID,
       defaultValue: Sequelize.UUIDV4
     },
-    userId: {
-      type: Sequelize.UUID,
-      allowNull: false,
-    },
     articleId: {
       type: Sequelize.UUID,
-      allowNull: false,
       onDelete: 'CASCADE',
       references: {
-        model: 'Articles',
-        key: 'id',
-        as: 'articleId'
+        model: 'Users',
+        key: 'id'
       }
     },
-    report: {
-      allowNull: false,
-      type: Sequelize.TEXT
+    bookmarkedBy: {
+      type: Sequelize.UUID,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'Users',
+        key: 'id'
+      }
+    },
+    bookmarked: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
     },
     createdAt: {
       allowNull: false,
@@ -33,5 +35,5 @@ module.exports = {
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('Reports')
+  down: queryInterface => queryInterface.dropTable('Bookmark')
 };
