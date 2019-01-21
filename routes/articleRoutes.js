@@ -12,7 +12,8 @@ const { createArticle } = Articles;
 const { categoryValidator } = profileValidations;
 const {
   expectedParamsValidator,
-  nonEmptyParamsValidator
+  nonEmptyParamsValidator,
+  existingTitleValidator
 } = articleValidation;
 
 router.route('/articles')
@@ -20,6 +21,7 @@ router.route('/articles')
   .post(
     expectedParamsValidator,
     nonEmptyParamsValidator,
+    existingTitleValidator,
     categoryValidator,
     createArticle);
 

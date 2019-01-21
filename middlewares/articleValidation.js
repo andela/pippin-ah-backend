@@ -1,3 +1,7 @@
+import sequelize from 'sequelize';
+import models from '../models';
+
+const { Article } = models;
 const requiredParams = ['title', 'body', 'description', 'category'];
 
 export default {
@@ -38,5 +42,19 @@ export default {
     error.status = 400;
     return next(error);
   },
+
+  async existingTitleValidator(req, res, next) {
+    const articleExists = await Article.findOne(
+      { where: { title: req.body.title, userId: req.decoded.id } }
+    );
+
+    if (articleExists) {
+      const errorMessage = 'You already have an article with the same title';
+      const error = new Error(errorMessage);
+      error.status = 400;
+      return next(error);
+    }
+    return next();
+  }
 
 };
