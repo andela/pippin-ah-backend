@@ -2,15 +2,16 @@ import Sequelize from 'sequelize';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import 'babel-polyfill';
-import sgMail from '@sendgrid/mail';
+import sendmail from './emailService';
 import models from '../models';
 
-sgMail.setApiKey(process.env.EMAIL_API_KEY);
 
 dotenv.config();
 const { iLike, or } = Sequelize.Op;
 const { User, Profile } = models;
+const { sendWelcomeMail } = sendmail;
 const secret = process.env.SECRET_KEY;
+
 const time = { expiresIn: '72hrs' };
 const generateToken = payload => jwt.sign(payload, secret, time);
 
@@ -107,30 +108,11 @@ class Users {
     * @constructor
     * @param {object} req - The request object.
     * @param {object} res - The response object.
+    * @param {object} next - The nect middleware.
     */
   static async register(req, res) {
     const { username, email, password } = req.body;
-    sgMail.send({
-      to: email,
-      from: 'noreply@learncode.academy',
-      subject: 'Verification Email from LearnGround',
-      html: `<h2 style=" background-color:blue;color:white;margin-left:30px;
-      padding:15px">
-      Welcome To LearnGround</h2><br>
-       <strong style="color:green;">
-       Your Registration was sucessfull </strong><br>
-       <strong style="color:green;margin-left:30px;">
-       To activate Your account click the link below </strong><br>
-       <em style="color:blue;margin-left:30px;">
-       https://authors-haaven.herokuapp.com/ </em>`
-    }, (error) => {
-      if (error) {
-        // eslint-disable-next-line no-console
-        console.log('Error response received');
-      }
-      // eslint-disable-next-line no-console
-      console.log('A Welcome Email has been sent to your Email account');
-    });
+
     const user = await User
       .create({
         username,
@@ -145,6 +127,7 @@ class Users {
     };
     const token = generateToken(tokenPayload);
 
+    sendWelcomeMail(email, user.id);
     return res.status(201).json({
       message: 'An Email has been sent to Your account Email Account',
       username: user.username,
