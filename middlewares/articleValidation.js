@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-import sequelize from 'sequelize';
 import models from '../models';
 
 const { Article } = models;
