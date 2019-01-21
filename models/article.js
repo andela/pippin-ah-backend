@@ -1,16 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
   const Article = sequelize.define('Article', {
-<<<<<<< HEAD
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    body: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    description: {
-=======
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -18,7 +7,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     title: {
->>>>>>> 163a4fd455af89201b3c6bdf659921e61b3e3ae9
       type: DataTypes.STRING,
       allowNull: false
     },
@@ -31,8 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     tags: {
-      type: DataTypes.STRING,
-      allowNull: false
+      type: DataTypes.STRING
     },
     slug: {
       type: DataTypes.STRING,
@@ -44,14 +31,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     category: {
       type: DataTypes.STRING,
-      allowNull: false
-    },
-    slug: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    userId: {
-      type: DataTypes.INTEGER,
       allowNull: false
     }
   });
