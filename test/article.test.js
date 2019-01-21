@@ -85,7 +85,7 @@ describe('ARTICLE TEST SUITE', () => {
     it('should not create an article if title alreasy exists',
       async () => {
         const articleObject = {
-          title: 'Post to test if article already exists    ',
+          title: '   Post to test if article already exists    ',
           body: 'Article Body',
           description: 'Article Description',
           category: 'Science'
