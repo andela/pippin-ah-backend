@@ -5,7 +5,8 @@ dotenv.config();
 
 
 const Url = process.env.NODE_ENV === 'development'
-  ? 'http://localhost:3000/api/v1/activate/' : process.env.HEROKU_URL;
+  ? `http://localhost:${process.env.PORT}/api/v1/activate/`
+  : process.env.HEROKU_URL;
 
 const subject = 'Verification Email from LearnGround';
 const from = 'noreply@learncode.academy';
