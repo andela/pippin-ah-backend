@@ -10,7 +10,7 @@ const verifyToken = (req, res, next) => {
     let error;
     if (!token) {
       error = new Error('No token provided');
-      error.status = 400;
+      error.status = 401;
       return next(error);
     }
     if (err) {

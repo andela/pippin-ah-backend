@@ -407,10 +407,9 @@ describe('USER TEST SUITE', () => {
       async () => {
         const response = await chai.request(server)
           .patch('/api/v1/user');
-        expect(response.status).to.equal(400);
+        expect(response.status).to.equal(401);
         expect(response.body.error).to.equal('No token provided');
       });
-
 
     it('Should not allow update when token is Invalid',
       async () => {
@@ -420,7 +419,6 @@ describe('USER TEST SUITE', () => {
         expect(response.status).to.equal(401);
         expect(response.body.error).to.equal('Invalid token');
       });
-
 
     it('Should successfully update when correct parameters are provided',
       async () => {
@@ -438,7 +436,6 @@ describe('USER TEST SUITE', () => {
         expect(response.body.email).to.equal('talkto@gmail.com');
         expect(response.body.isMentor).to.equal(false);
       });
-
 
     it('Should not allow update when username already exists',
       async () => {
