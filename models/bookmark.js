@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const Bookmark = sequelize.define('Reaction', {
+  const Bookmark = sequelize.define('Bookmark', {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
