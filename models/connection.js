@@ -7,10 +7,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     userId: {
-      type: DataTypes.INTEGER
+      type: DataTypes.UUID
     },
     followerId: {
-      type: DataTypes.INTEGER
+      type: DataTypes.UUID
     },
   });
   Connection.associate = (models) => {
