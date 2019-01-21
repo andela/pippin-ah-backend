@@ -94,7 +94,7 @@ describe('ARTICLE TEST SUITE', () => {
           .post('/api/v1/articles')
           .send(articleObject)
           .set('Authorization', accesstoken);
-        const errorResult = 'User already has an article with this title';
+        const errorResult = 'You already have an article with the same title';
         expect(response.status).to.equal(400);
         expect(response.body.error).to.equal(errorResult);
       });
