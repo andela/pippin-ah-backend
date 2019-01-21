@@ -35,7 +35,7 @@ describe('FOLLOW TEST SUITE', () => {
   });
 
   describe('Follow Validations', () => {
-    it('Should not be able to follow user when no token is provided',
+    it('Should not permit following a user when no token is provided',
       async () => {
         const response = await chai
           .request(server)
@@ -43,7 +43,7 @@ describe('FOLLOW TEST SUITE', () => {
         expect(response.body.error).to.equal('No token provided');
       });
 
-    it('Should not be able to follow user with invalid token provided',
+    it('Should not permit following a user with invalid token provided',
       async () => {
         const response = await chai
           .request(server)
@@ -52,7 +52,7 @@ describe('FOLLOW TEST SUITE', () => {
         expect(response.body.error).to.equal('Invalid token');
       });
 
-    it('Should not be able to follow a non-existent user',
+    it('Should not permit following a non-existent user',
       async () => {
         const response = await chai
           .request(server)
@@ -62,7 +62,7 @@ describe('FOLLOW TEST SUITE', () => {
           .to.equal('The user provided does not exist');
       });
 
-    it('Should not be able to follow self',
+    it('Should not permit following self',
       async () => {
         const response = await chai
           .request(server)
@@ -71,7 +71,7 @@ describe('FOLLOW TEST SUITE', () => {
         expect(response.body.error).to.equal('You cannot follow yourself');
       });
 
-    it('Should be able to follow another user',
+    it('Should permit following another user with valid parameters',
       async () => {
         const response = await chai
           .request(server)
@@ -80,7 +80,7 @@ describe('FOLLOW TEST SUITE', () => {
         expect(response.body.message).to.equal('You are now following marydoe');
       });
 
-    it('Should not be able to follow the same user twice',
+    it('Should not permit following a user twice',
       async () => {
         const response = await chai
           .request(server)
@@ -91,25 +91,25 @@ describe('FOLLOW TEST SUITE', () => {
       });
   });
 
-  describe('Followers', () => {
-    it('Should not be able to get followers when no token is provided',
+  describe('GET A USER\'S FOLLOWERS LIST: /api/v1/profile/followers', () => {
+    it('Should not permit getting followers when no token is provided',
       async () => {
         const response = await chai
           .request(server)
-          .post('/api/v1/profile/followers');
+          .get('/api/v1/profile/followers');
         expect(response.body.error).to.equal('No token provided');
       });
 
-    it('Should not be able to get followers with invalid token provided',
+    it('Should not permit getting followers with invalid token provided',
       async () => {
         const response = await chai
           .request(server)
-          .post('/api/v1/profile/followers')
+          .get('/api/v1/profile/followers')
           .set('Authorization', 'someInvalidToken');
         expect(response.body.error).to.equal('Invalid token');
       });
 
-    it('Should be able to get followers with valid token',
+    it('Should get follower\'s list with valid token provided',
       async () => {
         const response = await chai
           .request(server)
@@ -121,25 +121,25 @@ describe('FOLLOW TEST SUITE', () => {
       });
   });
 
-  describe('Following', () => {
-    it('Should not be able to get followed users when no token is provided',
+  describe('GET A USER\'S FOLLOWING LIST: /api/v1/profile/following', () => {
+    it('Should not authorize following list request with no token provided',
       async () => {
         const response = await chai
           .request(server)
-          .post('/api/v1/profile/following');
+          .get('/api/v1/profile/following');
         expect(response.body.error).to.equal('No token provided');
       });
 
-    it('Should not be able to get followed users with invalid token provided',
+    it('Should not permit follower\'s list request with invalid token provided',
       async () => {
         const response = await chai
           .request(server)
-          .post('/api/v1/profile/following')
+          .get('/api/v1/profile/following')
           .set('Authorization', 'someInvalidToken');
         expect(response.body.error).to.equal('Invalid token');
       });
 
-    it('Should be able to get followed users with valid token',
+    it('Should get the following list with valid token provided',
       async () => {
         const response = await chai
           .request(server)
