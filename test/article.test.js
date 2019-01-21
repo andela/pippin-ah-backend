@@ -85,7 +85,7 @@ describe('ARTICLE TEST SUITE', () => {
     it('should not create an article if title alreasy exists',
       async () => {
         const articleObject = {
-          title: 'Post to test if article already exists',
+          title: 'Post to test if article already exists    ',
           body: 'Article Body',
           description: 'Article Description',
           category: 'Science'
@@ -97,6 +97,22 @@ describe('ARTICLE TEST SUITE', () => {
         const errorResult = 'You already have an article with the same title';
         expect(response.status).to.equal(400);
         expect(response.body.error).to.equal(errorResult);
+      });
+
+    it('should trim spaces at the begining and ending of the title',
+      async () => {
+        const articleObject = {
+          title: '   Test Space Trimming    ',
+          body: 'Article Body',
+          description: 'Article Description',
+          category: 'Science'
+        };
+        const response = await chai.request(server)
+          .post('/api/v1/articles')
+          .send(articleObject)
+          .set('Authorization', accesstoken);
+        expect(response.status).to.equal(201);
+        expect(response.body.title).to.equal('Test Space Trimming');
       });
 
     it('should create an article when required fields are provided',
