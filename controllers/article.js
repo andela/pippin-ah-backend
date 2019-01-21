@@ -21,7 +21,7 @@ export default {
     );
 
     if (articleExists) {
-      const errorMessage = 'User already created article with this title';
+      const errorMessage = 'User already has an article with this title';
       const error = new Error(errorMessage);
       error.status = 400;
       return next(error);
