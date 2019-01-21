@@ -5,7 +5,7 @@ import { generateSlug } from '../helpers';
 const { Article, User, Profile } = models;
 
 export default {
-  createArticle: async (req, res, next) => {
+  createArticle: async (req, res) => {
     const {
       title, body, description, category,
     } = req.body;
@@ -21,9 +21,9 @@ export default {
     const article = await Article
       .create({
         title,
-        body,
-        description,
-        category,
+        body: body.trim(),
+        description: description.trim(),
+        category: category.trim(),
         slug: generateSlug(title),
         userId,
       });
