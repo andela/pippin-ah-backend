@@ -2,18 +2,18 @@ module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Comments', {
     id: {
       allowNull: false,
-      autoIncrement: true,
       primaryKey: true,
-      type: Sequelize.INTEGER
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.UUIDV4
     },
     comment: {
       type: Sequelize.STRING
     },
     userId: {
-      type: Sequelize.INTEGER
+      type: Sequelize.UUID
     },
     articleId: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.UUID,
       allowNull: false,
       onDelete: 'CASCADE',
       references: {
