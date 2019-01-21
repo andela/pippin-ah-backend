@@ -20,7 +20,7 @@ export default {
     const profile = user.Profile;
     const article = await Article
       .create({
-        title,
+        title: title.trim(),
         body: body.trim(),
         description: description.trim(),
         category: category.trim(),
