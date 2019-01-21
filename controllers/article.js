@@ -1,5 +1,6 @@
 import 'babel-polyfill';
 import models from '../models';
+import { generateSlug } from '../helpers';
 
 const { Article, User, Profile } = models;
 
@@ -22,7 +23,7 @@ export default {
         body,
         description,
         category,
-        slug,
+        slug: generateSlug(title),
         userId,
       });
     return res.status(201).json({
