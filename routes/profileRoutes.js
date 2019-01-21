@@ -26,11 +26,9 @@ router.route('/profiles/:username/follow')
   .post(canFollowUser, addFollower);
 
 router.route('/profile/following')
-  .all(verifyToken)
-  .get(getFollowing);
+  .get(verifyToken, getFollowing);
 
 router.route('/profile/followers')
-  .all(verifyToken)
-  .get(getFollowers);
+  .get(verifyToken, getFollowers);
 
 export default router;
