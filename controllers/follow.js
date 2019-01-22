@@ -11,7 +11,7 @@ export default {
       include: [
         {
           model: Profile,
-          attributes: ['lastName', 'firstName', 'bio', 'category', 'imageUrl']
+          attributes: ['lastName', 'firstName', 'bio', 'interests', 'imageUrl']
         }
       ]
     });
@@ -45,7 +45,7 @@ export default {
                 'lastName',
                 'firstName',
                 'bio',
-                'category',
+                'interests',
                 'imageUrl'
               ]
             }
@@ -61,7 +61,7 @@ export default {
         lastName: item.userDetails.Profile.lastName,
         firstName: item.userDetails.Profile.firstName,
         bio: item.userDetails.Profile.bio,
-        category: item.userDetails.Profile.category,
+        interests: item.userDetails.Profile.interests,
         imageUrl: item.userDetails.Profile.imageUrl
       }
     ));
@@ -87,7 +87,7 @@ export default {
                 'lastName',
                 'firstName',
                 'bio',
-                'category',
+                'interests',
                 'imageUrl'
               ]
             }
@@ -103,7 +103,7 @@ export default {
         lastName: item.followerDetails.Profile.lastName,
         firstName: item.followerDetails.Profile.firstName,
         bio: item.followerDetails.Profile.bio,
-        category: item.followerDetails.Profile.category,
+        interests: item.followerDetails.Profile.interests,
         imageUrl: item.followerDetails.Profile.imageUrl
       }
     ));

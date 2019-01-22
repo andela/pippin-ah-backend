@@ -109,14 +109,14 @@ describe('FOLLOW TEST SUITE', () => {
         expect(response.body.error).to.equal('Invalid token');
       });
 
-    it('Should get follower\'s list with valid token provided',
+    it('Should get followers list with valid token provided',
       async () => {
         const response = await chai
           .request(server)
           .get('/api/v1/profile/followers')
           .set('Authorization', secondUserToken);
         expect(
-          response.body.followers[0].followerDetails.username
+          response.body.followers[0].username
         ).to.equal('johnsolomon');
       });
   });
@@ -146,7 +146,7 @@ describe('FOLLOW TEST SUITE', () => {
           .get('/api/v1/profile/following')
           .set('Authorization', firstUserToken);
         expect(
-          response.body.following[0].userDetails.username
+          response.body.following[0].username
         ).to.equal('marydoe');
       });
   });
