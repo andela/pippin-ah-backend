@@ -186,7 +186,8 @@ class Users {
               'firstName',
               'lastName',
               'bio',
-              'imageUrl'
+              'imageUrl',
+              'interests'
             ]
           }
         ]
@@ -198,7 +199,8 @@ class Users {
       firstName: item.User.Profile.firstName,
       lastName: item.User.Profile.lastName,
       bio: item.User.Profile.bio,
-      imageUrl: item.User.Profile.imageUrl,
+      image: item.User.Profile.imageUrl,
+      interests: item.User.Profile.interests,
     }));
 
     return res.send(responseArray);

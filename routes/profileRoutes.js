@@ -1,18 +1,16 @@
 import express from 'express';
-import Profile from '../controllers/profile';
+import { Profile } from '../controllers';
 import { verifyToken, profileValidations } from '../middlewares';
 
-const { categoryValidator, nameValidator } = profileValidations;
-const {
-  updateProfile
-} = Profile;
+const { interestsValidator, nameValidator } = profileValidations;
+const { updateProfile } = Profile;
 
 const router = express.Router();
 
 router.route('/profile')
-  .all(verifyToken)
   .patch(
-    categoryValidator,
+    verifyToken,
+    interestsValidator,
     nameValidator,
     updateProfile
   );

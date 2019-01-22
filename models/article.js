@@ -34,9 +34,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true
     },
     category: {
-      type: DataTypes.STRING,
-      allowNull: false
-    }
+      type: DataTypes.ENUM,
+      values: ['Science', 'Technology', 'Engineering', 'Arts', 'Mathematics']
+    },
   });
 
   Article.associate = (models) => {

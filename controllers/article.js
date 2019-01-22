@@ -5,7 +5,7 @@ import { generateSlug } from '../helpers';
 const { Article, User, Profile } = models;
 
 export default {
-  createArticle: async (req, res) => {
+  async createArticle(req, res) {
     const {
       title, body, description, category,
     } = req.body;
@@ -27,6 +27,7 @@ export default {
         slug: generateSlug(title),
         userId,
       });
+
     return res.status(201).json({
       title: article.title,
       body: article.body,

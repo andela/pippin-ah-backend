@@ -9,7 +9,7 @@ import {
 const router = express.Router();
 
 const { createArticle } = Article;
-const { categoryValidator } = profileValidations;
+const { interestsValidator } = profileValidations;
 const {
   expectedParamsValidator,
   nonEmptyParamsValidator,
@@ -22,7 +22,8 @@ router.route('/articles')
     expectedParamsValidator,
     nonEmptyParamsValidator,
     existingTitleValidator,
-    categoryValidator,
-    createArticle);
+    interestsValidator,
+    createArticle
+  );
 
 export default router;

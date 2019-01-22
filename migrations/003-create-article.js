@@ -41,8 +41,8 @@ module.exports = {
       allowNull: true
     },
     category: {
-      type: Sequelize.STRING,
-      allowNull: false
+      type: Sequelize.ENUM,
+      values: ['Science', 'Technology', 'Engineering', 'Arts', 'Mathematics']
     },
     createdAt: {
       allowNull: false,
