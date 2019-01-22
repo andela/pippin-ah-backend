@@ -138,7 +138,7 @@ class Users {
           The Den Of Great Ideas
           </h3>
            <strong style=" text-align:justify";margin-left:50%>
-           Your Registration was sucessfull </strong><br>
+           Your Registration was successful </strong><br>
            <strong style=" text-align:justify";margin-left:50%>
            Click <a href="${activationUrl}">Activate</a> to activate 
            your account
