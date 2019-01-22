@@ -4,7 +4,7 @@ import 'babel-polyfill';
 import models from '../models';
 
 const { iLike, or } = Sequelize.Op;
-const { User, Profile } = models;
+const { User, Profile, Article } = models;
 const secret = process.env.SECRET_KEY;
 const time = { expiresIn: '72hrs' };
 const generateToken = payload => jwt.sign(payload, secret, time);
@@ -166,6 +166,42 @@ class Users {
       email: newUser.email,
       token
     });
+  }
+
+  /**
+    * Represents a controller.
+    * @constructor
+    * @param {object} req - The request object.
+    * @param {object} res - The response object.
+    */
+  static async getAllAuthors(req, res) {
+    const authors = await Article.findAll({
+      include: [{
+        model: User,
+        attributes: ['username'],
+        include: [
+          {
+            model: Profile,
+            attributes: [
+              'firstName',
+              'lastName',
+              'bio',
+              'imageUrl'
+            ]
+          }
+        ]
+      }]
+    });
+
+    const responseArray = authors.map(item => ({
+      author: item.User.username,
+      firstName: item.User.Profile.firstName,
+      lastName: item.User.Profile.lastName,
+      bio: item.User.Profile.bio,
+      imageUrl: item.User.Profile.imageUrl,
+    }));
+
+    return res.send(responseArray);
   }
 }
 
