@@ -108,7 +108,6 @@ export default {
       }
     ));
 
-
     return res.json({
       followers: response,
       count: followers.length
