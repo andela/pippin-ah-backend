@@ -1,5 +1,3 @@
-const { categories } = require('../helpers');
-
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Profiles', {
     id: {
@@ -31,7 +29,13 @@ module.exports = {
       }
     },
     interests: {
-      type: Sequelize.ARRAY(Sequelize.ENUM(categories))
+      type: Sequelize.ARRAY(Sequelize.ENUM([
+        'Science',
+        'Technology',
+        'Engineering',
+        'Arts',
+        'Mathematics'
+      ]))
     },
     createdAt: {
       allowNull: false,
