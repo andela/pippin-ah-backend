@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-import 'babel-polyfill';
 import models from '../models';
 
 dotenv.config();

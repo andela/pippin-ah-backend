@@ -1,13 +1,11 @@
 import Sequelize from 'sequelize';
 import jwt from 'jsonwebtoken';
-import 'babel-polyfill';
 import dotenv from 'dotenv';
-import sendmail from '../services';
+import sendEmail from '../services';
 import models from '../models';
 
 dotenv.config();
 const { iLike, or } = Sequelize.Op;
-const { sendEmail } = sendmail;
 const { User, Profile, Article } = models;
 
 const secret = process.env.SECRET_KEY;

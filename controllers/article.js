@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import models from '../models';
 import { generateSlug } from '../helpers';
 
