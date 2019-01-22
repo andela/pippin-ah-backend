@@ -7,7 +7,7 @@ const { updateProfile } = Profile;
 
 const router = express.Router();
 
-router.route('/profile')
+router.route('/')
   .patch(
     verifyToken,
     interestsValidator,
