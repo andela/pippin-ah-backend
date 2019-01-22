@@ -1,11 +1,39 @@
 import Sequelize from 'sequelize';
 import models from '../models';
+import { categories as categoryEnum } from '../helpers';
 
 const { Article } = models;
 const requiredParams = ['title', 'body', 'description', 'category'];
 const { iLike } = Sequelize.Op;
 
 export default {
+  categoryValidator(req, res, next) {
+    let { category } = req.body;
+
+    if (!Array.isArray(category)) {
+      category = [category.toString()];
+    }
+
+    const errorArray = [];
+
+    (category).forEach((item) => {
+      if (!categoryEnum.includes(item)) {
+        errorArray.push(item);
+      }
+    });
+
+    if (!errorArray.length) return next();
+
+    const pluralize = errorArray.length === 1 ? 'category' : 'categories';
+    const stringifiedErrorArray = JSON.stringify(errorArray);
+    const stringifiedAllowedCategories = JSON.stringify(categoryEnum);
+    // eslint-disable-next-line
+      const errorMessage = `Invalid ${pluralize} ${stringifiedErrorArray}. Allowed categories are ${stringifiedAllowedCategories}`;
+    const error = new Error(errorMessage);
+    error.status = 400;
+    return next(error);
+  },
+
   expectedParamsValidator(req, res, next) {
     const errorArray = [];
 

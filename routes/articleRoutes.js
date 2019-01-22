@@ -2,18 +2,17 @@ import express from 'express';
 import { Article } from '../controllers';
 import {
   verifyToken,
-  articleValidation,
-  profileValidations
+  articleValidation
 } from '../middlewares';
 
 const router = express.Router();
 
 const { createArticle } = Article;
-const { interestsValidator } = profileValidations;
 const {
   expectedParamsValidator,
   nonEmptyParamsValidator,
-  existingTitleValidator
+  existingTitleValidator,
+  categoryValidator
 } = articleValidation;
 
 router.route('/articles')
@@ -22,7 +21,7 @@ router.route('/articles')
     expectedParamsValidator,
     nonEmptyParamsValidator,
     existingTitleValidator,
-    interestsValidator,
+    categoryValidator,
     createArticle
   );
 
