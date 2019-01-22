@@ -187,7 +187,6 @@ class Users {
               'firstName',
               'lastName',
               'bio',
-              'category',
               'imageUrl'
             ]
           }
@@ -200,7 +199,6 @@ class Users {
       firstName: item.User.Profile.firstName,
       lastName: item.User.Profile.lastName,
       bio: item.User.Profile.bio,
-      category: item.User.Profile.category,
       imageUrl: item.User.Profile.imageUrl,
     }));
 
