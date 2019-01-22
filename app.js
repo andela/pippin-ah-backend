@@ -1,4 +1,4 @@
-import 'babel-polyfill';
+
 import express from 'express';
 import session from 'express-session';
 import cors from 'cors';
@@ -14,7 +14,6 @@ import {
 
 dotenv.config();
 
-// Create global app object
 const app = express();
 
 initPassport();
@@ -37,9 +36,9 @@ app.use(
 );
 
 app.use('/api/v1/users', authRoutes);
-app.use('/api/v1', userRoutes);
+app.use('/api/v1/user', userRoutes);
+app.use('/api/v1/profile', profileRoutes);
 app.use('/api/v1', articleRoutes);
-app.use('/api/v1', profileRoutes);
 app.use(notFoundRoute);
 app.use(errorHandler);
 

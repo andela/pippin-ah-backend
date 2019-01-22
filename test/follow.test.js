@@ -39,7 +39,7 @@ describe('FOLLOW TEST SUITE', () => {
       async () => {
         const response = await chai
           .request(server)
-          .post('/api/v1/profiles/marydoe/follow');
+          .post('/api/v1/profile/marydoe/follow');
         expect(response.body.error).to.equal('No token provided');
       });
 
@@ -47,7 +47,7 @@ describe('FOLLOW TEST SUITE', () => {
       async () => {
         const response = await chai
           .request(server)
-          .post('/api/v1/profiles/marydoe/follow')
+          .post('/api/v1/profile/marydoe/follow')
           .set('Authorization', 'someInvalidToken');
         expect(response.body.error).to.equal('Invalid token');
       });
@@ -56,7 +56,7 @@ describe('FOLLOW TEST SUITE', () => {
       async () => {
         const response = await chai
           .request(server)
-          .post('/api/v1/profiles/johndoe/follow')
+          .post('/api/v1/profile/johndoe/follow')
           .set('Authorization', firstUserToken);
         expect(response.body.error)
           .to.equal('The user provided does not exist');
@@ -66,7 +66,7 @@ describe('FOLLOW TEST SUITE', () => {
       async () => {
         const response = await chai
           .request(server)
-          .post('/api/v1/profiles/johnsolomon/follow')
+          .post('/api/v1/profile/johnsolomon/follow')
           .set('Authorization', firstUserToken);
         expect(response.body.error).to.equal('You cannot follow yourself');
       });
@@ -75,7 +75,7 @@ describe('FOLLOW TEST SUITE', () => {
       async () => {
         const response = await chai
           .request(server)
-          .post('/api/v1/profiles/marydoe/follow')
+          .post('/api/v1/profile/marydoe/follow')
           .set('Authorization', firstUserToken);
         expect(response.body.message).to.equal('You are now following marydoe');
       });
@@ -84,7 +84,7 @@ describe('FOLLOW TEST SUITE', () => {
       async () => {
         const response = await chai
           .request(server)
-          .post('/api/v1/profiles/marydoe/follow')
+          .post('/api/v1/profile/marydoe/follow')
           .set('Authorization', firstUserToken);
         expect(response.body.error)
           .to.equal('You are already following this user');

@@ -13,12 +13,15 @@ const {
 const {
   getUser,
   updateUser,
+  activateUser,
   getAllAuthors
 } = Users;
 
 const router = express.Router();
+router.route('/activate/:userId')
+  .get(activateUser);
 
-router.route('/user')
+router.route('/')
   .all(verifyToken)
   .get(getUser)
   .patch(
@@ -27,7 +30,8 @@ router.route('/user')
     usernameExistsValidator,
     emailIsValid,
     emailExistsValidator,
-    updateUser);
+    updateUser
+  );
 
 router.route('/authors')
   .get(verifyToken, getAllAuthors);
