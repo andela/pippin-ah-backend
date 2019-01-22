@@ -4,7 +4,6 @@ import session from 'express-session';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import initPassport from './config';
-
 import { errorHandler, notFoundRoute } from './middlewares';
 import {
   authRoutes,

@@ -7,10 +7,10 @@ import models from '../models';
 
 dotenv.config();
 const { iLike, or } = Sequelize.Op;
-const { sendWelcomeMail } = sendmail;
+const { sendEmail } = sendmail;
 const { User, Profile, Article } = models;
-const secret = process.env.SECRET_KEY;
 
+const secret = process.env.SECRET_KEY;
 const time = { expiresIn: '72hrs' };
 const generateToken = payload => jwt.sign(payload, secret, time);
 
@@ -144,7 +144,7 @@ class Users {
            your account
            </strong><br>`;
 
-    sendWelcomeMail({ email, subject, html });
+    sendEmail({ email, subject, html });
     return res.status(201).json({
       message: 'An email has been sent to your email address',
       username: user.username,
@@ -206,7 +206,7 @@ class Users {
     await user.update({ isActive: true });
     return res.json({
       message:
-      'your account has been activated. Login to continue using learnGround'
+      'Your account has been activated. Login to continue using learnground'
     });
   }
 
