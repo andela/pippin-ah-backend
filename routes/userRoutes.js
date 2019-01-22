@@ -13,9 +13,12 @@ const {
 const {
   getUser,
   updateUser,
+  activateUser
 } = Users;
 
 const router = express.Router();
+router.route('/:userId')
+  .get(activateUser);
 
 router.route('/user')
   .all(verifyToken)

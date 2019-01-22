@@ -52,7 +52,7 @@ describe('USER TEST SUITE', () => {
           .send(newUser2)
           .end((err, res) => {
             expect(res.body.message).to.equal(
-              'An Email has been sent to Your account Email Account');
+              'An email has been sent to your email address');
             expect(res.status).to.equal(201);
             done();
           });

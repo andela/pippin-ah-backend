@@ -2,7 +2,7 @@ import Sequelize from 'sequelize';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import 'babel-polyfill';
-import sendmail from './emailService';
+import sendmail from '../services/emailService';
 import models from '../models';
 
 
@@ -14,6 +14,12 @@ const secret = process.env.SECRET_KEY;
 
 const time = { expiresIn: '72hrs' };
 const generateToken = payload => jwt.sign(payload, secret, time);
+
+const subject = 'Verification Email from LearnGround';
+const from = 'learnground2019@gmail.com';
+const Url = process.env.NODE_ENV === 'development'
+  ? `http://localhost:${process.env.PORT}/api/v1/activate/`
+  : process.env.HEROKU_URL;
 
 /**
  * @class
@@ -126,10 +132,19 @@ class Users {
       isMentor: user.isMentor
     };
     const token = generateToken(tokenPayload);
+    const activate = `${Url}${user.id}`;
+    const html = `<h2 style=" text-align:justify";margin-left:30px;
+          padding:15px">
+          Welcome To LearnGround The Den of Great Ideas </h2><br>
+           <strong>
+           Your Registration was sucessfull </strong><br>
+           <strong>
+           Click <a href="${activate}">Activate</a> to activate your account
+           </strong><br>`;
 
-    sendWelcomeMail(email, user.id);
+    sendWelcomeMail(email, from, subject, html);
     return res.status(201).json({
-      message: 'An Email has been sent to Your account Email Account',
+      message: 'An email has been sent to your email address',
       username: user.username,
       email: user.email,
       token
@@ -174,6 +189,25 @@ class Users {
     return res.status(201).json({
       email: newUser.email,
       token
+    });
+  }
+
+  /**
+    * Represents a controller.
+    * @constructor
+    * @param {object} req - The request object.
+    * @param {object} res - The response object.
+    */
+  static async activateUser(req, res) {
+    const user = await User.findOne({
+      where: { id: req.params.userId }
+    });
+    const userAcctivation = await user
+      .update({
+        isActive: true
+      });
+    return res.json({
+      message: `${userAcctivation.username} your account has been activated`
     });
   }
 }

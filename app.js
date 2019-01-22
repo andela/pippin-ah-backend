@@ -3,15 +3,13 @@ import express from 'express';
 import session from 'express-session';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import sgMail from '@sendgrid/mail';
 import initPassport from './config';
 import {
-  authRoutes, userRoutes, profileRoutes, activateRoute
+  authRoutes,
+  userRoutes,
+  profileRoutes
 } from './routes';
 import { errorHandler, notFoundRoute } from './middlewares';
-
-
-sgMail.setApiKey(process.env.EMAIL_API_KEY);
 
 dotenv.config();
 
@@ -39,8 +37,8 @@ app.use(
 
 
 app.use('/api/v1/users', authRoutes);
-app.use('/api/v1/activate', activateRoute);
 app.use('/api/v1', userRoutes);
+app.use('/api/v1/activate', userRoutes);
 app.use('/api/v1', profileRoutes);
 app.use(notFoundRoute);
 app.use(errorHandler);
