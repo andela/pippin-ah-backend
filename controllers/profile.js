@@ -20,21 +20,32 @@ class Profiles {
     const profile = await Profile.findOne({
       where: { userId: req.decoded.id }
     });
-    const userProfile = await profile
+
+    const {
+      firstName,
+      lastName,
+      bio,
+      imageUrl,
+      interests = []
+    } = req.body;
+
+    const normalizedInterests = [...new Set(profile.interests.concat(interests))];
+
+    const responseData = await profile
       .update({
-        firstName: req.body.firstName || profile.firstName,
-        lastName: req.body.lastName || profile.lastName,
-        bio: req.body.bio || profile.bio,
-        interests: req.body.interests || profile.interests,
-        imageUrl: req.body.imageUrl || profile.imageUrl
+        firstName: firstName || profile.firstName,
+        lastName: lastName || profile.lastName,
+        bio: bio || profile.bio,
+        interests: normalizedInterests || profile.interests,
+        imageUrl: imageUrl || profile.imageUrl
       });
     return res.json({
       message: 'Profile updated successfully',
-      firstName: userProfile.firstName,
-      lastName: userProfile.lastName,
-      bio: userProfile.bio,
-      interests: userProfile.interests,
-      imageURL: userProfile.imageURL
+      firstName: responseData.firstName,
+      lastName: responseData.lastName,
+      bio: responseData.bio,
+      interests: responseData.interests,
+      imageURL: responseData.imageURL
     });
   }
 }

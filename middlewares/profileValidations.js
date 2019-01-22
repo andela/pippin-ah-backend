@@ -3,10 +3,16 @@ import { categories as interestsEnum } from '../helpers';
 
 export default {
   interestsValidator(req, res, next) {
+    let { interests } = req.body;
+
+    if (!Array.isArray(interests)) {
+      interests = [interests.toString()];
+    }
+
     if (Object.keys(req.body).includes('interests')) {
       const errorArray = [];
 
-      (req.body.interests).forEach((item) => {
+      (interests).forEach((item) => {
         if (!interestsEnum.includes(item)) {
           errorArray.push(item);
         }
