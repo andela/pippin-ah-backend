@@ -30,7 +30,6 @@ router.route('/user')
     updateUser);
 
 router.route('/authors')
-  .all(verifyToken)
-  .get(getAllAuthors);
+  .get(verifyToken, getAllAuthors);
 
 export default router;
