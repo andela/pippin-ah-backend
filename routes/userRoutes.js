@@ -17,7 +17,7 @@ const {
 } = Users;
 
 const router = express.Router();
-router.route('/activation/:userId')
+router.route('/activate/:userId')
   .get(activateUser);
 
 router.route('/')
