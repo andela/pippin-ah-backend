@@ -14,7 +14,6 @@ import {
 
 dotenv.config();
 
-// Create global app object
 const app = express();
 
 initPassport();
