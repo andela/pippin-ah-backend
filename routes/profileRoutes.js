@@ -6,7 +6,7 @@ import {
   followValidations
 } from '../middlewares';
 
-const { interestsValidator, categoryValidator, nameValidator } = profileValidations;
+const { interestsValidator, nameValidator } = profileValidations;
 const { updateProfile } = Profile;
 const { canFollowUser } = followValidations;
 const { followUser, getFollowing, getFollowers } = Follow;
