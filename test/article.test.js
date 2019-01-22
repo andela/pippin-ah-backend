@@ -118,7 +118,7 @@ describe('ARTICLE TEST SUITE', () => {
     it('should not create an article if category is invalid',
       async () => {
         const articleObject = {
-          title: '   Test Space Trimming    ',
+          title: ' New Article Title    ',
           body: 'Article Body',
           description: 'Article Description',
           category: 'Travel'
@@ -129,6 +129,7 @@ describe('ARTICLE TEST SUITE', () => {
           .send(articleObject)
           .set('Authorization', accesstoken);
         expect(response.status).to.equal(400);
+        expect(response.body.error.split(' ')[2]).to.equal('[Travel].');
       });
 
     it('should create an article when required fields are provided',

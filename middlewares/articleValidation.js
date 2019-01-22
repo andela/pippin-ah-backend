@@ -8,30 +8,18 @@ const { iLike } = Sequelize.Op;
 
 export default {
   categoryValidator(req, res, next) {
-    let { category } = req.body;
+    const { category } = req.body;
 
-    if (!Array.isArray(category)) {
-      category = [category.toString()];
+    if (!categoryEnum.includes(category)) {
+      const stringifiedAllowedCategories = JSON.stringify(categoryEnum);
+      // eslint-disable-next-line
+      const errorMessage = `Invalid category [${category}]. Allowed categories are ${stringifiedAllowedCategories}`;
+      const error = new Error(errorMessage);
+      error.status = 400;
+      return next(error);
     }
 
-    const errorArray = [];
-
-    (category).forEach((item) => {
-      if (!categoryEnum.includes(item)) {
-        errorArray.push(item);
-      }
-    });
-
-    if (!errorArray.length) return next();
-
-    const pluralize = errorArray.length === 1 ? 'category' : 'categories';
-    const stringifiedErrorArray = JSON.stringify(errorArray);
-    const stringifiedAllowedCategories = JSON.stringify(categoryEnum);
-    // eslint-disable-next-line
-      const errorMessage = `Invalid ${pluralize} ${stringifiedErrorArray}. Allowed categories are ${stringifiedAllowedCategories}`;
-    const error = new Error(errorMessage);
-    error.status = 400;
-    return next(error);
+    return next();
   },
 
   expectedParamsValidator(req, res, next) {
