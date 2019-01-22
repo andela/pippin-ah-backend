@@ -29,7 +29,14 @@ class Profiles {
       interests = []
     } = req.body;
 
-    const normalizedInterests = [...new Set(profile.interests.concat(interests))];
+    let normalizedInterests;
+
+    normalizedInterests = interests;
+    if (profile.interests) {
+      normalizedInterests = [
+        ...new Set(profile.interests.concat(interests))
+      ];
+    }
 
     const responseData = await profile
       .update({
