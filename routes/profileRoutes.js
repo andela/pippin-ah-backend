@@ -9,9 +9,9 @@ const {
 
 const router = express.Router();
 
-router.route('/profile')
-  .all(verifyToken)
+router.route('/')
   .patch(
+    verifyToken,
     categoryValidator,
     nameValidator,
     updateProfile

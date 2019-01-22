@@ -35,11 +35,9 @@ app.use(
   })
 );
 
-
 app.use('/api/v1/users', authRoutes);
-app.use('/api/v1', userRoutes);
-app.use('/api/v1/activate', userRoutes);
-app.use('/api/v1', profileRoutes);
+app.use('/api/v1/user', userRoutes);
+app.use('/api/v1/profile', profileRoutes);
 app.use(notFoundRoute);
 app.use(errorHandler);
 

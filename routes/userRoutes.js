@@ -17,10 +17,10 @@ const {
 } = Users;
 
 const router = express.Router();
-router.route('/:userId')
+router.route('/activation/:userId')
   .get(activateUser);
 
-router.route('/user')
+router.route('/')
   .all(verifyToken)
   .get(getUser)
   .patch(
@@ -29,6 +29,7 @@ router.route('/user')
     usernameExistsValidator,
     emailIsValid,
     emailExistsValidator,
-    updateUser);
+    updateUser
+  );
 
 export default router;

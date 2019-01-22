@@ -2,7 +2,7 @@ import Sequelize from 'sequelize';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import 'babel-polyfill';
-import sendmail from '../services/emailService';
+import sendmail from '../services';
 import models from '../models';
 
 
@@ -16,9 +16,8 @@ const time = { expiresIn: '72hrs' };
 const generateToken = payload => jwt.sign(payload, secret, time);
 
 const subject = 'Verification Email from LearnGround';
-const from = 'learnground2019@gmail.com';
-const Url = process.env.NODE_ENV === 'development'
-  ? `http://localhost:${process.env.PORT}/api/v1/activate/`
+const userActivationUrl = process.env.NODE_ENV === 'development'
+  ? `http://localhost:${process.env.PORT}/api/v1/user/activate/`
   : process.env.HEROKU_URL;
 
 /**
@@ -77,7 +76,6 @@ class Users {
     return res.send(responseObject);
   }
 
-
   /**
     * Represents a controller.
     * @constructor
@@ -132,17 +130,22 @@ class Users {
       isMentor: user.isMentor
     };
     const token = generateToken(tokenPayload);
-    const activate = `${Url}${user.id}`;
-    const html = `<h2 style=" text-align:justify";margin-left:30px;
+
+    const activationUrl = `${userActivationUrl}${user.id}`;
+    const html = `<h1 style=" text-align:justify";margin-left:50%;
           padding:15px">
-          Welcome To LearnGround The Den of Great Ideas </h2><br>
-           <strong>
+          Welcome To LearnGround </h1><br>
+          <h3 style=" text-align:justify";margin-left:50%>
+          The Den Of Great Ideas
+          </h3>
+           <strong style=" text-align:justify";margin-left:50%>
            Your Registration was sucessfull </strong><br>
-           <strong>
-           Click <a href="${activate}">Activate</a> to activate your account
+           <strong style=" text-align:justify";margin-left:50%>
+           Click <a href="${activationUrl}">Activate</a> to activate 
+           your account
            </strong><br>`;
 
-    sendWelcomeMail(email, from, subject, html);
+    sendWelcomeMail(email, subject, html);
     return res.status(201).json({
       message: 'An email has been sent to your email address',
       username: user.username,
@@ -199,15 +202,11 @@ class Users {
     * @param {object} res - The response object.
     */
   static async activateUser(req, res) {
-    const user = await User.findOne({
-      where: { id: req.params.userId }
-    });
-    const userAcctivation = await user
-      .update({
-        isActive: true
-      });
+    const user = await User.findOne({ where: { id: req.params.userId } });
+    await user.update({ isActive: true });
     return res.json({
-      message: `${userAcctivation.username} your account has been activated`
+      message:
+      'your account has been activated. Login to continue using learnGround'
     });
   }
 }
