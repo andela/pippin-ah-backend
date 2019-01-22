@@ -25,7 +25,7 @@ class Profiles {
         firstName: req.body.firstName || profile.firstName,
         lastName: req.body.lastName || profile.lastName,
         bio: req.body.bio || profile.bio,
-        category: req.body.category || profile.category,
+        interests: req.body.interests || profile.interests,
         imageUrl: req.body.imageUrl || profile.imageUrl
       });
     return res.json({
@@ -33,7 +33,7 @@ class Profiles {
       firstName: userProfile.firstName,
       lastName: userProfile.lastName,
       bio: userProfile.bio,
-      category: userProfile.category,
+      interests: userProfile.interests,
       imageURL: userProfile.imageURL
     });
   }
