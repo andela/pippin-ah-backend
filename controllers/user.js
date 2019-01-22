@@ -1,13 +1,21 @@
 import Sequelize from 'sequelize';
 import jwt from 'jsonwebtoken';
-import 'babel-polyfill';
+import dotenv from 'dotenv';
+import sendEmail from '../services';
 import models from '../models';
 
+dotenv.config();
 const { iLike, or } = Sequelize.Op;
 const { User, Profile, Article } = models;
+
 const secret = process.env.SECRET_KEY;
 const time = { expiresIn: '72hrs' };
 const generateToken = payload => jwt.sign(payload, secret, time);
+
+const subject = 'Welcome to Learnground';
+const userActivationUrl = process.env.NODE_ENV === 'development'
+  ? `http://localhost:${process.env.PORT}/api/v1/user/activate/`
+  : process.env.HEROKU_URL;
 
 /**
  * @class
@@ -65,7 +73,6 @@ class Users {
     return res.send(responseObject);
   }
 
-
   /**
     * Represents a controller.
     * @constructor
@@ -105,6 +112,7 @@ class Users {
     */
   static async register(req, res) {
     const { username, email, password } = req.body;
+
     const user = await User
       .create({
         username,
@@ -119,7 +127,23 @@ class Users {
     };
     const token = generateToken(tokenPayload);
 
+    const activationUrl = `${userActivationUrl}${user.id}`;
+    const html = `<h1 style=" text-align:justify";margin-left:50%;
+          padding:15px">
+          Welcome To LearnGround </h1><br>
+          <h3 style=" text-align:justify";margin-left:50%>
+          The Den Of Great Ideas
+          </h3>
+           <strong style=" text-align:justify";margin-left:50%>
+           Your Registration was successful </strong><br>
+           <strong style=" text-align:justify";margin-left:50%>
+           Click <a href="${activationUrl}">Activate</a> to activate 
+           your account
+           </strong><br>`;
+
+    sendEmail({ email, subject, html });
     return res.status(201).json({
+      message: 'An email has been sent to your email address',
       username: user.username,
       email: user.email,
       token
@@ -165,6 +189,21 @@ class Users {
     return res.status(201).json({
       email: newUser.email,
       token
+    });
+  }
+
+  /**
+    * Represents a controller.
+    * @constructor
+    * @param {object} req - The request object.
+    * @param {object} res - The response object.
+    */
+  static async activateUser(req, res) {
+    const user = await User.findOne({ where: { id: req.params.userId } });
+    await user.update({ isActive: true });
+    return res.json({
+      message:
+      'Your account has been activated. Login to continue using learnground'
     });
   }
 

@@ -12,7 +12,7 @@ const { canFollowUser } = followValidations;
 const { followUser, getFollowing, getFollowers } = Follow;
 const router = express.Router();
 
-router.route('/profile')
+router.route('/')
   .patch(
     verifyToken,
     interestsValidator,
@@ -20,14 +20,14 @@ router.route('/profile')
     updateProfile
   );
 
-router.route('/profiles/:username/follow')
+router.route('/:username/follow')
   .all(verifyToken)
   .post(canFollowUser, followUser);
 
-router.route('/profile/following')
+router.route('/following')
   .get(verifyToken, getFollowing);
 
-router.route('/profile/followers')
+router.route('/followers')
   .get(verifyToken, getFollowers);
 
 export default router;
