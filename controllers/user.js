@@ -111,7 +111,6 @@ class Users {
     * @constructor
     * @param {object} req - The request object.
     * @param {object} res - The response object.
-    * @param {object} next - The nect middleware.
     */
   static async register(req, res) {
     const { username, email, password } = req.body;
