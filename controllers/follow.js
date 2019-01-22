@@ -54,8 +54,20 @@ export default {
         }
       ]
     });
+
+    const response = following.map(item => (
+      {
+        username: item.userDetails.username,
+        lastName: item.userDetails.Profile.lastName,
+        firstName: item.userDetails.Profile.firstName,
+        bio: item.userDetails.Profile.bio,
+        category: item.userDetails.Profile.category,
+        imageUrl: item.userDetails.Profile.imageUrl
+      }
+    ));
+
     return res.json({
-      following,
+      following: response,
       count: following.length
     });
   },
@@ -84,8 +96,21 @@ export default {
         },
       ]
     });
+
+    const response = followers.map(item => (
+      {
+        username: item.followerDetails.username,
+        lastName: item.followerDetails.Profile.lastName,
+        firstName: item.followerDetails.Profile.firstName,
+        bio: item.followerDetails.Profile.bio,
+        category: item.followerDetails.Profile.category,
+        imageUrl: item.followerDetails.Profile.imageUrl
+      }
+    ));
+
+
     return res.json({
-      followers,
+      followers: response,
       count: followers.length
     });
   }
