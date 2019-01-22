@@ -1,15 +1,14 @@
 import Sequelize from 'sequelize';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 import 'babel-polyfill';
+import dotenv from 'dotenv';
 import sendmail from '../services';
 import models from '../models';
 
-
 dotenv.config();
 const { iLike, or } = Sequelize.Op;
-const { User, Profile } = models;
 const { sendWelcomeMail } = sendmail;
+const { User, Profile, Article } = models;
 const secret = process.env.SECRET_KEY;
 
 const time = { expiresIn: '72hrs' };
@@ -179,9 +178,10 @@ class Users {
         token
       });
     }
-
+    const username = email.substring(0, email.indexOf('@')).replace('.', '')
+            + Math.random().toString(36).replace('0.', '');
     const newUser = await User
-      .create({ email });
+      .create({ email, username, isActive: true });
     const profile = new Profile({ lastName, firstName, imageUrl });
     await newUser.setProfile(profile);
     const tokenPayload = {
@@ -208,6 +208,44 @@ class Users {
       message:
       'your account has been activated. Login to continue using learnGround'
     });
+  }
+
+  /**
+    * Represents a controller.
+    * @constructor
+    * @param {object} req - The request object.
+    * @param {object} res - The response object.
+    */
+  static async getAllAuthors(req, res) {
+    const authors = await Article.findAll({
+      include: [{
+        model: User,
+        attributes: ['username'],
+        include: [
+          {
+            model: Profile,
+            attributes: [
+              'firstName',
+              'lastName',
+              'bio',
+              'imageUrl',
+              'interests'
+            ]
+          }
+        ]
+      }]
+    });
+
+    const responseArray = authors.map(item => ({
+      author: item.User.username,
+      firstName: item.User.Profile.firstName,
+      lastName: item.User.Profile.lastName,
+      bio: item.User.Profile.bio,
+      image: item.User.Profile.imageUrl,
+      interests: item.User.Profile.interests,
+    }));
+
+    return res.send(responseArray);
   }
 }
 

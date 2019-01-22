@@ -1,4 +1,6 @@
-module.exports = (sequelize, DataTypes) => {
+import { categories as categoriesEnum } from '../helpers';
+
+export default (sequelize, DataTypes) => {
   const Profile = sequelize.define('Profile', {
     id: {
       type: DataTypes.UUID,
@@ -18,11 +20,9 @@ module.exports = (sequelize, DataTypes) => {
     bio: {
       type: DataTypes.TEXT
     },
-    category: {
-      type: DataTypes.ENUM,
-      values: ['Science', 'Technology', 'Engineering', 'Arts', 'Mathematics']
+    interests: {
+      type: DataTypes.ARRAY(DataTypes.ENUM(categoriesEnum))
     },
-
   });
   Profile.associate = (models) => {
     Profile.belongsTo(models.User, {

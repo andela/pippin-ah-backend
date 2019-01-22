@@ -1,27 +1,27 @@
-
 import validation from 'validator';
-
-const Categories = [
-  'Science',
-  'Technology',
-  'Engineering',
-  'Arts',
-  'Mathematic'
-];
+import { categories as interestsEnum } from '../helpers';
 
 export default {
+  interestsValidator(req, res, next) {
+    if (Object.keys(req.body).includes('interests')) {
+      const errorArray = [];
 
-  categoryValidator(req, res, next) {
-    if (Object.keys(req.body).includes('category')) {
-      if (!Categories.includes(req.body.category)) {
-        const allowedList = JSON.stringify(Categories);
-        // eslint-disable-next-line max-len
-        const errorMessage = `Invalid category. Allowed categories are ${allowedList}`;
-        const error = new Error(errorMessage);
-        error.status = 400;
-        return next(error);
-      }
-      return next();
+      (req.body.interests).forEach((item) => {
+        if (!interestsEnum.includes(item)) {
+          errorArray.push(item);
+        }
+      });
+
+      if (!errorArray.length) return next();
+
+      const pluralize = errorArray.length === 1 ? 'category' : 'categories';
+      const stringifiedErrorArray = JSON.stringify(errorArray);
+      const stringifiedAllowedCategories = JSON.stringify(interestsEnum);
+      // eslint-disable-next-line
+      const errorMessage = `Invalid ${pluralize} ${stringifiedErrorArray}. Allowed categories are ${stringifiedAllowedCategories}`;
+      const error = new Error(errorMessage);
+      error.status = 400;
+      return next(error);
     }
     return next();
   },
@@ -37,7 +37,6 @@ export default {
         }
       }
     });
-
 
     if (errorArray.length) {
       const errorMessage = JSON.stringify(errorArray);
@@ -63,6 +62,4 @@ export default {
     error.status = 400;
     return next(error);
   }
-
-
 };

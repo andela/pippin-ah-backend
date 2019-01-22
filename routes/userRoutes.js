@@ -13,7 +13,8 @@ const {
 const {
   getUser,
   updateUser,
-  activateUser
+  activateUser,
+  getAllAuthors
 } = Users;
 
 const router = express.Router();
@@ -31,5 +32,8 @@ router.route('/')
     emailExistsValidator,
     updateUser
   );
+
+router.route('/authors')
+  .get(verifyToken, getAllAuthors);
 
 export default router;

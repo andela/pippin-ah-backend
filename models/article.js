@@ -6,21 +6,24 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       allowNull: false
     },
+    userId: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
     title: {
       type: DataTypes.STRING,
       allowNull: false
     },
     body: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false
     },
     description: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false
     },
     tags: {
-      type: DataTypes.STRING,
-      allowNull: false
+      type: DataTypes.STRING
     },
     slug: {
       type: DataTypes.STRING,
@@ -31,9 +34,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true
     },
     category: {
-      type: DataTypes.STRING,
-      allowNull: false
-    }
+      type: DataTypes.ENUM,
+      values: ['Science', 'Technology', 'Engineering', 'Arts', 'Mathematics']
+    },
   });
 
   Article.associate = (models) => {

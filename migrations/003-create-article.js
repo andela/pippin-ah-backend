@@ -6,26 +6,6 @@ module.exports = {
       type: Sequelize.UUID,
       defaultValue: Sequelize.UUIDV4
     },
-    post: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
-    likes: {
-      type: Sequelize.INTEGER,
-      defaultValue: 0
-    },
-    dislikes: {
-      type: Sequelize.INTEGER,
-      defaultValue: 0
-    },
-    rating: {
-      type: Sequelize.INTEGER,
-      allowNull: true
-    },
-    category: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
     userId: {
       type: Sequelize.UUID,
       allowNull: false,
@@ -36,7 +16,34 @@ module.exports = {
         as: 'userId'
       }
     },
-
+    title: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    body: {
+      type: Sequelize.TEXT,
+      allowNull: false
+    },
+    description: {
+      type: Sequelize.TEXT,
+      allowNull: false
+    },
+    tags: {
+      type: Sequelize.TEXT,
+      allowNull: true
+    },
+    slug: {
+      type: Sequelize.STRING,
+      allowNull: true
+    },
+    rating: {
+      type: Sequelize.INTEGER,
+      allowNull: true
+    },
+    category: {
+      type: Sequelize.ENUM,
+      values: ['Science', 'Technology', 'Engineering', 'Arts', 'Mathematics']
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE

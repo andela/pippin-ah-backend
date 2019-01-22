@@ -4,12 +4,14 @@ import session from 'express-session';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import initPassport from './config';
+
+import { errorHandler, notFoundRoute } from './middlewares';
 import {
   authRoutes,
   userRoutes,
+  articleRoutes,
   profileRoutes
 } from './routes';
-import { errorHandler, notFoundRoute } from './middlewares';
 
 dotenv.config();
 
@@ -38,6 +40,7 @@ app.use(
 app.use('/api/v1/users', authRoutes);
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/profile', profileRoutes);
+app.use('/api/v1', articleRoutes);
 app.use(notFoundRoute);
 app.use(errorHandler);
 
