@@ -7,7 +7,7 @@ import models from '../models';
 
 dotenv.config();
 const { iLike, or } = Sequelize.Op;
-const { sendEmail } = sendmail;
+const { Welcome } = sendmail;
 const { User, Profile, Article } = models;
 
 const secret = process.env.SECRET_KEY;
@@ -143,7 +143,7 @@ class Users {
            your account
            </strong><br>`;
 
-    sendEmail({ email, subject, html });
+    Welcome({ email, subject, html });
     return res.status(201).json({
       message: 'An email has been sent to your email address',
       username: user.username,

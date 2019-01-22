@@ -6,7 +6,7 @@ sgMail.setApiKey(process.env.EMAIL_API_KEY);
 
 
 export default {
-  sendEmail({ email, subject = 'Notification from LearnGround', html }) {
+  Welcome({ email, subject = 'Notification from LearnGround', html }) {
     sgMail.send({
       to: email,
       from: 'learnground2019@gmail.com',
