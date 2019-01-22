@@ -32,28 +32,28 @@ describe('USER TEST SUITE', () => {
   });
 
   describe('TEST SUITS FOR PROFILE', () => {
-    it('Should update profile when Valid inputs are supplied',
+    it('Should update profile when valid inputs are supplied',
       async () => {
         const newProfile = {
-          category: 'Science',
+          interests: ['Science', 'Technology'],
           firstName: 'Moses',
           lastName: 'Ezen',
           bio: 'sofware developer at google'
         };
+
         const response = await chai.request(server)
           .patch('/api/v1/profile')
           .set('Authorization', profileToken)
           .send(newProfile);
-        expect(response.body.category).to.equal('Science');
+        expect(response.body.interests[0]).to.equal('Science');
         expect(response.body.firstName).to.equal('Moses');
         expect(response.body.lastName).to.equal('Ezen');
         expect(response.body.bio).to.equal('sofware developer at google');
-
         expect(response.body.message).to.equal(
           'Profile updated successfully');
       });
 
-    it('Should update profile when few Valid inputs are supplied',
+    it('Should update profile when few valid inputs are supplied',
       async () => {
         const newProfile = {
           imageUrl: true
@@ -70,7 +70,6 @@ describe('USER TEST SUITE', () => {
     it('Should not update if the first name is not all letters',
       async () => {
         const newProfile = {
-          category: 'Science',
           firstName: '6789032%^&*',
           lastName: 'Ezen',
           bio: 'sofware developer at google'
@@ -90,7 +89,6 @@ describe('USER TEST SUITE', () => {
     it('Should not update if the last name is not all letters',
       async () => {
         const newProfile = {
-          category: 'Science',
           firstName: 'james',
           lastName: '8990&**^',
           bio: 'sofware developer at google'
@@ -107,10 +105,9 @@ describe('USER TEST SUITE', () => {
       });
 
 
-    it('Should not update profile If the lasttname is less than 2 characters',
+    it('Should not update profile if the lastname is less than 2 characters',
       async () => {
         const newProfile = {
-          category: 'Science',
           firstName: 'james',
           lastName: 'S',
           bio: 'sofware developer at google'
@@ -129,7 +126,6 @@ describe('USER TEST SUITE', () => {
     it('Should not update profile If the firstname is less than 2 characters',
       async () => {
         const newProfile = {
-          category: 'Science',
           firstName: 'j',
           lastName: 'Samuel',
           bio: 'sofware developer at google'
@@ -146,14 +142,17 @@ describe('USER TEST SUITE', () => {
       });
 
 
-    it('Should not update profile If an invalid category is supplied',
+    it('Should not update profile if an invalid interest is supplied',
       async () => {
         const newProfile = {
-          category: 'Programing',
+          interests: ['Programing'],
           firstName: 'james',
           lastName: 'Sadiq',
           bio: 'sofware developer at google'
         };
+
+        const expectedErrorArray = JSON.stringify(newProfile.interests);
+
         const response = await chai.request(server)
           .patch('/api/v1/profile')
           .set('Authorization', profileToken2)
@@ -161,7 +160,27 @@ describe('USER TEST SUITE', () => {
         expect(response.status).to.equal(400);
         expect(response.body.error)
           // eslint-disable-next-line max-len
-          .to.equal('Invalid category. Allowed categories are ["Science","Technology","Engineering","Arts","Mathematic"]');
+          .to.equal(`Invalid category ${expectedErrorArray}. Allowed categories are ["Science","Technology","Engineering","Arts","Mathematics"]`);
       });
+  });
+
+  it('Should not allow update for invalid interests', async () => {
+    const newProfile = {
+      interests: ['Programing', 'Travel'],
+      firstName: 'james',
+      lastName: 'Sadiq',
+      bio: 'sofware developer at google'
+    };
+
+    const expectedErrorArray = JSON.stringify(newProfile.interests);
+
+    const response = await chai.request(server)
+      .patch('/api/v1/profile')
+      .set('Authorization', profileToken2)
+      .send(newProfile);
+    expect(response.status).to.equal(400);
+    expect(response.body.error)
+      // eslint-disable-next-line max-len
+      .to.equal(`Invalid categories ${expectedErrorArray}. Allowed categories are ["Science","Technology","Engineering","Arts","Mathematics"]`);
   });
 });
