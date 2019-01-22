@@ -145,7 +145,7 @@ class Users {
            your account
            </strong><br>`;
 
-    sendWelcomeMail(email, subject, html);
+    sendWelcomeMail({ email, subject, html });
     return res.status(201).json({
       message: 'An email has been sent to your email address',
       username: user.username,
