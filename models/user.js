@@ -50,7 +50,13 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
+
+    User.hasMany(models.Follow, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE'
+    });
   };
+
 
   User.prototype.hashPassword = async function hashPassword() {
     if (this.password) {
