@@ -14,7 +14,7 @@ const secret = process.env.SECRET_KEY;
 const time = { expiresIn: '72hrs' };
 const generateToken = payload => jwt.sign(payload, secret, time);
 
-const subject = 'Welcome To  LearnGround';
+const subject = 'Welcome to Learnground';
 const userActivationUrl = process.env.NODE_ENV === 'development'
   ? `http://localhost:${process.env.PORT}/api/v1/user/activate/`
   : process.env.HEROKU_URL;
