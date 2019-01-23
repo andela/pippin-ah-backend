@@ -3,6 +3,8 @@ import chaiHttp from 'chai-http';
 import models from '../models';
 import server from '../app';
 
+const baseUrl = '/api/v1/articles';
+
 chai.use(chaiHttp);
 
 describe('ARTICLE TEST SUITE', () => {
@@ -27,7 +29,7 @@ describe('ARTICLE TEST SUITE', () => {
     accesstoken = responseObject.body.token;
 
     await chai.request(server)
-      .post('/api/v1/articles')
+      .post(baseUrl)
       .send(articleRequestObject)
       .set('Authorization', accesstoken);
   });
@@ -42,7 +44,7 @@ describe('ARTICLE TEST SUITE', () => {
           category: 'Science'
         };
         const response = await chai.request(server)
-          .post('/api/v1/articles')
+          .post(baseUrl)
           .send(articleObject);
         expect(response.status).to.equal(401);
         expect(response.body.error).to.equal('No token provided');
@@ -55,7 +57,7 @@ describe('ARTICLE TEST SUITE', () => {
           category: 'Science'
         };
         const response = await chai.request(server)
-          .post('/api/v1/articles')
+          .post(baseUrl)
           .send(articleObject)
           .set('Authorization', accesstoken);
         const errorResult = JSON.parse(response.body.error);
@@ -73,7 +75,7 @@ describe('ARTICLE TEST SUITE', () => {
           category: 'Article Category'
         };
         const response = await chai.request(server)
-          .post('/api/v1/articles')
+          .post(baseUrl)
           .send(articleObject)
           .set('Authorization', accesstoken);
         const errorResult = JSON.parse(response.body.error);
@@ -91,7 +93,7 @@ describe('ARTICLE TEST SUITE', () => {
           category: 'Science'
         };
         const response = await chai.request(server)
-          .post('/api/v1/articles')
+          .post(baseUrl)
           .send(articleObject)
           .set('Authorization', accesstoken);
         const errorResult = 'You already have an article with the same title';
@@ -108,7 +110,7 @@ describe('ARTICLE TEST SUITE', () => {
           category: 'Science'
         };
         const response = await chai.request(server)
-          .post('/api/v1/articles')
+          .post(baseUrl)
           .send(articleObject)
           .set('Authorization', accesstoken);
         expect(response.status).to.equal(201);
@@ -124,7 +126,7 @@ describe('ARTICLE TEST SUITE', () => {
           category: 'Science'
         };
         chai.request(server)
-          .post('/api/v1/articles')
+          .post(baseUrl)
           .set('Authorization', accesstoken)
           .send(articleObject)
           .end((err, res) => {
@@ -132,6 +134,22 @@ describe('ARTICLE TEST SUITE', () => {
             expect(res.body.title).to.equal('New Article');
             expect(res.body.description).to.equal('Article Description');
             done();
+          });
+      });
+
+    it('should add  tag when valid values are entered',
+      async () => {
+        const articleObject = {
+          title: 'New Article',
+          body: 'Article Body'
+        };
+        const response = await chai.request(server)
+          .patch(`${baseUrl}/tag`)
+          .set('Authorization', accesstoken)
+          .send(articleObject)
+          .end((err, res) => {
+            expect(response.status).to.equal(200);
+            expect(res.body.message).to.equal(`Tag added to ${response.title}`);
           });
       });
   });
