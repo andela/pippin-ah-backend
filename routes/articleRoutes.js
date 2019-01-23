@@ -35,7 +35,7 @@ router.route('/')
   );
 
 
-router.route('/articles/tag')
+router.route('/tag')
   .patch(
     verifyToken,
     expectedParamsValidator2,

@@ -50,24 +50,22 @@ export default {
       {
         where: { userId: authorId, title }
       });
+    console.log('******', article.tags);
 
     if (!article.tags) {
       normalizedTags = tags;
     }
+    console.log('#####', normalizedTags);
     if (article.tags) {
       normalizedTags = [
         ...new Set(article.tags.concat(tags))
       ];
     }
 
+    console.log('******', typeof (article));
     await article
-      .update({
-        tags: normalizedTags
-      });
-
-    return res.status(200).json({
-      message: `Tag added to ${article.title}`
-    });
+      .update({ tags: normalizedTags || article.title });
+    return res.json({ message: `Tag added to ${article.title}` });
   },
 
   async getArticle(req, res) {

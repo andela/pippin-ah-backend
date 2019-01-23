@@ -153,7 +153,9 @@ describe('ARTICLE TEST SUITE', () => {
             done();
           });
       });
+  });
 
+  describe('Tag Article', () => {
     it('should add  tag when valid values are entered',
       async () => {
         const articleObject = {
@@ -168,6 +170,34 @@ describe('ARTICLE TEST SUITE', () => {
         expect(response.body.message).to.equal(
           `Tag added to ${response.title}`
         );
+      });
+    it('should not tag an article when title fields is empty',
+      async () => {
+        const articleObject = {
+          title: '',
+          tags: 'Article Body'
+        };
+        const response = await chai.request(server)
+          .patch(`${baseUrl}/tag`)
+          .set('Authorization', accesstoken)
+          .send(articleObject);
+        const errorResult = JSON.parse(response.body.error);
+        expect(response.status).to.equal(400);
+        expect(errorResult[0]).to.equal('title must not be empty');
+      });
+    it('should not tag an article when tags fields are empty',
+      async () => {
+        const articleObject = {
+          tags: '',
+          title: 'Article Body'
+        };
+        const response = await chai.request(server)
+          .patch(`${baseUrl}/tag`)
+          .set('Authorization', accesstoken)
+          .send(articleObject);
+        const errorResult = JSON.parse(response.body.error);
+        expect(response.status).to.equal(400);
+        expect(errorResult[0]).to.equal('tags must not be empty');
       });
   });
   describe('Get Article', () => {
