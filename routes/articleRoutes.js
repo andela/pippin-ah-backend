@@ -13,7 +13,9 @@ const { interestsValidator } = profileValidations;
 const {
   expectedParamsValidator,
   nonEmptyParamsValidator,
-  existingTitleValidator
+  existingTitleValidator,
+  expectedParamsValidator2,
+  nonEmptyParamsValidator2
 } = articleValidation;
 
 router.route('/articles')
@@ -27,6 +29,11 @@ router.route('/articles')
   );
 
 router.route('/articles/tag')
-  .post(verifyToken, tagArticle);
+  .patch(
+    verifyToken,
+    expectedParamsValidator2,
+    nonEmptyParamsValidator2,
+    tagArticle
+  );
 
 export default router;

@@ -41,22 +41,24 @@ export default {
   },
 
   async tagArticle(req, res) {
-    const { tags, title } = req.body;
+    let normalizedTags;
+    const { title, tags = [] } = req.body;
 
     const authorId = req.decoded.id;
-    const userArticle = await Article.findOne(
+    const article = await Article.findOne(
       {
-        where: { userId: authorId, title },
+        where: { userId: authorId, title }
       });
 
-    await userArticle
-      .create({
-        tags
-      });
+    normalizedTags = tags;
+    if (article.tags) {
+      normalizedTags = [
+        ...new Set(article.tags.concat(tags))
+      ];
+    }
 
-    return res.status(201).json({
-      message: `Tag added to ${userArticle.title}`
-    });
+    await article.update({ tags: normalizedTags });
+
+    return res.send({ message: `Tag added to ${article.title}` });
   }
-
 };
