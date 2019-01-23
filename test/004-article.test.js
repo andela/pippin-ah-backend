@@ -213,6 +213,10 @@ describe('ARTICLE TEST SUITE', () => {
         expect(response.body.error).to.equal('Article provided does not exist');
       });
   });
+<<<<<<< HEAD
+=======
+
+>>>>>>> feat(getArticles): get Articles by category
   describe('Get Article by category', () => {
     it('should not get article when the category is not specified in the route',
       async () => {
@@ -241,10 +245,18 @@ describe('ARTICLE TEST SUITE', () => {
         expect(response.body[0].author).to.equal('newusername');
         expect(response.body[0].firstName).to.equal(null);
         expect(response.body[0].title)
+<<<<<<< HEAD
           .to.equal('Halt and Catch Fire');
         expect(response.body[0].body).to.equal('Article Body');
         expect(response.body[0]).to.have.deep.property('createdOn');
         expect(response.body[0]).to.have.deep.property('modifiedOn');
+=======
+          .to.equal('Post to test if article already exists');
+        expect(response.body[0].body).to.equal('Article Body');
+        expect(response.body[0]).to.have.deep.property('createdOn');
+        expect(response.body[0]).to.have.deep.property('modifiedOn');
+        console.log(response.body);
+>>>>>>> feat(getArticles): get Articles by category
       });
   });
 });
