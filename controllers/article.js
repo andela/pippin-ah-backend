@@ -23,7 +23,7 @@ export default {
         body: body.trim(),
         description: description.trim(),
         category: category.trim(),
-        slug: generateSlug(title),
+        slug: `${generateSlug(title)}-${user.username}`,
         userId,
       });
 
@@ -39,5 +39,11 @@ export default {
         image: profile.imageUrl
       }
     });
+  },
+
+  async getArticle(req, res) {
+    const { slug } = req.params;
+    const article = await Article.findOne({ where: { slug } });
+    return res.json(article);
   }
 };

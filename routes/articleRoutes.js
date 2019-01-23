@@ -8,7 +8,7 @@ import {
 
 const router = express.Router();
 
-const { createArticle } = Article;
+const { createArticle, getArticle } = Article;
 const { addComment } = Comment;
 const {
   expectedParamsValidator,
@@ -23,13 +23,19 @@ const {
 } = commentValidations;
 
 router.route('/')
-  .all(verifyToken)
   .post(
+    verifyToken,
     expectedParamsValidator,
     nonEmptyParamsValidator,
     existingTitleValidator,
     categoryValidator,
     createArticle
+  );
+
+router.route('/:slug')
+  .get(
+    ensureArticleExists,
+    getArticle
   );
 
 router.route('/:slug/comments')

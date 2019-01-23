@@ -24,5 +24,11 @@ describe('HELPER TEST SUITE', () => {
       expect(result[0]).to.equal('Science');
       done();
     });
+
+    it('Should not throw up a TypeError when no input is supplied', (done) => {
+      const result = convertToArray();
+      expect(typeof (result)).to.equal('object');
+      done();
+    });
   });
 });

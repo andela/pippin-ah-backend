@@ -16,7 +16,7 @@ describe('ARTICLE TEST SUITE', () => {
       password: 'newpassword'
     };
     const articleRequestObject = {
-      title: 'Post to test if article already exists',
+      title: 'Halt and Catch Fire',
       body: 'Article Body',
       description: 'Article Description',
       category: 'Science'
@@ -85,7 +85,7 @@ describe('ARTICLE TEST SUITE', () => {
     it('should not create an article if title alreasy exists',
       async () => {
         const articleObject = {
-          title: '   Post to Test if aRticle alreAdy exists    ',
+          title: 'Halt and Catch Fire ',
           body: 'Article Body',
           description: 'Article Description',
           category: 'Science'
@@ -150,6 +150,22 @@ describe('ARTICLE TEST SUITE', () => {
             expect(res.body.description).to.equal('Article Description');
             done();
           });
+      });
+  });
+  describe('Get Article', () => {
+    it('should get an article',
+      async () => {
+        const response = await chai.request(server)
+          .get('/api/v1/articles/halt-and-catch-fire-newusername');
+        expect(response.status).to.equal(200);
+        expect(response.body.slug).to.equal('halt-and-catch-fire-newusername');
+      });
+    it('should return an error if article does not exist',
+      async () => {
+        const response = await chai.request(server)
+          .get('/api/v1/articles/non-existing-article');
+        expect(response.status).to.equal(404);
+        expect(response.body.error).to.equal('Article provided does not exist');
       });
   });
 });

@@ -61,20 +61,20 @@ export default {
   },
 
   async existingTitleValidator(req, res, next) {
-    const articleExists = await Article.findOne({
+    const titleExists = await Article.findOne({
       where: {
         title: { [iLike]: req.body.title.trim() }, userId: req.decoded.id
       }
     }
     );
 
-    if (articleExists) {
+    if (titleExists) {
       const errorMessage = 'You already have an article with the same title';
       const error = new Error(errorMessage);
       error.status = 400;
       return next(error);
     }
     return next();
-  }
+  },
 
 };
