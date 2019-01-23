@@ -23,15 +23,15 @@ describe('COMMENT TEST SUITE', () => {
       description: 'Article Description',
       category: 'Science'
     };
-    slug = 'post-to-test-if-article-already-exists';
     const responseObject = await chai.request(server).post('/api/v1/users')
       .send(userRequestObject);
     accesstoken = responseObject.body.token;
 
-    await chai.request(server)
+    const newArticle = await chai.request(server)
       .post('/api/v1/articles')
       .send(articleRequestObject)
       .set('Authorization', accesstoken);
+    ({ slug } = newArticle.body);
   });
 
   describe('Add Comment To Article', () => {
