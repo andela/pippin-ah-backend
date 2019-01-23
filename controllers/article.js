@@ -39,5 +39,11 @@ export default {
         image: profile.imageUrl
       }
     });
+  },
+
+  async getArticle(req, res) {
+    const { slug } = req.params;
+    const article = await Article.findOne({ where: { slug } });
+    return res.json(article);
   }
 };

@@ -8,7 +8,7 @@ import {
 
 const router = express.Router();
 
-const { createArticle } = Article;
+const { createArticle, getArticle } = Article;
 const { interestsValidator } = profileValidations;
 const {
   expectedParamsValidator,
@@ -17,13 +17,16 @@ const {
 } = articleValidation;
 
 router.route('/articles')
-  .all(verifyToken)
   .post(
+    verifyToken,
     expectedParamsValidator,
     nonEmptyParamsValidator,
     existingTitleValidator,
     interestsValidator,
     createArticle
   );
+
+router.route('/articles/:slug')
+  .get(getArticle);
 
 export default router;
