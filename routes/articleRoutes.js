@@ -1,5 +1,5 @@
 import express from 'express';
-import { Article, Comment } from '../controllers';
+import { Article, Comment, Reaction } from '../controllers';
 import {
   verifyToken,
   articleValidation,
@@ -10,6 +10,7 @@ const router = express.Router();
 
 const { createArticle, getArticle } = Article;
 const { addComment } = Comment;
+const { like, cancelReaction, dislike } = Reaction;
 const {
   expectedParamsValidator,
   nonEmptyParamsValidator,
@@ -46,5 +47,14 @@ router.route('/:slug/comments')
     ensureValidComment,
     addComment
   );
+
+router.route('/:slug/like')
+  .patch(verifyToken, ensureArticleExists, like);
+
+router.route('/:slug/cancelreaction')
+  .patch(verifyToken, ensureArticleExists, cancelReaction);
+
+router.route('/:slug/dislike')
+  .patch(verifyToken, ensureArticleExists, dislike);
 
 export default router;
