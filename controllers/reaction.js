@@ -27,7 +27,6 @@ const setReaction = async (liked, disliked, slug, userId) => {
 };
 
 export default {
-
   like(req, res) {
     setReaction(true, false, req.params.slug, req.decoded.id);
     return res.sendStatus(200);
@@ -42,5 +41,4 @@ export default {
     setReaction(false, true, req.params.slug, req.decoded.id);
     return res.sendStatus(200);
   }
-
 };
