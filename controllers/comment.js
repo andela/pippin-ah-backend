@@ -9,15 +9,15 @@ export default {
     const article = await Article.findOne({
       where: { slug: { [iLike]: req.params.slug } }
     });
-    const comment = await Comment.create({
+    const newComment = await Comment.create({
       userId: req.decoded.id,
       comment: req.body.comment,
       articleId: article.id
     });
     return res.json({
-      comment: comment.comment,
-      id: comment.id,
-      updatedAt: comment.updatedAt
+      comment: newComment.comment,
+      id: newComment.id,
+      updatedAt: newComment.updatedAt
     });
   }
 };
