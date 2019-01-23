@@ -77,17 +77,4 @@ export default {
     return next();
   },
 
-  async existingArticleValidator(req, res, next) {
-    const articleExists = await Article.findOne({
-      where: { slug: { [iLike]: req.params.slug } }
-    });
-
-    if (articleExists) return next();
-
-    const errorMessage = 'Article does not exist';
-    const error = new Error(errorMessage);
-    error.status = 400;
-    return next(error);
-  }
-
 };
