@@ -18,7 +18,7 @@ describe('ARTICLE TEST SUITE', () => {
       password: 'newpassword'
     };
     const articleRequestObject = {
-      title: 'Post to test if article already exists',
+      title: 'Halt and Catch Fire',
       body: 'Article Body',
       description: 'Article Description',
       category: 'Science'
@@ -87,7 +87,7 @@ describe('ARTICLE TEST SUITE', () => {
     it('should not create an article if title alreasy exists',
       async () => {
         const articleObject = {
-          title: '   Post to Test if aRticle alreAdy exists    ',
+          title: 'Halt and Catch Fire ',
           body: 'Article Body',
           description: 'Article Description',
           category: 'Science'
@@ -115,6 +115,23 @@ describe('ARTICLE TEST SUITE', () => {
           .set('Authorization', accesstoken);
         expect(response.status).to.equal(201);
         expect(response.body.title).to.equal('Test Space Trimming');
+      });
+
+    it('should not create an article if category is invalid',
+      async () => {
+        const articleObject = {
+          title: ' New Article Title    ',
+          body: 'Article Body',
+          description: 'Article Description',
+          category: 'Travel'
+        };
+
+        const response = await chai.request(server)
+          .post('/api/v1/articles')
+          .send(articleObject)
+          .set('Authorization', accesstoken);
+        expect(response.status).to.equal(400);
+        expect(response.body.error.split(' ')[2]).to.equal('[Travel].');
       });
 
     it('should create an article when required fields are provided',
@@ -151,6 +168,22 @@ describe('ARTICLE TEST SUITE', () => {
         expect(response.body.message).to.equal(
           `Tag added to ${response.title}`
         );
+      });
+  });
+  describe('Get Article', () => {
+    it('should get an article',
+      async () => {
+        const response = await chai.request(server)
+          .get('/api/v1/articles/halt-and-catch-fire-newusername');
+        expect(response.status).to.equal(200);
+        expect(response.body.slug).to.equal('halt-and-catch-fire-newusername');
+      });
+    it('should return an error if article does not exist',
+      async () => {
+        const response = await chai.request(server)
+          .get('/api/v1/articles/non-existing-article');
+        expect(response.status).to.equal(404);
+        expect(response.body.error).to.equal('Article provided does not exist');
       });
   });
 });

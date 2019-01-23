@@ -1,19 +1,19 @@
 import validation from 'validator';
-import { categories as interestsEnum } from '../helpers';
+import { categories as interestsEnum, convertToArray } from '../helpers';
 
 export default {
   interestsValidator(req, res, next) {
-    if (Object.keys(req.body).includes('interests')) {
+    if (req.body.interests) {
+      const interests = convertToArray(req.body.interests);
       const errorArray = [];
 
-      (req.body.interests).forEach((item) => {
+      (interests).forEach((item) => {
         if (!interestsEnum.includes(item)) {
           errorArray.push(item);
         }
       });
 
       if (!errorArray.length) return next();
-
       const pluralize = errorArray.length === 1 ? 'category' : 'categories';
       const stringifiedErrorArray = JSON.stringify(errorArray);
       const stringifiedAllowedCategories = JSON.stringify(interestsEnum);

@@ -1,32 +1,39 @@
 import express from 'express';
-import { Article } from '../controllers';
+import { Article, Comment } from '../controllers';
 import {
   verifyToken,
   articleValidation,
-  profileValidations
+  commentValidations
 } from '../middlewares';
 
 const router = express.Router();
 
-const { createArticle, tagArticle } = Article;
-const { interestsValidator } = profileValidations;
+const { createArticle, getArticle, tagArticle } = Article;
+const { addComment } = Comment;
 const {
   expectedParamsValidator,
   nonEmptyParamsValidator,
   existingTitleValidator,
   expectedParamsValidator2,
-  nonEmptyParamsValidator2
+  nonEmptyParamsValidator2,
+  categoryValidator
 } = articleValidation;
+const {
+  ensureCommentInput,
+  ensureValidComment,
+  ensureArticleExists
+} = commentValidations;
 
-router.route('/articles')
-  .all(verifyToken)
+router.route('/')
   .post(
+    verifyToken,
     expectedParamsValidator,
     nonEmptyParamsValidator,
     existingTitleValidator,
-    interestsValidator,
+    categoryValidator,
     createArticle
   );
+
 
 router.route('/articles/tag')
   .patch(
@@ -34,6 +41,21 @@ router.route('/articles/tag')
     expectedParamsValidator2,
     nonEmptyParamsValidator2,
     tagArticle
+  );
+
+router.route('/:slug')
+  .get(
+    ensureArticleExists,
+    getArticle
+  );
+
+router.route('/:slug/comments')
+  .post(
+    verifyToken,
+    ensureArticleExists,
+    ensureCommentInput,
+    ensureValidComment,
+    addComment
   );
 
 export default router;

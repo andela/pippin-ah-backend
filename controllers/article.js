@@ -23,7 +23,7 @@ export default {
         body: body.trim(),
         description: description.trim(),
         category: category.trim(),
-        slug: generateSlug(title),
+        slug: `${generateSlug(title)}-${user.username}`,
         userId,
       });
 
@@ -31,6 +31,7 @@ export default {
       title: article.title,
       body: article.body,
       description: article.description,
+      slug: article.slug,
       createdAt: article.createdAt,
       author: {
         username: user.username,
@@ -67,6 +68,12 @@ export default {
     return res.status(200).json({
       message: `Tag added to ${article.title}`
     });
+  },
+
+  async getArticle(req, res) {
+    const { slug } = req.params;
+    const article = await Article.findOne({ where: { slug } });
+    return res.json(article);
   }
 
 };
