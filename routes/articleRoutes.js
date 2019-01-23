@@ -3,7 +3,6 @@ import { Article, Comment } from '../controllers';
 import {
   verifyToken,
   articleValidation,
-  profileValidations,
   commentValidations
 } from '../middlewares';
 
@@ -11,11 +10,11 @@ const router = express.Router();
 
 const { createArticle } = Article;
 const { addComment } = Comment;
-const { interestsValidator } = profileValidations;
 const {
   expectedParamsValidator,
   nonEmptyParamsValidator,
-  existingTitleValidator
+  existingTitleValidator,
+  categoryValidator
 } = articleValidation;
 const {
   ensureCommentInput,
@@ -29,7 +28,7 @@ router.route('/')
     expectedParamsValidator,
     nonEmptyParamsValidator,
     existingTitleValidator,
-    interestsValidator,
+    categoryValidator,
     createArticle
   );
 
