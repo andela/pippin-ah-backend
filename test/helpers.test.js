@@ -27,7 +27,7 @@ describe('HELPER TEST SUITE', () => {
 
     it('Should not throw up a TypeError when no input is supplied', (done) => {
       const result = convertToArray();
-      expect(result);
+      expect(typeof (result)).to.equal('object');
       done();
     });
   });
