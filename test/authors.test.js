@@ -7,11 +7,11 @@ chai.use(chaiHttp);
 
 const baseUrl = '/api/v1';
 
-describe('AUTHOR TEST SUITE', async () => {
+describe('AUTHOR TEST SUITE', () => {
   let accessToken;
 
   before(async () => {
-    models.sequelize.sync({ force: true });
+    await models.sequelize.sync({ force: true });
 
     const userRequestObject = {
       username: 'JohnDoe',
@@ -37,18 +37,15 @@ describe('AUTHOR TEST SUITE', async () => {
   });
 
   describe('GET ALL AUTHORS', () => {
-    it('Should successfully get a list of all authors', (done) => {
-      chai
-        .request(server)
+    it('Should successfully get a list of all authors', async () => {
+      const response = await chai.request(server)
         .get(`${baseUrl}/user/authors`)
-        .set('Authorization', accessToken)
-        .end((err, res) => {
-          expect(res.status).to.equal(200);
-          expect(res.body[0].author).to.equal('JohnDoe');
-          expect(Array.isArray(res.body)).to.equal(true);
-          expect(res.body[0].firstName).to.equal(null);
-          done();
-        });
+        .set('Authorization', accessToken);
+
+      expect(response.status).to.equal(200);
+      expect(response.body[0].author).to.equal('JohnDoe');
+      expect(Array.isArray(response.body)).to.equal(true);
+      expect(response.body[0].firstName).to.equal(null);
     });
   });
 });
