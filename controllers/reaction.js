@@ -4,83 +4,42 @@ import models from '../models';
 const { iLike } = Sequelize.Op;
 const { Article, Reaction } = models;
 
+const setReaction = async (liked, disliked, slug, userId) => {
+  const article = await Article.findOne({
+    where: { slug: { [iLike]: slug } }
+  });
+  const oldReaction = await Reaction.findOne({
+    where: {
+      articleId: article.id,
+      likedOrDislikedBy: userId,
+    }
+  });
+  if (oldReaction) {
+    await oldReaction.update({ liked, disliked });
+    return;
+  }
+  await Reaction.create({
+    articleId: article.id,
+    likedOrDislikedBy: userId,
+    liked,
+    disliked
+  });
+};
+
 export default {
 
-  async like(req, res) {
-    const article = await Article.findOne({
-      where: { slug: { [iLike]: req.params.slug } }
-    });
-    const oldReaction = await Reaction.findOne({
-      where: {
-        articleId: article.id,
-        likedOrDislikedBy: req.decoded.id,
-      }
-    });
-    if (oldReaction) {
-      await oldReaction.update({
-        liked: true,
-        disliked: false
-      });
-      return res.sendStatus(200);
-    }
-    await Reaction.create({
-      articleId: article.id,
-      likedOrDislikedBy: req.decoded.id,
-      liked: true,
-      disliked: false
-    });
+  like(req, res) {
+    setReaction(true, false, req.params.slug, req.decoded.id);
     return res.sendStatus(200);
   },
 
-  async cancelReaction(req, res) {
-    const article = await Article.findOne({
-      where: { slug: { [iLike]: req.params.slug } }
-    });
-    const oldReaction = await Reaction.findOne({
-      where: {
-        articleId: article.id,
-        likedOrDislikedBy: req.decoded.id,
-      }
-    });
-    if (oldReaction) {
-      await oldReaction.update({
-        liked: false,
-        disliked: false
-      });
-      return res.sendStatus(200);
-    }
-    await Reaction.create({
-      articleId: article.id,
-      likedOrDislikedBy: req.decoded.id,
-      liked: false,
-      disliked: false
-    });
+  cancelReaction(req, res) {
+    setReaction(false, false, req.params.slug, req.decoded.id);
     return res.sendStatus(200);
   },
 
-  async dislike(req, res) {
-    const article = await Article.findOne({
-      where: { slug: { [iLike]: req.params.slug } }
-    });
-    const oldReaction = await Reaction.findOne({
-      where: {
-        articleId: article.id,
-        likedOrDislikedBy: req.decoded.id,
-      }
-    });
-    if (oldReaction) {
-      await oldReaction.update({
-        liked: false,
-        disliked: true
-      });
-      return res.sendStatus(200);
-    }
-    await Reaction.create({
-      articleId: article.id,
-      likedOrDislikedBy: req.decoded.id,
-      liked: false,
-      disliked: true
-    });
+  dislike(req, res) {
+    setReaction(false, true, req.params.slug, req.decoded.id);
     return res.sendStatus(200);
   }
 

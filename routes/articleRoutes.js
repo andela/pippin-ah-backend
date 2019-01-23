@@ -11,7 +11,6 @@ const router = express.Router();
 const { createArticle, getArticle } = Article;
 const { addComment } = Comment;
 const { like, cancelReaction, dislike } = Reaction;
-const { interestsValidator } = profileValidations;
 const {
   expectedParamsValidator,
   nonEmptyParamsValidator,
