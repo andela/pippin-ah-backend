@@ -30,7 +30,9 @@ class Profiles {
 
     let normalizedInterests;
 
-    normalizedInterests = interests;
+    if (!profile.interests) {
+      normalizedInterests = interests;
+    }
     if (profile.interests) {
       normalizedInterests = [
         ...new Set(profile.interests.concat(interests))
@@ -42,7 +44,7 @@ class Profiles {
         firstName: firstName || profile.firstName,
         lastName: lastName || profile.lastName,
         bio: bio || profile.bio,
-        interests: normalizedInterests || profile.interests,
+        interests: normalizedInterests,
         imageUrl: imageUrl || profile.imageUrl
       });
     return res.json({
