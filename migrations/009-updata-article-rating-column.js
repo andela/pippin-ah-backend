@@ -10,7 +10,6 @@ module.exports = {
     })
   ]),
 
-  /* eslint-disable no-unused-vars */
   down: (queryInterface, Sequelize) => Promise.all([
     queryInterface.removeColumn(tableName, 'rating'),
 
