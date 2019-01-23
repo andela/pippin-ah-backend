@@ -50,15 +50,23 @@ export default {
         where: { userId: authorId, title }
       });
 
-    normalizedTags = tags;
+    if (!article.tags) {
+      normalizedTags = tags;
+    }
     if (article.tags) {
       normalizedTags = [
         ...new Set(article.tags.concat(tags))
       ];
     }
 
-    await article.update({ tags: normalizedTags });
+    await article
+      .update({
+        tags: normalizedTags
+      });
 
-    return res.send({ message: `Tag added to ${article.title}` });
+    return res.status(200).json({
+      message: `Tag added to ${article.title}`
+    });
   }
+
 };

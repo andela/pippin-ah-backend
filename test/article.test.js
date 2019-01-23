@@ -141,16 +141,16 @@ describe('ARTICLE TEST SUITE', () => {
       async () => {
         const articleObject = {
           title: 'New Article',
-          body: 'Article Body'
+          tags: 'Article Body'
         };
         const response = await chai.request(server)
           .patch(`${baseUrl}/tag`)
           .set('Authorization', accesstoken)
-          .send(articleObject)
-          .end((err, res) => {
-            expect(response.status).to.equal(200);
-            expect(res.body.message).to.equal(`Tag added to ${response.title}`);
-          });
+          .send(articleObject);
+        expect(response.status).to.equal(200);
+        expect(response.body.message).to.equal(
+          `Tag added to ${response.title}`
+        );
       });
   });
 });
