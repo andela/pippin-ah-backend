@@ -51,7 +51,7 @@ router.route('/:slug/comments')
 router.route('/:slug/like')
   .patch(verifyToken, ensureArticleExists, like);
 
-router.route('/:slug/cancel-reaction')
+router.route('/:slug/cancelreaction')
   .patch(verifyToken, ensureArticleExists, cancelReaction);
 
 router.route('/:slug/dislike')

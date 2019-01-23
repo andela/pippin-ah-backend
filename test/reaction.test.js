@@ -105,7 +105,7 @@ describe('REACTION TEST SUITE', () => {
     it('should not authorize cancelling a reaction if no token is provided',
       async () => {
         const response = await chai.request(server)
-          .patch(`${baseUrl}/articles/${slug}/cancel-reaction`);
+          .patch(`${baseUrl}/articles/${slug}/cancelreaction`);
         expect(response.status).to.equal(401);
         expect(response.body.error).to.equal('No token provided');
       });
@@ -113,7 +113,7 @@ describe('REACTION TEST SUITE', () => {
     it('should not authorize canceling a reaction if invalid token is provided',
       async () => {
         const response = await chai.request(server)
-          .patch(`${baseUrl}/articles/${slug}/cancel-reaction`)
+          .patch(`${baseUrl}/articles/${slug}/cancelreaction`)
           .set('Authorization', 'invalid token');
         expect(response.status).to.equal(401);
         expect(response.body.error).to.equal('Invalid token');
@@ -122,7 +122,7 @@ describe('REACTION TEST SUITE', () => {
     it('should succesfully cancel reaction on a valid article with right token',
       async () => {
         const response = await chai.request(server)
-          .patch(`${baseUrl}/articles/${slug}/cancel-reaction`)
+          .patch(`${baseUrl}/articles/${slug}/cancelreaction`)
           .set('Authorization', token);
         expect(response.status).to.equal(200);
       });
