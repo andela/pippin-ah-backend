@@ -31,6 +31,7 @@ export default {
       title: article.title,
       body: article.body,
       description: article.description,
+      slug: article.slug,
       createdAt: article.createdAt,
       author: {
         username: user.username,

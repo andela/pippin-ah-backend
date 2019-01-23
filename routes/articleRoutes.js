@@ -1,21 +1,28 @@
 import express from 'express';
-import { Article } from '../controllers';
+import { Article, Comment } from '../controllers';
 import {
   verifyToken,
-  articleValidation
+  articleValidation,
+  commentValidations
 } from '../middlewares';
 
 const router = express.Router();
 
 const { createArticle } = Article;
+const { addComment } = Comment;
 const {
   expectedParamsValidator,
   nonEmptyParamsValidator,
   existingTitleValidator,
   categoryValidator
 } = articleValidation;
+const {
+  ensureCommentInput,
+  ensureValidComment,
+  ensureArticleExists
+} = commentValidations;
 
-router.route('/articles')
+router.route('/')
   .all(verifyToken)
   .post(
     expectedParamsValidator,
@@ -23,6 +30,15 @@ router.route('/articles')
     existingTitleValidator,
     categoryValidator,
     createArticle
+  );
+
+router.route('/:slug/comments')
+  .post(
+    verifyToken,
+    ensureArticleExists,
+    ensureCommentInput,
+    ensureValidComment,
+    addComment
   );
 
 export default router;
