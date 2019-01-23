@@ -36,9 +36,9 @@ router.route('/articles')
 router.route('/articles/:slug/comments')
   .post(
     verifyToken,
+    ensureArticleExists,
     ensureCommentInput,
     ensureValidComment,
-    ensureArticleExists,
     addComment
   );
 
