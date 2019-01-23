@@ -23,7 +23,7 @@ export default {
         body: body.trim(),
         description: description.trim(),
         category: category.trim(),
-        slug: generateSlug(title),
+        slug: `${generateSlug(title)}-${user.username}`,
         userId,
       });
 
@@ -31,6 +31,7 @@ export default {
       title: article.title,
       body: article.body,
       description: article.description,
+      slug: article.slug,
       createdAt: article.createdAt,
       author: {
         username: user.username,
