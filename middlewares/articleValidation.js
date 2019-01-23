@@ -1,11 +1,27 @@
 import Sequelize from 'sequelize';
 import models from '../models';
+import { categories as categoryEnum } from '../helpers';
 
 const { Article } = models;
 const requiredParams = ['title', 'body', 'description', 'category'];
 const { iLike } = Sequelize.Op;
 
 export default {
+  categoryValidator(req, res, next) {
+    const { category } = req.body;
+
+    if (!categoryEnum.includes(category)) {
+      const stringifiedAllowedCategories = JSON.stringify(categoryEnum);
+      // eslint-disable-next-line
+      const errorMessage = `Invalid category [${category}]. Allowed categories are ${stringifiedAllowedCategories}`;
+      const error = new Error(errorMessage);
+      error.status = 400;
+      return next(error);
+    }
+
+    return next();
+  },
+
   expectedParamsValidator(req, res, next) {
     const errorArray = [];
 

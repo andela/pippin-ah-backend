@@ -115,6 +115,23 @@ describe('ARTICLE TEST SUITE', () => {
         expect(response.body.title).to.equal('Test Space Trimming');
       });
 
+    it('should not create an article if category is invalid',
+      async () => {
+        const articleObject = {
+          title: ' New Article Title    ',
+          body: 'Article Body',
+          description: 'Article Description',
+          category: 'Travel'
+        };
+
+        const response = await chai.request(server)
+          .post('/api/v1/articles')
+          .send(articleObject)
+          .set('Authorization', accesstoken);
+        expect(response.status).to.equal(400);
+        expect(response.body.error.split(' ')[2]).to.equal('[Travel].');
+      });
+
     it('should create an article when required fields are provided',
       (done) => {
         const articleObject = {
