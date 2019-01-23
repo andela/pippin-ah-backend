@@ -14,8 +14,7 @@ const {
   expectedParamsValidator,
   nonEmptyParamsValidator,
   existingTitleValidator,
-  expectedParamsValidator2,
-  nonEmptyParamsValidator2,
+  checkIfTagIsString,
   categoryValidator
 } = articleValidation;
 const {
@@ -38,8 +37,7 @@ router.route('/')
 router.route('/tag')
   .patch(
     verifyToken,
-    expectedParamsValidator2,
-    nonEmptyParamsValidator2,
+    checkIfTagIsString,
     tagArticle
   );
 

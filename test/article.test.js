@@ -167,39 +167,23 @@ describe('ARTICLE TEST SUITE', () => {
           .set('Authorization', accesstoken)
           .send(articleObject);
         expect(response.status).to.equal(200);
-        expect(response.body.message).to.equal(
-          `Tag added to ${response.title}`
-        );
       });
-    it('should not tag an article when title fields is empty',
+
+    it('should not add tag when numbers are entered',
       async () => {
         const articleObject = {
-          title: '',
-          tags: 'Article Body'
+          title: 'New Article',
+          tags: 678899900000,
         };
         const response = await chai.request(server)
           .patch(`${baseUrl}/tag`)
           .set('Authorization', accesstoken)
           .send(articleObject);
-        const errorResult = JSON.parse(response.body.error);
         expect(response.status).to.equal(400);
-        expect(errorResult[0]).to.equal('title must not be empty');
-      });
-    it('should not tag an article when tags fields are empty',
-      async () => {
-        const articleObject = {
-          tags: '',
-          title: 'Article Body'
-        };
-        const response = await chai.request(server)
-          .patch(`${baseUrl}/tag`)
-          .set('Authorization', accesstoken)
-          .send(articleObject);
-        const errorResult = JSON.parse(response.body.error);
-        expect(response.status).to.equal(400);
-        expect(errorResult[0]).to.equal('tags must not be empty');
+        expect(response.body.error).to.equal('tag must be a string');
       });
   });
+
   describe('Get Article', () => {
     it('should get an article',
       async () => {

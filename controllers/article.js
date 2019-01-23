@@ -43,29 +43,21 @@ export default {
 
   async tagArticle(req, res) {
     let normalizedTags;
-    const { title, tags = [] } = req.body;
+    const { title, tags } = req.body;
 
-    const authorId = req.decoded.id;
-    const article = await Article.findOne(
-      {
-        where: { userId: authorId, title }
-      });
-    console.log('******', article.tags);
+    const { id: userId } = req.decoded;
+    const article = await Article.findOne({ where: { userId, title } });
 
-    if (!article.tags) {
-      normalizedTags = tags;
-    }
-    console.log('#####', normalizedTags);
+    normalizedTags = [tags.trim().toLowerCase()];
+
     if (article.tags) {
       normalizedTags = [
-        ...new Set(article.tags.concat(tags))
+        ...new Set(article.tags.concat(tags.trim().toLowerCase()))
       ];
     }
 
-    console.log('******', typeof (article));
-    await article
-      .update({ tags: normalizedTags || article.title });
-    return res.json({ message: `Tag added to ${article.title}` });
+    await article.update({ tags: normalizedTags });
+    return res.sendStatus(200);
   },
 
   async getArticle(req, res) {

@@ -4,7 +4,6 @@ import { categories as categoryEnum } from '../helpers';
 
 const { Article } = models;
 const requiredParams = ['title', 'body', 'description', 'category'];
-const tagsParams = ['title', 'tags'];
 const { iLike } = Sequelize.Op;
 
 export default {
@@ -42,47 +41,10 @@ export default {
     return next(error);
   },
 
-  expectedParamsValidator2(req, res, next) {
-    const errorArray = [];
-
-    tagsParams.forEach((param) => {
-      if (!Object.keys(req.body).includes(param)) {
-        errorArray.push(`${param} is required`);
-      }
-    });
-
-    if (!errorArray.length) {
-      return next();
-    }
-
-    const errorMessage = JSON.stringify(errorArray);
-    const error = new Error(errorMessage);
-    error.status = 400;
-    return next(error);
-  },
-
   nonEmptyParamsValidator(req, res, next) {
     const errorArray = [];
 
     requiredParams.forEach((param) => {
-      if (!req.body[param].trim().length) {
-        errorArray.push(`${param} must not be empty`);
-      }
-    });
-
-    if (!errorArray.length) {
-      return next();
-    }
-
-    const errorMessage = JSON.stringify(errorArray);
-    const error = new Error(errorMessage);
-    error.status = 400;
-    return next(error);
-  },
-  nonEmptyParamsValidator2(req, res, next) {
-    const errorArray = [];
-
-    tagsParams.forEach((param) => {
       if (!req.body[param].trim().length) {
         errorArray.push(`${param} must not be empty`);
       }
@@ -115,4 +77,11 @@ export default {
     return next();
   },
 
+  checkIfTagIsString(req, res, next) {
+    const { tags } = req.body;
+    if (typeof tags === 'string') return next();
+    const error = new Error('tag must be a string');
+    error.status = 400;
+    return next(error);
+  }
 };
