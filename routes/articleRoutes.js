@@ -15,7 +15,8 @@ const { interestsValidator } = profileValidations;
 const {
   expectedParamsValidator,
   nonEmptyParamsValidator,
-  existingTitleValidator
+  existingTitleValidator,
+  existingArticleValidator
 } = articleValidation;
 const {
   ensureCommentInput,
@@ -34,7 +35,10 @@ router.route('/')
   );
 
 router.route('/:slug')
-  .get(getArticle);
+  .get(
+    existingArticleValidator,
+    getArticle
+  );
 
 router.route('/:slug/comments')
   .post(
