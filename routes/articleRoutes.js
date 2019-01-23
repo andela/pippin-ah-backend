@@ -23,7 +23,7 @@ const {
   ensureArticleExists
 } = commentValidations;
 
-router.route('/articles')
+router.route('/')
   .all(verifyToken)
   .post(
     expectedParamsValidator,
@@ -33,7 +33,7 @@ router.route('/articles')
     createArticle
   );
 
-router.route('/articles/:slug/comments')
+router.route('/:slug/comments')
   .post(
     verifyToken,
     ensureArticleExists,
