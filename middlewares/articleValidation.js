@@ -76,6 +76,25 @@ export default {
     }
     return next();
   },
+  categoryQueryValidator(req, res, next) {
+    const cate = [
+      'Science', 'Technology', 'Arts', 'Engineering', 'Mathematics'
+    ];
+    const { category } = req.query;
+    if (category === undefined) {
+      const error = new Error('Missing query string: category');
+      error.status = 400;
+      return next(error);
+    }
+
+    if (!cate.includes(category)) {
+      const errorMessage = `Invalid category ${category}`;
+      const error = new Error(errorMessage);
+      error.status = 400;
+      return next(error);
+    }
+    return next();
+  },
 
   checkIfTagIsString(req, res, next) {
     const { tags } = req.body;
