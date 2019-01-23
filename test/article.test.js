@@ -164,8 +164,8 @@ describe('ARTICLE TEST SUITE', () => {
       async () => {
         const response = await chai.request(server)
           .get('/api/v1/articles/non-existing-article');
-        expect(response.status).to.equal(400);
-        expect(response.body.error).to.equal('Article does not exist');
+        expect(response.status).to.equal(404);
+        expect(response.body.error).to.equal('Article provided does not exist');
       });
   });
 });
