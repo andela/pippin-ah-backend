@@ -105,42 +105,4 @@ export default {
     const article = await Article.findOne({ where: { slug } });
     return res.json(article);
   },
-  async getArticleByCategory(req, res) {
-    const { category } = req.query;
-
-    const article = await Article.findAll({
-      where: {
-        category
-      },
-      include: [{
-        model: User,
-        attributes: ['username'],
-        include: [
-          {
-            model: Profile,
-            attributes: [
-              'firstName',
-              'lastName',
-              'bio',
-              'imageUrl'
-            ]
-          }
-        ]
-      }]
-    });
-    const responseArray = article.map(item => ({
-      author: item.User.username,
-      firstName: item.User.Profile.firstName,
-      lastName: item.User.Profile.lastName,
-      bio: item.User.Profile.bio,
-      imageUrl: item.User.Profile.imageUrl,
-      title: item.title,
-      description: item.description,
-      body: item.body,
-      createdOn: dateFns.format(new Date(item.createdAt), 'D MMMM YYYY, h:ssA'),
-      modifiedOn: dateFns.format(new Date(item.updatedAt), 'D MMMM YYYY, h:ssA')
-    })
-    );
-    return res.send(responseArray);
-  }
 };
