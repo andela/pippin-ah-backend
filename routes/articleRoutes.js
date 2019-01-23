@@ -8,7 +8,7 @@ import {
 
 const router = express.Router();
 
-const { createArticle } = Article;
+const { createArticle, tagArticle } = Article;
 const { interestsValidator } = profileValidations;
 const {
   expectedParamsValidator,
@@ -25,5 +25,8 @@ router.route('/articles')
     interestsValidator,
     createArticle
   );
+
+router.route('/articles/tag')
+  .post(verifyToken, tagArticle);
 
 export default router;

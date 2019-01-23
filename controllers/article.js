@@ -38,5 +38,25 @@ export default {
         image: profile.imageUrl
       }
     });
+  },
+
+  async tagArticle(req, res) {
+    const { tags, title } = req.body;
+
+    const authorId = req.decoded.id;
+    const userArticle = await Article.findOne(
+      {
+        where: { userId: authorId, title },
+      });
+
+    await userArticle
+      .create({
+        tags
+      });
+
+    return res.status(201).json({
+      message: `Tag added to ${userArticle.title}`
+    });
   }
+
 };
