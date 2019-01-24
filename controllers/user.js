@@ -137,7 +137,7 @@ class Users {
            <strong style=" text-align:justify";margin-left:50%>
            Your Registration was successful </strong><br>
            <strong style=" text-align:justify";margin-left:50%>
-           Click <a href="${activationUrl}">Activate</a> to activate 
+           Click <a href="${activationUrl}">Activate</a> to activate
            your account
            </strong><br>`;
 
