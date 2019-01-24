@@ -1,8 +1,5 @@
-import chai, { expect } from 'chai';
-import chaiHttp from 'chai-http';
+import { expect } from 'chai';
 import { convertToArray } from '../helpers';
-
-chai.use(chaiHttp);
 
 describe('HELPER TEST SUITE', () => {
   describe('convertToArray test suite', () => {
