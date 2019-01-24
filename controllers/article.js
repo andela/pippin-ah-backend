@@ -63,48 +63,28 @@ export default {
 
   async getArticleByCategory(req, res) {
     const { category } = req.query;
-    let article;
-    if (category === undefined) {
-      article = await Article.findAll({
-        include: [{
-          model: User,
-          attributes: ['username'],
-          include: [
-            {
-              model: Profile,
-              attributes: [
-                'firstName',
-                'lastName',
-                'bio',
-                'imageUrl'
-              ]
-            }
-          ]
-        }]
-      });
-    }
-    if (category !== undefined) {
-      article = await Article.findAll({
-        where: {
-          category
-        },
-        include: [{
-          model: User,
-          attributes: ['username'],
-          include: [
-            {
-              model: Profile,
-              attributes: [
-                'firstName',
-                'lastName',
-                'bio',
-                'imageUrl'
-              ]
-            }
-          ]
-        }]
-      });
-    }
+
+    const article = await Article.findAll({
+      where: {
+        category
+      },
+      include: [{
+        model: User,
+        attributes: ['username'],
+        include: [
+          {
+            model: Profile,
+            attributes: [
+              'firstName',
+              'lastName',
+              'bio',
+              'imageUrl'
+            ]
+          }
+        ]
+      }]
+    });
+
     const responseArray = article.map(item => ({
       author: item.User.username,
       firstName: item.User.Profile.firstName,
