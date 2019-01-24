@@ -30,9 +30,15 @@ describe('HELPER TEST SUITE', () => {
   });
 
   describe('getReadTime test suite', () => {
-    it('Should get the read time of input text', (done) => {
+    it('Should return 1 for texts less than 550 words', (done) => {
       const readTime = getReadTime('There is fire on the mountain');
       expect(readTime).to.equal(1);
+      done();
+    });
+
+    it('Should get the read time of texts with over 550 words', (done) => {
+      const readTime = getReadTime('word '.repeat(1000));
+      expect(readTime).to.equal(3);
       done();
     });
   });
