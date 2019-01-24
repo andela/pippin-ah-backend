@@ -1,6 +1,6 @@
 import dateFns from 'date-fns';
 import models from '../models';
-import { generateSlug } from '../helpers';
+import { generateSlug, getReadTime } from '../helpers';
 
 const { Article, User, Profile } = models;
 
@@ -26,6 +26,7 @@ export default {
         category: category.trim(),
         slug: `${generateSlug(title)}-${user.username}`,
         userId,
+        readTime: getReadTime(body.trim())
       });
 
     return res.status(201).json({
@@ -34,6 +35,7 @@ export default {
       description: article.description,
       slug: article.slug,
       createdAt: article.createdAt,
+      readTime: article.readTime,
       author: {
         username: user.username,
         bio: profile.bio,
