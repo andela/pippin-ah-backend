@@ -21,7 +21,7 @@ const {
   tagArticle,
   reportArticle,
   getArticleBySlug,
-  getArticleByCategory,
+  getArticle,
   tagArticle
 } = Article;
 
@@ -82,7 +82,7 @@ router.route('/tag')
   );
 
 router.route('/categories')
-  .get(categoryQueryValidator, getArticleByCategory);
+  .get(categoryQueryValidator, getArticle);
 
 router.route('/:slug')
   .get(

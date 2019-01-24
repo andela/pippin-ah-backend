@@ -87,7 +87,8 @@ export default {
 
     return res.status(201).send({ message: 'Your report has been registered' });
   },
-  async getArticleByCategory(req, res) {
+
+  async getArticle(req, res) {
     const { category } = req.query;
 
     const article = await Article.findAll({
