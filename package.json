@@ -14,7 +14,9 @@
     "db:migrate": "sequelize db:migrate",
     "db:migrate:testdb": "NODE_ENV=test npm run db:migrate",
     "undo:migrations": "sequelize db:migrate:undo:all",
-    "undo:migrations:testdb": "NODE_ENV=test npm run undo:migrations"
+    "undo:migrations:testdb": "NODE_ENV=test npm run undo:migrations",
+    "heroku:prod": "git push heroku-prod develop",
+    "heroku:staging": "git push heroku-staging develop"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
