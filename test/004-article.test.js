@@ -225,6 +225,17 @@ describe('ARTICLE TEST SUITE', () => {
         expect(response.body.error).to.equal('Invalid category sciences');
       });
 
+    it('should return empty array when category is undefined',
+      async () => {
+        const response = await chai.request(server)
+          .get('/api/v1/articles/categories?')
+          .set('Authorization', accesstoken);
+        expect(response.status).to.equal(200);
+        // eslint-disable-next-line no-unused-expressions
+        expect(response.body).to.be.an('array').that.is.empty;
+        expect(Array.isArray(response.body)).to.equal(true);
+      });
+
     it('should get article when the category matches',
       async () => {
         const response = await chai.request(server)
