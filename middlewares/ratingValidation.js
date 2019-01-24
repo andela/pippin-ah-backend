@@ -1,6 +1,3 @@
-import Sequelize from 'sequelize';
-import models from '../models';
-
 export default {
   verifyMentor(req, res, next) {
     const { isMentor } = req.decoded;
