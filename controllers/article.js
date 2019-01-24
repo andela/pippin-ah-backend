@@ -22,8 +22,7 @@ export default {
         include: [{ model: Profile }]
       });
 
-    const profile = user.Profile();
-    await profile.setUser(user);
+    const profile = user.Profile;
     const article = await Article
       .create({
         title: title.trim(),
