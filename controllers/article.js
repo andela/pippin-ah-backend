@@ -1,7 +1,12 @@
 import models from '../models';
 import { generateSlug } from '../helpers';
 
-const { Article, User, Profile } = models;
+const {
+  Article,
+  User,
+  Profile,
+  Report
+} = models;
 
 export default {
   async createArticle(req, res) {
@@ -57,6 +62,21 @@ export default {
     }
 
     await article.update({ tags: normalizedTags });
+    return res.sendStatus(200);
+  },
+
+  async reportArticle(req, res) {
+    const { report, articleId } = req.body;
+    const { id: userId } = req.decoded;
+    const normalizedReport = report.trim().replace(/  +/g, ' ');
+
+    await Report
+      .create({
+        report: normalizedReport,
+        articleId,
+        userId
+      });
+
     return res.sendStatus(200);
   },
 

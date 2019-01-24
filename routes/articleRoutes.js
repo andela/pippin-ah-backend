@@ -8,7 +8,13 @@ import {
 
 const router = express.Router();
 
-const { createArticle, getArticle, tagArticle } = Article;
+const {
+  createArticle,
+  getArticle,
+  tagArticle,
+  reportArticle
+} = Article;
+
 const { addComment } = Comment;
 const { like, cancelReaction, dislike } = Reaction;
 const {
@@ -16,7 +22,10 @@ const {
   nonEmptyParamsValidator,
   existingTitleValidator,
   checkIfTagIsString,
-  categoryValidator
+  categoryValidator,
+  checkIfArticleIdExists,
+  checkIfUserAlreadyReported,
+  reportValidator
 } = articleValidation;
 const {
   ensureCommentInput,
@@ -34,6 +43,14 @@ router.route('/')
     createArticle
   );
 
+router.route('/report')
+  .post(
+    verifyToken,
+    reportValidator,
+    checkIfArticleIdExists,
+    checkIfUserAlreadyReported,
+    reportArticle
+  );
 
 router.route('/tag')
   .patch(
