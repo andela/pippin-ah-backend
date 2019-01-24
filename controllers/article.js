@@ -17,7 +17,8 @@ export default {
         include: [{ model: Profile }]
       });
 
-    const profile = user.Profile;
+    const profile = user.Profile();
+    await profile.setUser(user);
     const article = await Article
       .create({
         title: title.trim(),
@@ -34,6 +35,7 @@ export default {
       body: article.body,
       description: article.description,
       slug: article.slug,
+      rating: article.rating,
       createdAt: article.createdAt,
       readTime: article.readTime,
       author: {

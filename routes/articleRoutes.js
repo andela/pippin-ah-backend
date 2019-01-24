@@ -1,5 +1,11 @@
 import express from 'express';
-import { Article, Comment, Reaction } from '../controllers';
+import {
+  Article,
+  Comment,
+  Reaction,
+  Rating
+} from '../controllers';
+
 import {
   verifyToken,
   articleValidation,
@@ -55,6 +61,12 @@ router.route('/:slug')
   .get(
     ensureArticleExists,
     getArticle
+  );
+
+router.route('/rating/:slug')
+  .patch(
+    verifyToken,
+    Rating.rateArticle
   );
 
 router.route('/:slug/comments')
