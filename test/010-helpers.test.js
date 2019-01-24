@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { convertToArray } from '../helpers';
+import { convertToArray, getReadTime } from '../helpers';
 
 describe('HELPER TEST SUITE', () => {
   describe('convertToArray test suite', () => {
@@ -25,6 +25,14 @@ describe('HELPER TEST SUITE', () => {
     it('Should not throw up a TypeError when no input is supplied', (done) => {
       const result = convertToArray();
       expect(typeof (result)).to.equal('object');
+      done();
+    });
+  });
+
+  describe('getReadTime test suite', () => {
+    it('Should get the read time of input text', (done) => {
+      const readTime = getReadTime('There is fire on the mountain');
+      expect(readTime).to.equal(1);
       done();
     });
   });
