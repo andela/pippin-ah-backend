@@ -23,15 +23,12 @@ export default {
   },
 
   categoryQueryValidator(req, res, next) {
-    const cate = [
-      'Science', 'Technology', 'Arts', 'Engineering', 'Mathematics'
-    ];
     const { category } = req.query;
     if (category === undefined) {
       return next();
     }
 
-    if (!cate.includes(category)) {
+    if (!categoryEnum.includes(category)) {
       const errorMessage = `Invalid category ${category}`;
       const error = new Error(errorMessage);
       error.status = 400;
