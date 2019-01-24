@@ -10,19 +10,16 @@ export default {
     const article = await Article.findOne({ where: { slug } });
     const { rating } = article;
 
-    /* if (rating) {
-      console.log('####', rating);
-      newRating = currentRating.push({ [id]: rating });
-      console.log('****', newRating);
-    } */
-    /* if (rating) {
-      rating[id] = newRating;
+    JSON.stringify(rating);
+    console.log('#####', rating);
+    if (!rating) {
       await article.update({
-        rating
+        rating: { [id]: newRating }
       });
-    } */
+    }
+    rating[id] = newRating;
     await article.update({
-      rating: { [id]: newRating }
+      rating
     });
     res.json(article);
   }
