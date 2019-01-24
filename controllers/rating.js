@@ -14,11 +14,23 @@ export default {
       await article.update({
         rating: { [id]: newRating }
       });
+      await article.update({
+        aveRating: newRating
+      });
     }
+
     if (rating) {
       rating[id] = newRating;
       await article.update({
         rating
+      });
+
+      const ratingArray = Object.values(rating);
+      const sum = ratingArray.reduce((a, b) => Number(a) + Number(b));
+      const aveRating = sum / ratingArray.length;
+
+      await article.update({
+        aveRating
       });
     }
     res.json(article);
