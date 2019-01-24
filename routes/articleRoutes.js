@@ -42,7 +42,11 @@ const {
   ensureArticleExists
 } = commentValidations;
 
-const { verifyMentor } = ratingValidation;
+const {
+  verifyMentor,
+  validateInputType,
+  validateInputRange
+} = ratingValidation;
 
 router.route('/')
   .post(
@@ -83,6 +87,8 @@ router.route('/:slug')
 router.route('/rating/:slug')
   .patch(
     verifyToken,
+    validateInputType,
+    validateInputRange,
     Rating.rateArticle
   );
 
