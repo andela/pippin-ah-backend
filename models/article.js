@@ -37,6 +37,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM,
       values: ['Science', 'Technology', 'Engineering', 'Arts', 'Mathematics']
     },
+    readTime: {
+      type: DataTypes.INTEGER
+    },
   });
 
   Article.associate = (models) => {

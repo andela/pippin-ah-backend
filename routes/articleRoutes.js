@@ -12,7 +12,8 @@ const {
   createArticle,
   getArticle,
   tagArticle,
-  reportArticle
+  reportArticle,
+  getArticleByCategory
 } = Article;
 
 const { addComment } = Comment;
@@ -26,7 +27,8 @@ const {
   checkIfArticleIdExists,
   checkIfUserAlreadyReported,
   checkForUuid,
-  reportValidator
+  reportValidator,
+  categoryQueryValidator
 } = articleValidation;
 const {
   ensureCommentInput,
@@ -60,6 +62,9 @@ router.route('/tag')
     checkIfTagIsString,
     tagArticle
   );
+
+router.route('/categories')
+  .get(categoryQueryValidator, getArticleByCategory);
 
 router.route('/:slug')
   .get(

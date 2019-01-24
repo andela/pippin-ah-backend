@@ -288,4 +288,42 @@ describe('ARTICLE TEST SUITE', () => {
         expect(response.body.error).to.equal('Article provided does not exist');
       });
   });
+
+  describe('Get Article by category', () => {
+    it('should not get article when the category does not match',
+      async () => {
+        const response = await chai.request(server)
+          .get('/api/v1/articles/categories?category=sciences')
+          .set('Authorization', accesstoken);
+        expect(response.status).to.equal(400);
+        expect(response.body).to.have.deep.property('error');
+        expect(response.body.error).to.equal('Invalid category sciences');
+      });
+
+    it('should return empty array when category is undefined',
+      async () => {
+        const response = await chai.request(server)
+          .get('/api/v1/articles/categories?')
+          .set('Authorization', accesstoken);
+        expect(response.status).to.equal(200);
+        // eslint-disable-next-line no-unused-expressions
+        expect(response.body).to.be.an('array').that.is.empty;
+        expect(Array.isArray(response.body)).to.equal(true);
+      });
+
+    it('should get article when the category matches',
+      async () => {
+        const response = await chai.request(server)
+          .get('/api/v1/articles/categories?category=Science')
+          .set('Authorization', accesstoken);
+        expect(response.status).to.equal(200);
+        expect(response.body[0].author).to.equal('newusername');
+        expect(response.body[0].firstName).to.equal(null);
+        expect(response.body[0].title)
+          .to.equal('Halt and Catch Fire');
+        expect(response.body[0].body).to.equal('Article Body');
+        expect(response.body[0]).to.have.deep.property('createdOn');
+        expect(response.body[0]).to.have.deep.property('modifiedOn');
+      });
+  });
 });

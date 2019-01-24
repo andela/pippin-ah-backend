@@ -1,5 +1,6 @@
+import dateFns from 'date-fns';
 import models from '../models';
-import { generateSlug } from '../helpers';
+import { generateSlug, getReadTime } from '../helpers';
 
 const {
   Article,
@@ -30,6 +31,7 @@ export default {
         category: category.trim(),
         slug: `${generateSlug(title)}-${user.username}`,
         userId,
+        readTime: getReadTime(body.trim())
       });
 
     return res.status(201).json({
@@ -39,6 +41,7 @@ export default {
       description: article.description,
       slug: article.slug,
       createdAt: article.createdAt,
+      readTime: article.readTime,
       author: {
         username: user.username,
         bio: profile.bio,
@@ -80,10 +83,50 @@ export default {
 
     return res.sendStatus(200);
   },
+  async getArticleByCategory(req, res) {
+    const { category } = req.query;
+
+    const article = await Article.findAll({
+      where: {
+        category
+      },
+      include: [{
+        model: User,
+        attributes: ['username'],
+        include: [
+          {
+            model: Profile,
+            attributes: [
+              'firstName',
+              'lastName',
+              'bio',
+              'imageUrl'
+            ]
+          }
+        ]
+      }]
+    });
+
+    const responseArray = article.map(item => ({
+      author: item.User.username,
+      firstName: item.User.Profile.firstName,
+      lastName: item.User.Profile.lastName,
+      bio: item.User.Profile.bio,
+      imageUrl: item.User.Profile.imageUrl,
+      title: item.title,
+      description: item.description,
+      category: item.category,
+      body: item.body,
+      createdOn: dateFns.format(new Date(item.createdAt), 'D MMMM YYYY, h:ssA'),
+      modifiedOn: dateFns.format(new Date(item.updatedAt), 'D MMMM YYYY, h:ssA')
+    })
+    );
+    return res.send(responseArray);
+  },
 
   async getArticle(req, res) {
     const { slug } = req.params;
     const article = await Article.findOne({ where: { slug } });
     return res.json(article);
-  }
+  },
 };
