@@ -164,11 +164,69 @@ describe('ARTICLE TEST SUITE', () => {
           report: 'Article has erotic content, its inappropriate',
           articleId
         };
+
         const response = await chai.request(server)
-          .patch(`${baseUrl}/report`)
+          .post(`${baseUrl}/report`)
           .set('Authorization', accesstoken)
           .send(articleObject);
         expect(response.status).to.equal(200);
+      });
+
+    it('should not be able to report an article more than one',
+      async () => {
+        const articleObject = {
+          report: 'Article has not been deleted, I said it contain erotic',
+          articleId
+        };
+
+        const response = await chai.request(server)
+          .post(`${baseUrl}/report`)
+          .set('Authorization', accesstoken)
+          .send(articleObject);
+        expect(response.status).to.equal(409);
+        expect(response.body.error).to.equal('Article already reported by you');
+      });
+
+    it('should throw an error if Article not found',
+      async () => {
+        const articleObject = {
+          report: 'Article has not been deleted, I said it contain erotic',
+          articleId: 'EF25DD19-E1EF-48CE-A6E4-A7F0E98F1A61'
+        };
+
+        const response = await chai.request(server)
+          .post(`${baseUrl}/report`)
+          .set('Authorization', accesstoken)
+          .send(articleObject);
+        expect(response.status).to.equal(409);
+        expect(response.body.error).to.equal('Article not found');
+      });
+
+    it('should throw an error if required field not provided',
+      async () => {
+        const response = await chai.request(server)
+          .post(`${baseUrl}/report`)
+          .set('Authorization', accesstoken)
+          .send({});
+        const errorResult = JSON.parse(response.body.error);
+        expect(response.status).to.equal(400);
+        expect(errorResult.length).to.equal(2);
+        // eslint-disable-next-line no-unused-expressions
+        expect(Array.isArray(errorResult)).to.be.true;
+        expect(errorResult[0]).to.equal('articleId is required');
+        expect(errorResult[1]).to.equal('report is required');
+      });
+    it('should throw an error if invalid UUID is provided',
+      async () => {
+        const response = await chai.request(server)
+          .post(`${baseUrl}/report`)
+          .set('Authorization', accesstoken)
+          .send({
+            report: 'Article has not been deleted, I said it contain erotic',
+            articleId: 'FGGHHH%%^&*GGSSSSDDGGGHGHADSFGHH'
+          });
+        expect(response.status).to.equal(400);
+        expect(response.body.error).to.equal('Invalid ArticleId');
       });
   });
 

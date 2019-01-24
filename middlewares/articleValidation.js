@@ -84,6 +84,17 @@ export default {
     error.status = 400;
     return next(error);
   },
+  checkForUuid(req, res, next) {
+    const { articleId } = req.body;
+    // eslint-disable-next-line
+    const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    if (!uuid.test(articleId)) {
+      const error = new Error('Invalid ArticleId');
+      error.status = 400;
+      return next(error);
+    }
+    return next();
+  },
 
   reportValidator(req, res, next) {
     const required = ['articleId', 'report'];

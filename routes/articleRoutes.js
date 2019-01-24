@@ -25,6 +25,7 @@ const {
   categoryValidator,
   checkIfArticleIdExists,
   checkIfUserAlreadyReported,
+  checkForUuid,
   reportValidator
 } = articleValidation;
 const {
@@ -47,6 +48,7 @@ router.route('/report')
   .post(
     verifyToken,
     reportValidator,
+    checkForUuid,
     checkIfArticleIdExists,
     checkIfUserAlreadyReported,
     reportArticle

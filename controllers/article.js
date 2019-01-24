@@ -33,6 +33,7 @@ export default {
       });
 
     return res.status(201).json({
+      id: article.id,
       title: article.title,
       body: article.body,
       description: article.description,
