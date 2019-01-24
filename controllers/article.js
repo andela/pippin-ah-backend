@@ -41,6 +41,25 @@ export default {
     });
   },
 
+  async tagArticle(req, res) {
+    let normalizedTags;
+    const { title, tags } = req.body;
+
+    const { id: userId } = req.decoded;
+    const article = await Article.findOne({ where: { userId, title } });
+
+    normalizedTags = [tags.trim().toLowerCase()];
+
+    if (article.tags) {
+      normalizedTags = [
+        ...new Set(article.tags.concat(tags.trim().toLowerCase()))
+      ];
+    }
+
+    await article.update({ tags: normalizedTags });
+    return res.sendStatus(200);
+  },
+
   async getArticle(req, res) {
     const { slug } = req.params;
     const article = await Article.findOne({ where: { slug } });

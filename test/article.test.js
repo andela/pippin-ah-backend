@@ -3,6 +3,8 @@ import chaiHttp from 'chai-http';
 import models from '../models';
 import server from '../app';
 
+const baseUrl = '/api/v1/articles';
+
 chai.use(chaiHttp);
 
 describe('ARTICLE TEST SUITE', () => {
@@ -27,7 +29,7 @@ describe('ARTICLE TEST SUITE', () => {
     accesstoken = responseObject.body.token;
 
     await chai.request(server)
-      .post('/api/v1/articles')
+      .post(baseUrl)
       .send(articleRequestObject)
       .set('Authorization', accesstoken);
   });
@@ -42,7 +44,7 @@ describe('ARTICLE TEST SUITE', () => {
           category: 'Science'
         };
         const response = await chai.request(server)
-          .post('/api/v1/articles')
+          .post(baseUrl)
           .send(articleObject);
         expect(response.status).to.equal(401);
         expect(response.body.error).to.equal('No token provided');
@@ -55,7 +57,7 @@ describe('ARTICLE TEST SUITE', () => {
           category: 'Science'
         };
         const response = await chai.request(server)
-          .post('/api/v1/articles')
+          .post(baseUrl)
           .send(articleObject)
           .set('Authorization', accesstoken);
         const errorResult = JSON.parse(response.body.error);
@@ -73,7 +75,7 @@ describe('ARTICLE TEST SUITE', () => {
           category: 'Article Category'
         };
         const response = await chai.request(server)
-          .post('/api/v1/articles')
+          .post(baseUrl)
           .send(articleObject)
           .set('Authorization', accesstoken);
         const errorResult = JSON.parse(response.body.error);
@@ -91,7 +93,7 @@ describe('ARTICLE TEST SUITE', () => {
           category: 'Science'
         };
         const response = await chai.request(server)
-          .post('/api/v1/articles')
+          .post(baseUrl)
           .send(articleObject)
           .set('Authorization', accesstoken);
         const errorResult = 'You already have an article with the same title';
@@ -108,7 +110,7 @@ describe('ARTICLE TEST SUITE', () => {
           category: 'Science'
         };
         const response = await chai.request(server)
-          .post('/api/v1/articles')
+          .post(baseUrl)
           .send(articleObject)
           .set('Authorization', accesstoken);
         expect(response.status).to.equal(201);
@@ -141,7 +143,7 @@ describe('ARTICLE TEST SUITE', () => {
           category: 'Science'
         };
         chai.request(server)
-          .post('/api/v1/articles')
+          .post(baseUrl)
           .set('Authorization', accesstoken)
           .send(articleObject)
           .end((err, res) => {
@@ -152,6 +154,49 @@ describe('ARTICLE TEST SUITE', () => {
           });
       });
   });
+
+  describe('Tag Article', () => {
+    it('should add  tag when valid values are entered',
+      async () => {
+        const articleObject = {
+          title: 'New Article',
+          tags: 'Article Body'
+        };
+        const response = await chai.request(server)
+          .patch(`${baseUrl}/tag`)
+          .set('Authorization', accesstoken)
+          .send(articleObject);
+        expect(response.status).to.equal(200);
+      });
+
+    it('should not add tag when numbers are entered',
+      async () => {
+        const articleObject = {
+          title: 'New Article',
+          tags: 678899900000,
+        };
+        const response = await chai.request(server)
+          .patch(`${baseUrl}/tag`)
+          .set('Authorization', accesstoken)
+          .send(articleObject);
+        expect(response.status).to.equal(400);
+        expect(response.body.error).to.equal('tag must be a string');
+      });
+
+    it('should append tag to existing tag',
+      async () => {
+        const articleObject = {
+          title: 'New Article',
+          tags: 'Article Body Two',
+        };
+        const response = await chai.request(server)
+          .patch(`${baseUrl}/tag`)
+          .set('Authorization', accesstoken)
+          .send(articleObject);
+        expect(response.status).to.equal(200);
+      });
+  });
+
   describe('Get Article', () => {
     it('should get an article',
       async () => {

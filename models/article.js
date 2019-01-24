@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     tags: {
-      type: DataTypes.STRING
+      type: DataTypes.ARRAY(DataTypes.STRING)
     },
     slug: {
       type: DataTypes.STRING,

@@ -77,4 +77,11 @@ export default {
     return next();
   },
 
+  checkIfTagIsString(req, res, next) {
+    const { tags } = req.body;
+    if (typeof tags === 'string') return next();
+    const error = new Error('tag must be a string');
+    error.status = 400;
+    return next(error);
+  }
 };

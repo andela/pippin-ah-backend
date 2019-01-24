@@ -8,13 +8,14 @@ import {
 
 const router = express.Router();
 
-const { createArticle, getArticle } = Article;
+const { createArticle, getArticle, tagArticle } = Article;
 const { addComment } = Comment;
 const { like, cancelReaction, dislike } = Reaction;
 const {
   expectedParamsValidator,
   nonEmptyParamsValidator,
   existingTitleValidator,
+  checkIfTagIsString,
   categoryValidator
 } = articleValidation;
 const {
@@ -31,6 +32,14 @@ router.route('/')
     existingTitleValidator,
     categoryValidator,
     createArticle
+  );
+
+
+router.route('/tag')
+  .patch(
+    verifyToken,
+    checkIfTagIsString,
+    tagArticle
   );
 
 router.route('/:slug')
