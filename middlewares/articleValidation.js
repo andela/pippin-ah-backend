@@ -28,9 +28,7 @@ export default {
     ];
     const { category } = req.query;
     if (category === undefined) {
-      const error = new Error('Missing query string: category');
-      error.status = 400;
-      return next(error);
+      return next();
     }
 
     if (!cate.includes(category)) {

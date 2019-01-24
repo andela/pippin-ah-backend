@@ -215,14 +215,19 @@ describe('ARTICLE TEST SUITE', () => {
   });
 
   describe('Get Article by category', () => {
-    it('should not get article when the category is not specified in the route',
+    it('should get all articles when the category is not specified',
       async () => {
         const response = await chai.request(server)
           .get('/api/v1/articles/categories?')
           .set('Authorization', accesstoken);
-        expect(response.status).to.equal(400);
-        expect(response.body).to.have.deep.property('error');
-        expect(response.body.error).to.equal('Missing query string: category');
+        expect(response.status).to.equal(200);
+        expect(response.body[0].author).to.equal('newusername');
+        expect(response.body[0].firstName).to.equal(null);
+        expect(response.body[0].title)
+          .to.equal('Halt and Catch Fire');
+        expect(response.body[0].body).to.equal('Article Body');
+        expect(response.body[0]).to.have.deep.property('createdOn');
+        expect(response.body[0]).to.have.deep.property('modifiedOn');
       });
     it('should not get article when the category does not match',
       async () => {
