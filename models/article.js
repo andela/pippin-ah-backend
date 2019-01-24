@@ -33,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.JSON,
       allowNull: true
     },
+    aveRating: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
     category: {
       type: DataTypes.ENUM,
       values: ['Science', 'Technology', 'Engineering', 'Arts', 'Mathematics']
