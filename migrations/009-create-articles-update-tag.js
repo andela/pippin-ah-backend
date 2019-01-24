@@ -1,8 +1,8 @@
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface
     .changeColumn('Articles', 'tags', {
-      type: `${Sequelize.ARRAY(Sequelize.TEXT)}USING CAST("tags" as 
-      ${Sequelize.ARRAY(Sequelize.TEXT)})`
+      type: `${Sequelize.ARRAY(Sequelize.STRING)}USING CAST("tags" as 
+      ${Sequelize.ARRAY(Sequelize.STRING)})`
     }),
   down: (queryInterface, Sequelize) => queryInterface
     .changeColumn('Articles', 'tags', {

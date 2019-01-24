@@ -182,6 +182,19 @@ describe('ARTICLE TEST SUITE', () => {
         expect(response.status).to.equal(400);
         expect(response.body.error).to.equal('tag must be a string');
       });
+
+    it('should append tag to existing tag',
+      async () => {
+        const articleObject = {
+          title: 'New Article',
+          tags: 'Article Body Two',
+        };
+        const response = await chai.request(server)
+          .patch(`${baseUrl}/tag`)
+          .set('Authorization', accesstoken)
+          .send(articleObject);
+        expect(response.status).to.equal(200);
+      });
   });
 
   describe('Get Article', () => {

@@ -65,5 +65,4 @@ export default {
     const article = await Article.findOne({ where: { slug } });
     return res.json(article);
   }
-
 };
