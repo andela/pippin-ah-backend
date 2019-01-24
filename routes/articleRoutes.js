@@ -75,7 +75,4 @@ router.route('/:slug/cancelreaction')
 router.route('/:slug/dislike')
   .patch(verifyToken, ensureArticleExists, dislike);
 
-router.route('/categories')
-  .get(categoryQueryValidator, getArticleByCategory);
-
 export default router;
