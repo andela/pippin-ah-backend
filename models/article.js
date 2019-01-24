@@ -31,10 +31,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     rating: {
       type: DataTypes.JSON,
+<<<<<<< HEAD
       allowNull: true
     },
     aveRating: {
       type: DataTypes.INTEGER,
+=======
+>>>>>>> 88b75b64755134ea1dde635d2bf9bbae4db9c755
       allowNull: true
     },
     category: {
