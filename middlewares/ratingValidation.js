@@ -22,4 +22,14 @@ export default {
     return next();
   },
 
+  validateInputRange(req, res, next) {
+    const { newRating } = req.body;
+    if (newRating > 5 || newRating < 1) {
+      const errorMessage = 'Value must not be less than 1 or greater than 5';
+      const error = new Error(errorMessage);
+      error.status = 400;
+      return next(error);
+    }
+    return next();
+  }
 };
