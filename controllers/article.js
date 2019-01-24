@@ -129,7 +129,7 @@ export default {
     return res.send(responseArray);
   },
 
-  async getArticle(req, res) {
+  async getArticleBySlug(req, res) {
     const { slug } = req.params;
     const article = await Article.findOne({ where: { slug } });
     return res.json(article);

@@ -17,10 +17,12 @@ const router = express.Router();
 
 const {
   createArticle,
-  getArticle,
+  getArticles,
   tagArticle,
   reportArticle,
-  getArticleByCategory
+  getArticleBySlug,
+  getArticleByCategory,
+  tagArticle
 } = Article;
 
 const { addComment } = Comment;
@@ -85,7 +87,7 @@ router.route('/categories')
 router.route('/:slug')
   .get(
     ensureArticleExists,
-    getArticle
+    getArticleBySlug
   );
 
 router.route('/rating/:slug')
