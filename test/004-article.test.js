@@ -9,6 +9,7 @@ chai.use(chaiHttp);
 
 describe('ARTICLE TEST SUITE', () => {
   let accesstoken;
+  let articleId;
   before(async () => {
     await models.sequelize.sync({ force: true });
 
@@ -114,6 +115,7 @@ describe('ARTICLE TEST SUITE', () => {
           .send(articleObject)
           .set('Authorization', accesstoken);
         expect(response.status).to.equal(201);
+        articleId = response.body.id;
         expect(response.body.title).to.equal('Test Space Trimming');
       });
 
@@ -152,6 +154,21 @@ describe('ARTICLE TEST SUITE', () => {
             expect(res.body.description).to.equal('Article Description');
             done();
           });
+      });
+  });
+
+  describe('Report Article', () => {
+    it('should be able to report an article',
+      async () => {
+        const articleObject = {
+          report: 'Article has erotic content, its inappropriate',
+          articleId
+        };
+        const response = await chai.request(server)
+          .patch(`${baseUrl}/report`)
+          .set('Authorization', accesstoken)
+          .send(articleObject);
+        expect(response.status).to.equal(200);
       });
   });
 
