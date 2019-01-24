@@ -9,7 +9,8 @@ import {
 import {
   verifyToken,
   articleValidation,
-  commentValidations
+  commentValidations,
+  ratingValidation
 } from '../middlewares';
 
 const router = express.Router();
@@ -40,6 +41,8 @@ const {
   ensureValidComment,
   ensureArticleExists
 } = commentValidations;
+
+const { verifyMentor } = ratingValidation;
 
 router.route('/')
   .post(
@@ -80,6 +83,7 @@ router.route('/:slug')
 router.route('/rating/:slug')
   .patch(
     verifyToken,
+    verifyMentor,
     Rating.rateArticle
   );
 
