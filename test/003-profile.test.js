@@ -5,7 +5,7 @@ import server from '../app';
 
 chai.use(chaiHttp);
 
-describe('USER TEST SUITE', () => {
+describe('PROFILE TEST SUITE', () => {
   let profileToken, profileToken2;
   before(async () => {
     await models.sequelize.sync({ force: true });
@@ -31,7 +31,7 @@ describe('USER TEST SUITE', () => {
     profileToken2 = responseObject2.body.token;
   });
 
-  describe('TEST SUITS FOR PROFILE', () => {
+  describe('Profile Update', () => {
     it('Should update profile when valid inputs are supplied',
       async () => {
         const newProfile = {
