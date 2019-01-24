@@ -27,7 +27,7 @@ export default {
 
       const ratingArray = Object.values(rating);
       const sum = ratingArray.reduce((a, b) => Number(a) + Number(b));
-      const aveRating = sum / ratingArray.length;
+      const aveRating = Math.round((sum / ratingArray.length) * 10) / 10;
 
       await article.update({
         aveRating
