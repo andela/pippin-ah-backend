@@ -71,6 +71,7 @@ router.route('/report/:slug')
     checkIfUserAlreadyReported,
     reportArticle
   );
+
 router.route('/')
   .get(categoryQueryValidator, getArticles);
 
