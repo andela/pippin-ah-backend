@@ -10,7 +10,6 @@ const {
   Report
 } = models;
 
-
 export default {
   async createArticle(req, res) {
     const {
@@ -95,10 +94,10 @@ export default {
     const {
       category,
       author,
-      tag,
       keywords
     } = req.query;
 
+    const tag = '';
     const article = await Article.findAll({
       where: {
         [and]: [
@@ -123,7 +122,7 @@ export default {
             category: category || categories
           },
           {
-            tags: tag || { [notIn]: [] }
+            tags: tag ? { [contains]: [tag] } : { [notIn]: [] }
           }
         ]
       },
@@ -137,43 +136,7 @@ export default {
       }
       ]
     });
-    /*  include: [{
-        model: User,
-        attributes: ['username'],
-        include: [
-          {
-            model: Profile,
-            attributes: [
-              'firstName',
-              'lastName',
-              'bio',
-              'imageUrl'
-            ]
-          }
-        ]
-      }]
-    });
 
-    const article = await Article.findAll({
-      where: {
-        category
-      },
-      include: [{
-        model: User,
-        attributes: ['username'],
-        include: [
-          {
-            model: Profile,
-            attributes: [
-              'firstName',
-              'lastName',
-              'bio',
-              'imageUrl'
-            ]
-          }
-        ]
-      }]
-    }); */
 
     const responseArray = article.map(item => ({
       author: item.User.username,
