@@ -3,7 +3,7 @@ import { isNumeric } from 'validator';
 export default {
   userIsMentor(req, res, next) {
     const { isMentor } = req.decoded;
-    if (isMentor === false) {
+    if (!isMentor) {
       const error = new Error('Only mentors can rate articles');
       error.status = 401;
       return next(error);

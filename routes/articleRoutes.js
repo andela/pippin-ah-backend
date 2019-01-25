@@ -50,6 +50,8 @@ const {
   ratingIsInRange
 } = ratingValidation;
 
+const { rateArticle } = Rating;
+
 router.route('/')
   .post(
     verifyToken,
@@ -94,7 +96,7 @@ router.route('/rating/:slug')
     isRateValueSupplied,
     inputTypeIsValid,
     ratingIsInRange,
-    Rating.rateArticle
+    rateArticle
   );
 
 router.route('/:slug/comments')
