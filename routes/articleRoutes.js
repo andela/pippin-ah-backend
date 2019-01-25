@@ -74,7 +74,7 @@ router.route('/report/:slug')
     reportArticle
   );
 router.route('/')
-  .get(getArticles);
+  .get(categoryQueryValidator, getArticles);
 
 router.route('/tag')
   .patch(
@@ -82,9 +82,6 @@ router.route('/tag')
     checkIfTagIsString,
     tagArticle
   );
-
-router.route('/categories')
-  .get(categoryQueryValidator, getArticles);
 
 router.route('/:slug')
   .get(
