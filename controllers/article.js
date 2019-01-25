@@ -120,7 +120,7 @@ export default {
       }
     ];
     if (author) {
-      queryArray.append({
+      queryArray.push({
         [or]: {
           '$User.Profile.lastName$': {
             [iLike]: `%${author}%`
