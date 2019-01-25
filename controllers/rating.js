@@ -4,9 +4,11 @@ const { Article } = models;
 
 export default {
   async rateArticle(req, res) {
-    const { slug } = req.params;
-    const { rateValue } = req.body;
-    const { id } = req.decoded;
+    const {
+      params: { slug },
+      body: { rateValue },
+      decoded: { id }
+    } = req;
     const article = await Article.findOne({ where: { slug } });
     const { rating } = article;
 
