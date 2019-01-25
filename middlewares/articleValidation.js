@@ -2,7 +2,7 @@ import Sequelize from 'sequelize';
 import models from '../models';
 import { categories as categoryEnum } from '../helpers';
 
-const { Article } = models;
+const { Article, Report } = models;
 const requiredParams = ['title', 'body', 'description', 'category'];
 const { iLike } = Sequelize.Op;
 
@@ -97,5 +97,41 @@ export default {
     const error = new Error('tag must be a string');
     error.status = 400;
     return next(error);
+  },
+
+  reportIsEmpty(req, res, next) {
+    const { report } = req.body;
+    if (report.trim().length < 10) {
+      const error = new Error('Report must have at least ten characters');
+      error.status = 400;
+      return next(error);
+    }
+    return next();
+  },
+
+  reportIsRequired(req, res, next) {
+    if ('report' in req.body) return next();
+    const error = new Error('Report is required');
+    error.status = 400;
+    return next(error);
+  },
+
+  async checkIfUserAlreadyReported(req, res, next) {
+    const { params: { slug } } = req;
+    const { id: userId } = req.decoded;
+    const article = await Article.findOne({ where: { slug } });
+    if (article) {
+      const idFound = await Report.findOne({
+        where: { articleId: article.id, userId }
+      });
+
+      if (idFound) {
+        const error = new Error('Article already reported by you');
+        error.status = 409;
+        return next(error);
+      }
+      return next();
+    }
+    return next();
   }
 };

@@ -11,8 +11,9 @@ const router = express.Router();
 const {
   createArticle,
   getArticle,
-  getArticleByCategory,
-  tagArticle
+  tagArticle,
+  reportArticle,
+  getArticleByCategory
 } = Article;
 
 const { addComment } = Comment;
@@ -23,6 +24,9 @@ const {
   existingTitleValidator,
   checkIfTagIsString,
   categoryValidator,
+  checkIfUserAlreadyReported,
+  reportIsEmpty,
+  reportIsRequired,
   categoryQueryValidator
 } = articleValidation;
 const {
@@ -39,6 +43,16 @@ router.route('/')
     existingTitleValidator,
     categoryValidator,
     createArticle
+  );
+
+router.route('/report/:slug')
+  .post(
+    verifyToken,
+    ensureArticleExists,
+    reportIsRequired,
+    reportIsEmpty,
+    checkIfUserAlreadyReported,
+    reportArticle
   );
 
 router.route('/tag')

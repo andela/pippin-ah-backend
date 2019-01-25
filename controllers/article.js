@@ -2,7 +2,12 @@ import dateFns from 'date-fns';
 import models from '../models';
 import { generateSlug, getReadTime } from '../helpers';
 
-const { Article, User, Profile } = models;
+const {
+  Article,
+  User,
+  Profile,
+  Report
+} = models;
 
 export default {
   async createArticle(req, res) {
@@ -63,6 +68,24 @@ export default {
     return res.sendStatus(200);
   },
 
+  async reportArticle(req, res) {
+    const {
+      body: { report },
+      params: { slug },
+      decoded: { id: userId }
+    } = req;
+
+    const article = await Article.findOne({ where: { slug } });
+    const normalizedReport = report.trim().replace(/  +/g, ' ');
+
+    await Report.create({
+      report: normalizedReport,
+      articleId: article.id,
+      userId
+    });
+
+    return res.status(201).send({ message: 'Your report has been registered' });
+  },
   async getArticleByCategory(req, res) {
     const { category } = req.query;
 

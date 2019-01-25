@@ -26,8 +26,6 @@ describe('FOLLOW TEST SUITE', () => {
     const firstUserResponse = await chai.request(server).post('/api/v1/users')
       .send(firstUser);
     firstUserToken = firstUserResponse.body.token;
-    await chai.request(server).post('/api/v1/users')
-      .send(firstUser);
 
     const secondUserResponse = await chai.request(server).post('/api/v1/users')
       .send(secondUser);
