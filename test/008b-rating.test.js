@@ -3,12 +3,14 @@ import chaiHttp from 'chai-http';
 import models from '../models';
 import server from '../app';
 
-chai.use(chaiHttp);
-
+const { User } = models;
 const baseUrl = '/api/v1/articles';
 
-describe('Test Suite for Rating', () => {
-  let accesstoken;
+chai.use(chaiHttp);
+
+describe.only('Test Suite for Rating', () => {
+  let nonMentorToken;
+  let isMentorToken;
   before(async () => {
     await models.sequelize.sync({ force: true });
 
@@ -23,32 +25,58 @@ describe('Test Suite for Rating', () => {
       description: 'Article Description',
       category: 'Science'
     };
+    const loginRequestObject = {
+      usernameOrEmail: 'bugsburney',
+      password: 'bugsbugs'
+    };
 
-    const responseObject = await chai.request(server).post('/api/v1/users')
+    const nonMentorResponseObject = await chai.request(server)
+      .post('/api/v1/users')
       .send(userRequestObject);
-    accesstoken = responseObject.body.token;
+    nonMentorToken = nonMentorResponseObject.body.token;
 
     await chai.request(server)
       .post(baseUrl)
       .send(articleRequestObject)
-      .set('Authorization', accesstoken);
+      .set('Authorization', nonMentorToken);
+
+    const user = await User.findOne({ where: { username: 'bugsburney' } });
+    await user.update({
+      isMentor: true,
+      password: 'bugsbugs'
+    });
+
+    const isMentorResponseObject = await chai.request(server)
+      .post('/api/v1/users/login')
+      .send(loginRequestObject);
+    isMentorToken = isMentorResponseObject.body.token;
   });
 
   describe('Rate Article', () => {
     it('should not rate an article if user is not logged in',
       async () => {
         const response = await chai.request(server)
-          .post(`${baseUrl}/rating/silicon-valley-bugsburney`)
+          .patch(`${baseUrl}/rating/silicon-valley-bugsburney`)
           .send({ rateValue: 5 });
-        expect(response.status).to.equal(400);
+        expect(response.status).to.equal(401);
         expect(response.body.error).to.equal('No token provided');
+      });
+
+    it('should not rate an article if user is not a mentor',
+      async () => {
+        const response = await chai.request(server)
+          .patch(`${baseUrl}/rating/silicon-valley-bugsburney`)
+          .set('Authorization', nonMentorToken)
+          .send({ rateValue: 5 });
+        expect(response.status).to.equal(401);
+        expect(response.body.error).to.equal('Only mentors can rate articles');
       });
 
     it('should not rate an article if value is not a number',
       async () => {
         const response = await chai.request(server)
-          .post(`${baseUrl}/rating/silicon-valley-bugsburney`)
-          .set('Authorization', accesstoken)
+          .patch(`${baseUrl}/rating/silicon-valley-bugsburney`)
+          .set('Authorization', isMentorToken)
           .send({ rateValue: 'a' });
         expect(response.status).to.equal(400);
         expect(response.body.error).to.equal('Value must be a number');
@@ -57,9 +85,9 @@ describe('Test Suite for Rating', () => {
     it('should not rate an article if value is less than 1 or greater than 5',
       async () => {
         const response = await chai.request(server)
-          .post(`${baseUrl}/rating/silicon-valley-bugsburney`)
-          .set('Authorization', accesstoken)
-          .send({ rateValue: 8 });
+          .patch(`${baseUrl}/rating/silicon-valley-bugsburney`)
+          .set('Authorization', isMentorToken)
+          .send({ rateValue: '8' });
         const errorMessage = 'Value must not be less than 1 or greater than 5';
         expect(response.status).to.equal(400);
         expect(response.body.error).to.equal(errorMessage);
