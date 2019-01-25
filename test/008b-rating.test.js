@@ -8,7 +8,7 @@ const baseUrl = '/api/v1/articles';
 
 chai.use(chaiHttp);
 
-describe('Test Suite for Rating', () => {
+describe.only('Test Suite for Rating', () => {
   let nonMentorToken;
   let isMentorToken;
   let secondUserToken;
@@ -156,7 +156,7 @@ describe('Test Suite for Rating', () => {
           .set('Authorization', isMentorToken)
           .send({ rateValue: '4' });
         expect(response.status).to.equal(200);
-        expect(response.body.yourRating).to.equal('4');
+        expect(response.body.yourRating).to.equal(4);
       });
 
     it('should rate an article even if it already has a rating',
@@ -166,7 +166,7 @@ describe('Test Suite for Rating', () => {
           .set('Authorization', isMentorToken)
           .send({ rateValue: '3' });
         expect(response.status).to.equal(200);
-        expect(response.body.yourRating).to.equal('3');
+        expect(response.body.yourRating).to.equal(3);
         expect(response.body.averageRating).to.equal((5 + 3) / 2);
       });
   });
