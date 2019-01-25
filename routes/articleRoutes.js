@@ -44,10 +44,10 @@ const {
 } = commentValidations;
 
 const {
-  verifyMentor,
-  validateInput,
-  validateInputType,
-  validateInputRange
+  userIsMentor,
+  isRateValueSupplied,
+  inputTypeIsValid,
+  ratingIsInRange
 } = ratingValidation;
 
 router.route('/')
@@ -89,11 +89,11 @@ router.route('/:slug')
 router.route('/rating/:slug')
   .patch(
     verifyToken,
-    verifyMentor,
+    userIsMentor,
     ensureArticleExists,
-    validateInput,
-    validateInputType,
-    validateInputRange,
+    isRateValueSupplied,
+    inputTypeIsValid,
+    ratingIsInRange,
     Rating.rateArticle
   );
 

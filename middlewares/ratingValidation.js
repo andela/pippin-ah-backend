@@ -1,7 +1,7 @@
 import { isNumeric } from 'validator';
 
 export default {
-  verifyMentor(req, res, next) {
+  userIsMentor(req, res, next) {
     const { isMentor } = req.decoded;
     if (isMentor === false) {
       const error = new Error('Only mentors can rate articles');
@@ -11,9 +11,9 @@ export default {
     return next();
   },
 
-  validateInput(req, res, next) {
+  isRateValueSupplied(req, res, next) {
     const { rateValue } = req.body;
-    if (!(rateValue)) {
+    if (!(rateValue in req.body)) {
       const error = new Error('Rate value must be provided');
       error.status = 400;
       return next(error);
@@ -21,7 +21,7 @@ export default {
     return next();
   },
 
-  validateInputType(req, res, next) {
+  inputTypeIsValid(req, res, next) {
     const { rateValue } = req.body;
     if (!isNumeric(rateValue)) {
       const error = new Error('Value must be a number');
@@ -31,7 +31,7 @@ export default {
     return next();
   },
 
-  validateInputRange(req, res, next) {
+  ratingIsInRange(req, res, next) {
     const { rateValue } = req.body;
     if (rateValue > 5 || rateValue < 1) {
       const errorMessage = 'Value must not be less than 1 or greater than 5';
