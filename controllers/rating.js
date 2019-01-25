@@ -14,9 +14,7 @@ export default {
 
     if (!rating) {
       await article.update({
-        rating: { [id]: rateValue }
-      });
-      await article.update({
+        rating: { [id]: rateValue },
         aveRating: rateValue
       });
     }
