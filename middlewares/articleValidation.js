@@ -24,7 +24,7 @@ export default {
 
   categoryQueryValidator(req, res, next) {
     const { category } = req.query;
-    if (category === undefined) {
+    if (!category) {
       return next();
     }
 
@@ -36,6 +36,7 @@ export default {
     }
     return next();
   },
+
 
   expectedParamsValidator(req, res, next) {
     const errorArray = [];
