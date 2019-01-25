@@ -96,7 +96,6 @@ export default {
     return res.status(201).send({ message: 'Your report has been registered' });
   },
 
-
   async getArticles(req, res) {
     const {
       category,
