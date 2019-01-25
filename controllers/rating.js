@@ -33,7 +33,12 @@ export default {
         aveRating
       });
     }
-    res.json(article);
+    return res.json({
+      title: article.title,
+      slug: article.slug,
+      yourRating: newRating,
+      averageRating: article.aveRating
+    });
   }
 
 };
