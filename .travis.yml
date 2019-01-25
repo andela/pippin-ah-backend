@@ -15,16 +15,21 @@ after_success:
 
 before_deploy:
 - npm run build
-
-addons:
-  artifacts: true
   
 deploy:
-  provider: heroku
-  api_key:
-    secure: kIPkhJlW1zidFatLLJu0+cD740BucevC8vyjLxkhGZkRmq1MdnD/Vzw5F2vGwwo8C1iHVwJTsZpPmqBJRrUC+uLPoINr34lE2kxnACRHReO8WYJywtGWarU3jiDwr70vIzuggytHLfcpHOELYPqTKLqsPuukWmFqGknpPeON+TP2Lx4BP/OpHzXCXjur8X1FOyNmB7XESXRioQUKNgDV1CL7SZNjCvh8UnI+nGkGO8g2S+3TOGy4qtIW1UJ0GcBmWVkiiqyRdv8eenOC+yjoFwQPiV2Ep7/O17uoTjZaUpcGzJyv8GX/MDc8CTiO7Hkkovb+acqR9+GMc9jIsnGqWODPs2fv+W2aPMgOlSLVQfAZEFH7/ugKP+V3Id7NYIcLaKkSkwImCQ7sqwYYJw8kgRJfBhvXGsrqgTmwFGcyw8GULahLmiwUyfkL8lsr+Nsun4PsOAv1kZS5RElojh1NWL9fGClPEWV2vV3xGmY9hiQTG5We9ozjxhyqnw5XEXd7mU7Ei3RFTmUufdi9xrRN0x8tJn3UdJN9E+Pv2TLWawgIXP7kSXBTWU+MwSzaJ3d9FRzRoYr9HrImjDCF30cHCH9ELz1uVwcHmB8Es0og8eehr+HglLu3fsujKkWTSye9cF/yNAWSs/vC3lrLHOxa7mRvoGwY4q8WsnbEnCCNRCI=
-  run: npm run db:migrate
-  app: authors-haaven
-  on:
-    repo: andela/pippin-ah-backend
-    branch: develop
+  - provider: heroku
+    api_key:
+      secure: CgZwp0km3S2QcsGUT67oBBajcbPw03Kw2Prd2K4/hTlr/VSZQoIn3WeMXu2fIB0aaeVWZtcaA8tPhzt8bNOCXUDnROInxx4tMvjSIZlsXoK7rcqXOi5j4sj6B5VnXtpJtocqC+Aa8kRUrOmNVkpBLvY20uvwOdJxeNEF14jZPCADD/Yh8UC214gp4sZ+2OSeAc3GQgn/VhVfoCo6hT3yiBGrNTUmW/ti+YSDw+WZE3G55+ZTj2pvPAv68mrEQR9HTSXnpoqDj9gWt6ZObDu8ysrxu5sWCxMACDfhoay+kcGl4B3ga2GMwW3J3z44XbtQ66946EMmf99/0XpznKc1r4abAfAzmv2Jcevk/SfnAH62KCvw02WHgnpjPsrps/p2DhDhl55YtlJO55wTfm1tGYPXoIXHvT5t3MmvDhc+igdQ2u/WFAOEg3d7prf7cAmb1pqnTWQhUKC36Q5lrKb/GCSmWK9+lg8NLBZ65ifjPVfXzryQZavl39MZUVpurC7Hjm2gEWapuD8rKFJeNJ+Dq9w8UcykX9BKKu+39mSEm3NK1w/8j50TyAapRt5C9uPUzgW8xeMUqKQCyLyV6iyku1ahgh/1QSCgTLouabS6QihVh8pd5R4fZVy/hpzhNTaUG98WzRSMir1FWYpmeHOjhgIkrv8bD34DddTn1KSZS8E="
+    run: npm run db:migrate
+    app: learnground-api-staging
+    on:
+      repo: andela/pippin-ah-backend
+      branch: develop
+  - provider: heroku
+    api_key:
+      secure: CgZwp0km3S2QcsGUT67oBBajcbPw03Kw2Prd2K4/hTlr/VSZQoIn3WeMXu2fIB0aaeVWZtcaA8tPhzt8bNOCXUDnROInxx4tMvjSIZlsXoK7rcqXOi5j4sj6B5VnXtpJtocqC+Aa8kRUrOmNVkpBLvY20uvwOdJxeNEF14jZPCADD/Yh8UC214gp4sZ+2OSeAc3GQgn/VhVfoCo6hT3yiBGrNTUmW/ti+YSDw+WZE3G55+ZTj2pvPAv68mrEQR9HTSXnpoqDj9gWt6ZObDu8ysrxu5sWCxMACDfhoay+kcGl4B3ga2GMwW3J3z44XbtQ66946EMmf99/0XpznKc1r4abAfAzmv2Jcevk/SfnAH62KCvw02WHgnpjPsrps/p2DhDhl55YtlJO55wTfm1tGYPXoIXHvT5t3MmvDhc+igdQ2u/WFAOEg3d7prf7cAmb1pqnTWQhUKC36Q5lrKb/GCSmWK9+lg8NLBZ65ifjPVfXzryQZavl39MZUVpurC7Hjm2gEWapuD8rKFJeNJ+Dq9w8UcykX9BKKu+39mSEm3NK1w/8j50TyAapRt5C9uPUzgW8xeMUqKQCyLyV6iyku1ahgh/1QSCgTLouabS6QihVh8pd5R4fZVy/hpzhNTaUG98WzRSMir1FWYpmeHOjhgIkrv8bD34DddTn1KSZS8E="
+    run: npm run db:migrate
+    app: learnground-api-production
+    on:
+      repo: andela/pippin-ah-backend
+      branch: master
