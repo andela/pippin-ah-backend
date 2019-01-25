@@ -16,9 +16,6 @@ after_success:
 before_deploy:
 - npm run build
 
-addons:
-  artifacts: true
-
 deploy:
   - provider: heroku
     api_key:
