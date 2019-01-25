@@ -7,7 +7,8 @@ const {
   Article,
   User,
   Profile,
-  Report
+  Report,
+  Bookmark
 } = models;
 const {
   iLike,
@@ -174,5 +175,45 @@ export default {
     const { slug } = req.params;
     const article = await Article.findOne({ where: { slug } });
     return res.json(article);
+  },
+  async bookmarkArticle(req, res) {
+    const { articleId } = req.query;
+
+    const userId = req.decoded.id;
+    const bookmarkedBy = userId;
+    const bookmarked = true;
+
+    const bookmark = await Bookmark
+      .create({
+        articleId,
+        bookmarkedBy,
+        bookmarked
+      });
+
+    return res.status(201).send(bookmark);
+  },
+  async removeBookmarkedArticle(req, res) {
+    const userId = req.decoded.id;
+    const { articleId } = req.query;
+
+    const bookmark = await Bookmark.findOne({
+      where: { articleId, bookmarkedBy: userId }
+    });
+
+    await bookmark.update({ bookmarked: false });
+    return res.send('Unbookmarked Successfully');
+  },
+  async getBookmarkedArticle(req, res) {
+    const userId = req.decoded.id;
+
+    const bookmarkedArticle = await Article
+      .findAll({
+        where: {
+          userId
+        }
+      });
+    const slugArray = bookmarkedArticle.map(item => item.slug);
+
+    return res.send(slugArray);
   },
 };

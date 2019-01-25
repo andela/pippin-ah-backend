@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
 import models from '../models';
-import { categories as categoryEnum } from '../helpers';
+import { categories as categoryEnum, uuid } from '../helpers';
 
 const { Article, Report } = models;
 const requiredParams = ['title', 'body', 'description', 'category'];
@@ -131,5 +131,33 @@ export default {
       return next(error);
     }
     return next();
-  }
+  },
+  async bookmarkQueryValidator(req, res, next) {
+    const { articleId } = req.query;
+    const validUUID = uuid.validateUUID(articleId);
+
+    if (articleId === undefined) {
+      const errorMessage = 'articleId is not specified';
+      const error = new Error(errorMessage);
+      error.status = 400;
+      return next(error);
+    }
+
+    if (!validUUID) {
+      const errorMessage = 'article id is not a valid uuid';
+      const error = new Error(errorMessage);
+      error.status = 400;
+      return next(error);
+    }
+
+    const article = await Article.findOne({ where: { id: articleId } });
+    if (article) {
+      return next();
+    }
+
+    const errorMessage = 'No article with such id exist';
+    const error = new Error(errorMessage);
+    error.status = 400;
+    return next(error);
+  },
 };

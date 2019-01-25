@@ -17,10 +17,14 @@ const router = express.Router();
 
 const {
   createArticle,
-  tagArticle,
-  reportArticle,
   getArticleBySlug,
   getArticles,
+  reportArticle,
+  getArticleByCategory,
+  tagArticle,
+  bookmarkArticle,
+  getBookmarkedArticle,
+  removeBookmarkedArticle
 } = Article;
 
 const {
@@ -41,7 +45,8 @@ const {
   checkIfUserAlreadyReported,
   reportIsEmpty,
   reportIsRequired,
-  categoryQueryValidator
+  categoryQueryValidator,
+  bookmarkQueryValidator
 } = articleValidation;
 
 const {
@@ -90,6 +95,16 @@ router.route('/tag')
     checkIfTagIsString,
     tagArticle
   );
+
+router.route('/categories')
+  .get(categoryQueryValidator, getArticleByCategory);
+
+router.route('/bookmarks')
+  .all(verifyToken)
+  .post(bookmarkQueryValidator, bookmarkArticle)
+  .get(getBookmarkedArticle)
+  .patch(bookmarkQueryValidator, removeBookmarkedArticle);
+
 
 router.route('/:slug')
   .get(
