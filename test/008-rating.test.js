@@ -9,11 +9,11 @@ const baseUrl = '/api/v1/articles';
 chai.use(chaiHttp);
 
 describe('Test Suite for Rating', () => {
-  let nonMentorToken;
-  let isMentorToken;
-  let secondUserToken;
-  let firstArticleSlug;
-  let secondArticleSlug;
+  let nonMentorToken,
+    isMentorToken,
+    secondUserToken,
+    firstArticleSlug,
+    secondArticleSlug;
   before(async () => {
     await models.sequelize.sync({ force: true });
 
