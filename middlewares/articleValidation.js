@@ -98,58 +98,26 @@ export default {
     error.status = 400;
     return next(error);
   },
-  checkForUuid(req, res, next) {
-    const { articleId } = req.body;
-    // eslint-disable-next-line
-    const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-    if (!uuid.test(articleId)) {
-      const error = new Error('Invalid ArticleId');
+
+  reportValidator(req, res, next) {
+    if (!req.body.report) {
+      const error = new Error('Report is required');
       error.status = 400;
       return next(error);
     }
     return next();
   },
 
-  reportValidator(req, res, next) {
-    const required = ['articleId', 'report'];
-    const errorArray = [];
-
-    required.forEach((param) => {
-      if (!Object.keys(req.body).includes(param)) {
-        errorArray.push(`${param} is required`);
-      }
-    });
-
-    if (!errorArray.length) {
-      return next();
-    }
-
-    const errorMessage = JSON.stringify(errorArray);
-    const error = new Error(errorMessage);
-    error.status = 400;
-    return next(error);
-  },
-
-  async checkIfArticleIdExists(req, res, next) {
-    const { articleId: id } = req.body;
-
-    if (id) {
-      const articleFound = await Article.findOne({ where: { id } });
-      if (!articleFound) {
-        const error = new Error('Article not found');
-        error.status = 409;
-        return next(error);
-      }
-      return next();
-    }
-    return next();
-  },
-
   async checkIfUserAlreadyReported(req, res, next) {
-    const { articleId } = req.body;
+    const { params: { slug } } = req;
     const { id: userId } = req.decoded;
-    if (articleId) {
-      const idFound = await Report.findOne({ where: { articleId, userId } });
+    const article = await Article.findOne({ where: { slug } });
+    if (article) {
+      const idFound = await Report.findOne(
+        {
+          where:
+        { articleId: article.id, userId }
+        });
       if (idFound) {
         const error = new Error('Article already reported by you');
         error.status = 409;

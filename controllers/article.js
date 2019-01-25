@@ -35,7 +35,6 @@ export default {
       });
 
     return res.status(201).json({
-      id: article.id,
       title: article.title,
       body: article.body,
       description: article.description,
@@ -70,18 +69,19 @@ export default {
   },
 
   async reportArticle(req, res) {
-    const { report, articleId } = req.body;
+    const { body: { report }, params: { slug } } = req;
     const { id: userId } = req.decoded;
+    const article = await Article.findOne({ where: { slug } });
     const normalizedReport = report.trim().replace(/  +/g, ' ');
 
     await Report
       .create({
         report: normalizedReport,
-        articleId,
+        articleId: article.id,
         userId
       });
 
-    return res.sendStatus(200);
+    return res.status(201).send({ message: 'You report has been registered' });
   },
   async getArticleByCategory(req, res) {
     const { category } = req.query;

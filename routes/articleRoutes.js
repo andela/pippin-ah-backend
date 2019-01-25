@@ -24,9 +24,7 @@ const {
   existingTitleValidator,
   checkIfTagIsString,
   categoryValidator,
-  checkIfArticleIdExists,
   checkIfUserAlreadyReported,
-  checkForUuid,
   reportValidator,
   categoryQueryValidator
 } = articleValidation;
@@ -46,12 +44,11 @@ router.route('/')
     createArticle
   );
 
-router.route('/report')
+router.route('/report/:slug')
   .post(
     verifyToken,
+    ensureArticleExists,
     reportValidator,
-    checkForUuid,
-    checkIfArticleIdExists,
     checkIfUserAlreadyReported,
     reportArticle
   );

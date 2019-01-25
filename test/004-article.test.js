@@ -9,7 +9,6 @@ chai.use(chaiHttp);
 
 describe('ARTICLE TEST SUITE', () => {
   let accesstoken;
-  let articleId;
   before(async () => {
     await models.sequelize.sync({ force: true });
 
@@ -115,7 +114,6 @@ describe('ARTICLE TEST SUITE', () => {
           .send(articleObject)
           .set('Authorization', accesstoken);
         expect(response.status).to.equal(201);
-        articleId = response.body.id;
         expect(response.body.title).to.equal('Test Space Trimming');
       });
 
@@ -161,72 +159,50 @@ describe('ARTICLE TEST SUITE', () => {
     it('should be able to report an article',
       async () => {
         const articleObject = {
-          report: 'Article has erotic content, its inappropriate',
-          articleId
+          report: 'Article has erotic content, its inappropriate'
         };
 
         const response = await chai.request(server)
-          .post(`${baseUrl}/report`)
+          .post(`${baseUrl}/report/halt-and-catch-fire-newusername`)
           .set('Authorization', accesstoken)
           .send(articleObject);
-        expect(response.status).to.equal(200);
+        expect(response.status).to.equal(201);
+        // eslint-disable-next-line
+        expect(response.body.message).to.equal('You report has been registered');
       });
 
     it('should not be able to report an article more than one',
       async () => {
         const articleObject = {
-          report: 'Article has not been deleted, I said it contain erotic',
-          articleId
+          report: 'Article has not been deleted, I said it contain erotic'
         };
 
         const response = await chai.request(server)
-          .post(`${baseUrl}/report`)
+          .post(`${baseUrl}/report/halt-and-catch-fire-newusername`)
           .set('Authorization', accesstoken)
           .send(articleObject);
         expect(response.status).to.equal(409);
         expect(response.body.error).to.equal('Article already reported by you');
       });
 
-    it('should throw an error if Article not found',
-      async () => {
-        const articleObject = {
-          report: 'Article has not been deleted, I said it contain erotic',
-          articleId: 'EF25DD19-E1EF-48CE-A6E4-A7F0E98F1A61'
-        };
-
-        const response = await chai.request(server)
-          .post(`${baseUrl}/report`)
-          .set('Authorization', accesstoken)
-          .send(articleObject);
-        expect(response.status).to.equal(409);
-        expect(response.body.error).to.equal('Article not found');
-      });
-
     it('should throw an error if required field not provided',
       async () => {
         const response = await chai.request(server)
-          .post(`${baseUrl}/report`)
+          .post(`${baseUrl}/report/halt-and-catch-fire-newusername`)
           .set('Authorization', accesstoken)
           .send({});
-        const errorResult = JSON.parse(response.body.error);
         expect(response.status).to.equal(400);
-        expect(errorResult.length).to.equal(2);
-        // eslint-disable-next-line no-unused-expressions
-        expect(Array.isArray(errorResult)).to.be.true;
-        expect(errorResult[0]).to.equal('articleId is required');
-        expect(errorResult[1]).to.equal('report is required');
+        expect(response.body.error).to.equal('Report is required');
       });
-    it('should throw an error if invalid UUID is provided',
+
+    it('should throw an error when article do not exist',
       async () => {
         const response = await chai.request(server)
-          .post(`${baseUrl}/report`)
+          .post(`${baseUrl}/report/halt-and-catch-fire-invalidusername`)
           .set('Authorization', accesstoken)
-          .send({
-            report: 'Article has not been deleted, I said it contain erotic',
-            articleId: 'FGGHHH%%^&*GGSSSSDDGGGHGHADSFGHH'
-          });
-        expect(response.status).to.equal(400);
-        expect(response.body.error).to.equal('Invalid ArticleId');
+          .send({});
+        expect(response.status).to.equal(404);
+        expect(response.body.error).to.equal('Article provided does not exist');
       });
   });
 
