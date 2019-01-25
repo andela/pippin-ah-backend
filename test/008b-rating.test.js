@@ -3,7 +3,7 @@ import chaiHttp from 'chai-http';
 import models from '../models';
 import server from '../app';
 
-chai.usee(chaiHttp);
+chai.use(chaiHttp);
 
 const baseUrl = '/api/v1/articles';
 
