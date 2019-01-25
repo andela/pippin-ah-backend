@@ -36,6 +36,7 @@ const {
   reportIsRequired,
   categoryQueryValidator
 } = articleValidation;
+
 const {
   ensureCommentInput,
   ensureValidComment,
@@ -44,6 +45,7 @@ const {
 
 const {
   verifyMentor,
+  validateInput,
   validateInputType,
   validateInputRange
 } = ratingValidation;
@@ -88,6 +90,7 @@ router.route('/rating/:slug')
   .patch(
     verifyToken,
     verifyMentor,
+    validateInput,
     validateInputType,
     validateInputRange,
     Rating.rateArticle

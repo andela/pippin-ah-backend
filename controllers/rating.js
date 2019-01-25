@@ -5,22 +5,22 @@ const { Article } = models;
 export default {
   async rateArticle(req, res) {
     const { slug } = req.params;
-    const { newRating } = req.body;
+    const { rateValue } = req.body;
     const { id } = req.decoded;
     const article = await Article.findOne({ where: { slug } });
     const { rating } = article;
 
     if (!rating) {
       await article.update({
-        rating: { [id]: newRating }
+        rating: { [id]: rateValue }
       });
       await article.update({
-        aveRating: newRating
+        aveRating: rateValue
       });
     }
 
     if (rating) {
-      rating[id] = newRating;
+      rating[id] = rateValue;
       await article.update({
         rating
       });
@@ -36,7 +36,7 @@ export default {
     return res.json({
       title: article.title,
       slug: article.slug,
-      yourRating: newRating,
+      yourRating: rateValue,
       averageRating: article.aveRating
     });
   }
