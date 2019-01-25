@@ -12,8 +12,7 @@ export default {
   },
 
   isRateValueSupplied(req, res, next) {
-    const { rateValue } = req.body;
-    if (!(rateValue in req.body)) {
+    if (!('rateValue' in req.body)) {
       const error = new Error('Rate value must be provided');
       error.status = 400;
       return next(error);
