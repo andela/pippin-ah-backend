@@ -8,7 +8,7 @@ const baseUrl = '/api/v1/articles';
 
 chai.use(chaiHttp);
 
-describe.only('Test Suite for Rating', () => {
+describe('Test Suite for Rating', () => {
   let nonMentorToken;
   let isMentorToken;
   let secondUserToken;
