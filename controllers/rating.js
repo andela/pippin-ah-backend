@@ -20,15 +20,12 @@ export default {
 
     if (rating) {
       rating[id] = rateValue;
-      await article.update({
-        rating
-      });
-
       const ratingArray = Object.values(rating);
       const sum = ratingArray.reduce((a, b) => a + b);
       const aveRating = Math.round((sum / ratingArray.length) * 10) / 10;
 
       await article.update({
+        rating,
         aveRating
       });
     }
