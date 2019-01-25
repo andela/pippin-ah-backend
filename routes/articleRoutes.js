@@ -17,12 +17,10 @@ const router = express.Router();
 
 const {
   createArticle,
-  getArticles,
   tagArticle,
   reportArticle,
   getArticleBySlug,
   getArticles,
-  tagArticle
 } = Article;
 
 const { addComment } = Comment;

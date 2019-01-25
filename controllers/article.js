@@ -9,6 +9,13 @@ const {
   Profile,
   Report
 } = models;
+const {
+  iLike,
+  and,
+  or,
+  notIn,
+  contains
+} = Sequelize.Op;
 
 export default {
   async createArticle(req, res) {
