@@ -94,10 +94,10 @@ export default {
     const {
       category,
       author,
+      tag,
       keywords
     } = req.query;
 
-    const tag = '';
     const article = await Article.findAll({
       where: {
         [and]: [
