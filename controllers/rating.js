@@ -4,11 +4,10 @@ const { Article } = models;
 
 export default {
   async rateArticle(req, res) {
-    const {
-      params: { slug },
-      body: { rateValue },
-      decoded: { id }
-    } = req;
+    const { params: { slug }, decoded: { id } } = req;
+    let { rateValue } = req.body;
+    rateValue = Number(rateValue);
+
     const article = await Article.findOne({ where: { slug } });
     const { rating } = article;
 
@@ -26,7 +25,7 @@ export default {
       });
 
       const ratingArray = Object.values(rating);
-      const sum = ratingArray.reduce((a, b) => Number(a) + Number(b));
+      const sum = ratingArray.reduce((a, b) => a + b);
       const aveRating = Math.round((sum / ratingArray.length) * 10) / 10;
 
       await article.update({
