@@ -73,6 +73,7 @@ router.route('/:slug')
 router.route('/rating/:slug')
   .patch(
     verifyToken,
+    verifyMentor,
     validateInputType,
     validateInputRange,
     Rating.rateArticle
