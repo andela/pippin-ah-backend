@@ -1,6 +1,7 @@
+import Sequelize from 'sequelize';
 import dateFns from 'date-fns';
 import models from '../models';
-import { generateSlug, getReadTime } from '../helpers';
+import { generateSlug, getReadTime, categories } from '../helpers';
 
 const {
   Article,
@@ -8,6 +9,7 @@ const {
   Profile,
   Report
 } = models;
+
 
 export default {
   async createArticle(req, res) {
@@ -90,7 +92,67 @@ export default {
 
 
   async getArticles(req, res) {
-    const { category } = req.query;
+    const {
+      category,
+      author,
+      tag,
+      keywords
+    } = req.query;
+
+    const article = await Article.findAll({
+      where: {
+        [and]: [
+          {
+            [or]: {
+              title: { [iLike]: keywords ? `%${keywords}%` : '%' },
+              description: { [iLike]: keywords ? `%${keywords}%` : '%' },
+              body: { [iLike]: keywords ? `%${keywords}%` : '%' }
+            },
+          },
+          {
+            [or]: {
+              '$User.Profile.lastName$': {
+                [iLike]: author ? `%${author}%` : '%'
+              },
+              '$User.Profile.firstName$': {
+                [iLike]: author ? `%${author}%` : '%'
+              },
+            }
+          },
+          {
+            category: category || categories
+          },
+          {
+            tags: tag || { [notIn]: [] }
+          }
+        ]
+      },
+      include: [{
+        model: User,
+        required: false,
+        include: [{
+          model: Profile,
+          required: false
+        }]
+      }
+      ]
+    });
+    /*  include: [{
+        model: User,
+        attributes: ['username'],
+        include: [
+          {
+            model: Profile,
+            attributes: [
+              'firstName',
+              'lastName',
+              'bio',
+              'imageUrl'
+            ]
+          }
+        ]
+      }]
+    });
 
     const article = await Article.findAll({
       where: {
@@ -111,7 +173,7 @@ export default {
           }
         ]
       }]
-    });
+    }); */
 
     const responseArray = article.map(item => ({
       author: item.User.username,
@@ -128,7 +190,10 @@ export default {
       modifiedOn: dateFns.format(new Date(item.updatedAt), 'D MMMM YYYY, h:ssA')
     })
     );
-    return res.send(responseArray);
+    return res.json({
+      responseArray,
+      count: article.length
+    });
   },
 
   async getArticleBySlug(req, res) {
