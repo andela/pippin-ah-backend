@@ -104,41 +104,44 @@ export default {
       tag,
       keywords
     } = req.query;
+    const queryArray = [
+      {
+        [or]: {
+          title: { [iLike]: keywords ? `%${keywords}%` : '%' },
+          description: { [iLike]: keywords ? `%${keywords}%` : '%' },
+          body: { [iLike]: keywords ? `%${keywords}%` : '%' }
+        },
+      },
+      {
+        category: category || categories
+      },
+      {
+        tags: tag ? { [contains]: [tag] } : { [notIn]: [] }
+      }
+    ];
+    if (author) {
+      queryArray.append({
+        [or]: {
+          '$User.Profile.lastName$': {
+            [iLike]: `%${author}%`
+          },
+          '$User.Profile.firstName$': {
+            [iLike]: `%${author}%`
+          },
+        }
 
+      });
+    }
     const article = await Article.findAll({
       where: {
-        [and]: [
-          {
-            [or]: {
-              title: { [iLike]: keywords ? `%${keywords}%` : '%' },
-              description: { [iLike]: keywords ? `%${keywords}%` : '%' },
-              body: { [iLike]: keywords ? `%${keywords}%` : '%' }
-            },
-          },
-          {
-            [or]: {
-              '$User.Profile.lastName$': {
-                [iLike]: author ? `%${author}%` : '%'
-              },
-              '$User.Profile.firstName$': {
-                [iLike]: author ? `%${author}%` : '%'
-              },
-            }
-          },
-          {
-            category: category || categories
-          },
-          {
-            tags: tag ? { [contains]: [tag] } : { [notIn]: [] }
-          }
-        ]
+        [and]: queryArray
       },
       include: [{
         model: User,
         required: false,
         include: [{
           model: Profile,
-          required: false
+          required: false,
         }]
       }
       ]
