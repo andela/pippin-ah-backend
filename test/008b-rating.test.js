@@ -12,6 +12,8 @@ describe('Test Suite for Rating', () => {
   let nonMentorToken;
   let isMentorToken;
   let secondUserToken;
+  let firstArticleSlug;
+  let secondArticleSlug;
   before(async () => {
     await models.sequelize.sync({ force: true });
 
@@ -55,10 +57,11 @@ describe('Test Suite for Rating', () => {
       .post('/api/v1/users')
       .send(secondUserRequestObject);
 
-    await chai.request(server)
+    const firstArticleResponse = await chai.request(server)
       .post(baseUrl)
       .send(firstArticleRequestObject)
       .set('Authorization', nonMentorToken);
+    firstArticleSlug = firstArticleResponse.body.slug;
 
     const firstUser = await User.findOne({ where: { username: 'bugsburney' } });
     await firstUser.update({
@@ -82,22 +85,23 @@ describe('Test Suite for Rating', () => {
       .send(secondLoginRequestObject);
     secondUserToken = secondUserResponseObject.body.token;
 
-    await chai.request(server)
+    const secondArticleResponse = await chai.request(server)
       .post(baseUrl)
       .send(secondArticleRequestObject)
       .set('Authorization', secondUserToken);
+    secondArticleSlug = secondArticleResponse.body.slug;
 
     await chai.request(server)
-      .patch(`${baseUrl}/rating/tales-of-two-strangers-daffyduck`)
+      .patch(`${baseUrl}/rating/${secondArticleSlug}`)
       .set('Authorization', secondUserToken)
-      .send({ rateValue: '2' });
+      .send({ rateValue: '5' });
   });
 
   describe('Rate Article', () => {
     it('should not rate an article if user is not logged in',
       async () => {
         const response = await chai.request(server)
-          .patch(`${baseUrl}/rating/silicon-valley-bugsburney`)
+          .patch(`${baseUrl}/rating/${firstArticleSlug}`)
           .send({ rateValue: 5 });
         expect(response.status).to.equal(401);
         expect(response.body.error).to.equal('No token provided');
@@ -106,7 +110,7 @@ describe('Test Suite for Rating', () => {
     it('should not rate an article if user is not a mentor',
       async () => {
         const response = await chai.request(server)
-          .patch(`${baseUrl}/rating/silicon-valley-bugsburney`)
+          .patch(`${baseUrl}/rating/${firstArticleSlug}`)
           .set('Authorization', nonMentorToken)
           .send({ rateValue: 5 });
         expect(response.status).to.equal(401);
@@ -116,7 +120,7 @@ describe('Test Suite for Rating', () => {
     it('should not rate an article if value is not a number',
       async () => {
         const response = await chai.request(server)
-          .patch(`${baseUrl}/rating/silicon-valley-bugsburney`)
+          .patch(`${baseUrl}/rating/${firstArticleSlug}`)
           .set('Authorization', isMentorToken)
           .send({ rateValue: 'a' });
         expect(response.status).to.equal(400);
@@ -126,7 +130,7 @@ describe('Test Suite for Rating', () => {
     it('should not rate an article if value is less than 1 or greater than 5',
       async () => {
         const response = await chai.request(server)
-          .patch(`${baseUrl}/rating/silicon-valley-bugsburney`)
+          .patch(`${baseUrl}/rating/${firstArticleSlug}`)
           .set('Authorization', isMentorToken)
           .send({ rateValue: '8' });
         const errorMessage = 'Value must not be less than 1 or greater than 5';
@@ -137,9 +141,9 @@ describe('Test Suite for Rating', () => {
     it('should not rate an article if no value is provided',
       async () => {
         const response = await chai.request(server)
-          .patch(`${baseUrl}/rating/silicon-valley-bugsburney`)
+          .patch(`${baseUrl}/rating/${firstArticleSlug}`)
           .set('Authorization', isMentorToken)
-          .send({ rateValue: '' });
+          .send();
         const errorMessage = 'Rate value must be provided';
         expect(response.status).to.equal(400);
         expect(response.body.error).to.equal(errorMessage);
@@ -148,7 +152,7 @@ describe('Test Suite for Rating', () => {
     it('should rate an article if value is valid and user is a mentor',
       async () => {
         const response = await chai.request(server)
-          .patch(`${baseUrl}/rating/silicon-valley-bugsburney`)
+          .patch(`${baseUrl}/rating/${firstArticleSlug}`)
           .set('Authorization', isMentorToken)
           .send({ rateValue: '4' });
         expect(response.status).to.equal(200);
@@ -158,11 +162,12 @@ describe('Test Suite for Rating', () => {
     it('should rate an article even if it already has a rating',
       async () => {
         const response = await chai.request(server)
-          .patch(`${baseUrl}/rating/tales-of-two-strangers-daffyduck`)
+          .patch(`${baseUrl}/rating/${secondArticleSlug}`)
           .set('Authorization', isMentorToken)
-          .send({ rateValue: '4' });
+          .send({ rateValue: '3' });
         expect(response.status).to.equal(200);
-        expect(response.body.yourRating).to.equal('4');
+        expect(response.body.yourRating).to.equal('3');
+        expect(response.body.averageRating).to.equal((5 + 3) / 2);
       });
   });
 });
