@@ -99,13 +99,21 @@ export default {
     return next(error);
   },
 
-  reportValidator(req, res, next) {
-    if (!req.body.report) {
-      const error = new Error('Report is required');
+  reportIsEmpty(req, res, next) {
+    const { report } = req.body;
+    if (report.trim().length < 10) {
+      const error = new Error('Report must have at least ten characters');
       error.status = 400;
       return next(error);
     }
     return next();
+  },
+
+  reportIsRequired(req, res, next) {
+    if ('report' in req.body) return next();
+    const error = new Error('Report is required');
+    error.status = 400;
+    return next(error);
   },
 
   async checkIfUserAlreadyReported(req, res, next) {
@@ -113,11 +121,10 @@ export default {
     const { id: userId } = req.decoded;
     const article = await Article.findOne({ where: { slug } });
     if (article) {
-      const idFound = await Report.findOne(
-        {
-          where:
-        { articleId: article.id, userId }
-        });
+      const idFound = await Report.findOne({
+        where: { articleId: article.id, userId }
+      });
+
       if (idFound) {
         const error = new Error('Article already reported by you');
         error.status = 409;

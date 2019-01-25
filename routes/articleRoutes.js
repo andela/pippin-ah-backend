@@ -25,7 +25,8 @@ const {
   checkIfTagIsString,
   categoryValidator,
   checkIfUserAlreadyReported,
-  reportValidator,
+  reportIsEmpty,
+  reportIsRequired,
   categoryQueryValidator
 } = articleValidation;
 const {
@@ -48,7 +49,8 @@ router.route('/report/:slug')
   .post(
     verifyToken,
     ensureArticleExists,
-    reportValidator,
+    reportIsRequired,
+    reportIsEmpty,
     checkIfUserAlreadyReported,
     reportArticle
   );
