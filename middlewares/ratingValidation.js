@@ -5,7 +5,7 @@ export default {
     const { isMentor } = req.decoded;
     if (isMentor === false) {
       const error = new Error('Only mentors can rate articles');
-      error.status = 400;
+      error.status = 401;
       return next(error);
     }
     return next();
