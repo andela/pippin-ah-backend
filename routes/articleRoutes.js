@@ -90,6 +90,7 @@ router.route('/rating/:slug')
   .patch(
     verifyToken,
     verifyMentor,
+    ensureArticleExists,
     validateInput,
     validateInputType,
     validateInputRange,
