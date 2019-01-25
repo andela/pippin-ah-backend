@@ -73,6 +73,8 @@ router.route('/report/:slug')
     checkIfUserAlreadyReported,
     reportArticle
   );
+router.route('/')
+  .get(getArticles);
 
 router.route('/tag')
   .patch(
