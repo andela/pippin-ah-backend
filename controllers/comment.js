@@ -17,8 +17,9 @@ export default {
       comment: { [currentTime]: req.body.comment },
       articleId: article.id
     });
+    const comment = Object.values(newComment.comment)[0];
     return res.json({
-      comment: newComment.comment,
+      comment,
       id: newComment.id,
       updatedAt: newComment.updatedAt
     });
