@@ -4,10 +4,10 @@ import models from '../models';
 
 const { iLike } = Sequelize.Op;
 const { Article, Comment } = models;
-const currentTime = moment().format('MMMM Do YYYY, h:mm:ss a');
 
 export default {
   async addComment(req, res) {
+    const currentTime = moment().format('MMMM Do YYYY, h:mm:ss a');
     const { params: { slug }, decoded } = req;
     const article = await Article
       .findOne({ where: { slug: { [iLike]: slug } } });
@@ -22,6 +22,7 @@ export default {
   },
 
   async editComment(req, res) {
+    const currentTime = moment().format('MMMM Do YYYY, h:mm:ss a');
     const { params: { id }, decoded, body: { newComment } } = req;
     const commentRow = await Comment
       .findOne({ where: { id, userId: decoded.id } });
