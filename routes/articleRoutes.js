@@ -17,10 +17,10 @@ const router = express.Router();
 
 const {
   createArticle,
-  getArticle,
   tagArticle,
   reportArticle,
-  getArticleByCategory
+  getArticleBySlug,
+  getArticles,
 } = Article;
 
 const { addComment } = Comment;
@@ -53,6 +53,7 @@ const {
 const { rateArticle } = Rating;
 
 router.route('/')
+  .get(categoryQueryValidator, getArticles)
   .post(
     verifyToken,
     expectedParamsValidator,
@@ -79,13 +80,10 @@ router.route('/tag')
     tagArticle
   );
 
-router.route('/categories')
-  .get(categoryQueryValidator, getArticleByCategory);
-
 router.route('/:slug')
   .get(
     ensureArticleExists,
-    getArticle
+    getArticleBySlug
   );
 
 router.route('/rating/:slug')

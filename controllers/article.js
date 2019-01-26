@@ -1,6 +1,7 @@
+import Sequelize from 'sequelize';
 import dateFns from 'date-fns';
 import models from '../models';
-import { generateSlug, getReadTime } from '../helpers';
+import { generateSlug, getReadTime, categories } from '../helpers';
 
 const {
   Article,
@@ -8,6 +9,13 @@ const {
   Profile,
   Report
 } = models;
+const {
+  iLike,
+  and,
+  or,
+  notIn,
+  contains
+} = Sequelize.Op;
 
 export default {
   async createArticle(req, res) {
@@ -87,32 +95,62 @@ export default {
 
     return res.status(201).send({ message: 'Your report has been registered' });
   },
-  async getArticleByCategory(req, res) {
-    const { category } = req.query;
 
-    const article = await Article.findAll({
+  async getArticles(req, res) {
+    const {
+      category,
+      author,
+      tag,
+      keywords
+    } = req.query;
+    const queryArray = [
+      {
+        [or]: {
+          title: { [iLike]: keywords ? `%${keywords}%` : '%' },
+          description: { [iLike]: keywords ? `%${keywords}%` : '%' },
+          body: { [iLike]: keywords ? `%${keywords}%` : '%' }
+        },
+      },
+      {
+        category: category || categories
+      },
+      {
+        tags: tag ? { [contains]: [tag] } : { [notIn]: [] }
+      }
+    ];
+    if (author) {
+      queryArray.push({
+        [or]: {
+          '$User.Profile.lastName$': {
+            [iLike]: `%${author}%`
+          },
+          '$User.Profile.firstName$': {
+            [iLike]: `%${author}%`
+          },
+          '$User.username$': {
+            [iLike]: `%${author}%`
+          },
+        }
+
+      });
+    }
+    const articles = await Article.findAll({
       where: {
-        category
+        [and]: queryArray
       },
       include: [{
         model: User,
-        attributes: ['username'],
-        include: [
-          {
-            model: Profile,
-            attributes: [
-              'firstName',
-              'lastName',
-              'bio',
-              'imageUrl'
-            ]
-          }
-        ]
-      }]
+        required: false,
+        include: [{
+          model: Profile,
+          required: false,
+        }]
+      }
+      ]
     });
-
-    const responseArray = article.map(item => ({
+    const responseArray = articles.map(item => ({
       author: item.User.username,
+      slug: item.slug,
       firstName: item.User.Profile.firstName,
       lastName: item.User.Profile.lastName,
       bio: item.User.Profile.bio,
@@ -121,15 +159,18 @@ export default {
       description: item.description,
       category: item.category,
       body: item.body,
-      slug: item.slug,
+      readTime: item.readTime,
       createdOn: dateFns.format(new Date(item.createdAt), 'D MMMM YYYY, h:ssA'),
       modifiedOn: dateFns.format(new Date(item.updatedAt), 'D MMMM YYYY, h:ssA')
     })
     );
-    return res.send(responseArray);
+    return res.json({
+      articles: responseArray,
+      count: articles.length
+    });
   },
 
-  async getArticle(req, res) {
+  async getArticleBySlug(req, res) {
     const { slug } = req.params;
     const article = await Article.findOne({ where: { slug } });
     return res.json(article);
