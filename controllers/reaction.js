@@ -27,18 +27,18 @@ const setReaction = async (liked, disliked, slug, userId) => {
 };
 
 export default {
-  like(req, res) {
-    setReaction(true, false, req.params.slug, req.decoded.id);
+  async like(req, res) {
+    await setReaction(true, false, req.params.slug, req.decoded.id);
     return res.sendStatus(200);
   },
 
-  cancelReaction(req, res) {
-    setReaction(false, false, req.params.slug, req.decoded.id);
+  async cancelReaction(req, res) {
+    await setReaction(false, false, req.params.slug, req.decoded.id);
     return res.sendStatus(200);
   },
 
-  dislike(req, res) {
-    setReaction(false, true, req.params.slug, req.decoded.id);
+  async dislike(req, res) {
+    await setReaction(false, true, req.params.slug, req.decoded.id);
     return res.sendStatus(200);
   }
 };
