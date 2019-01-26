@@ -1,9 +1,16 @@
 import express from 'express';
-import { Article, Comment, Reaction } from '../controllers';
+import {
+  Article,
+  Comment,
+  Reaction,
+  Rating
+} from '../controllers';
+
 import {
   verifyToken,
   articleValidation,
-  commentValidations
+  commentValidations,
+  ratingValidation
 } from '../middlewares';
 
 const router = express.Router();
@@ -29,11 +36,21 @@ const {
   reportIsRequired,
   categoryQueryValidator
 } = articleValidation;
+
 const {
   ensureCommentInput,
   ensureValidComment,
   ensureArticleExists
 } = commentValidations;
+
+const {
+  userIsMentor,
+  isRateValueSupplied,
+  inputTypeIsValid,
+  ratingIsInRange
+} = ratingValidation;
+
+const { rateArticle } = Rating;
 
 router.route('/')
   .post(
@@ -69,6 +86,17 @@ router.route('/:slug')
   .get(
     ensureArticleExists,
     getArticle
+  );
+
+router.route('/rating/:slug')
+  .patch(
+    verifyToken,
+    userIsMentor,
+    ensureArticleExists,
+    isRateValueSupplied,
+    inputTypeIsValid,
+    ratingIsInRange,
+    rateArticle
   );
 
 router.route('/:slug/comments')

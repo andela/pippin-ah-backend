@@ -39,6 +39,7 @@ export default {
       body: article.body,
       description: article.description,
       slug: article.slug,
+      rating: article.rating,
       createdAt: article.createdAt,
       readTime: article.readTime,
       author: {
@@ -120,6 +121,7 @@ export default {
       description: item.description,
       category: item.category,
       body: item.body,
+      slug: item.slug,
       createdOn: dateFns.format(new Date(item.createdAt), 'D MMMM YYYY, h:ssA'),
       modifiedOn: dateFns.format(new Date(item.updatedAt), 'D MMMM YYYY, h:ssA')
     })

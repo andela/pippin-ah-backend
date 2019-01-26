@@ -5,8 +5,12 @@ import server from '../app';
 
 chai.use(chaiHttp);
 
+const { User } = models;
+const baseUrl = '/api/v1/users';
+
 describe('USER TEST SUITE', () => {
-  let firstUserToken;
+  let firstUserToken, firstUserID;
+
   before(async () => {
     await models.sequelize.sync({ force: true });
 
@@ -16,9 +20,25 @@ describe('USER TEST SUITE', () => {
       password: 'johnny777'
     };
 
-    const responseObject = await chai.request(server).post('/api/v1/users')
+    const responseObject = await chai.request(server).post(`${baseUrl}`)
       .send(requestObject);
     firstUserToken = responseObject.body.token;
+
+    const firstUserObject = await User.findOne({
+      where: { username: 'johnsolomon' }
+    });
+    firstUserID = firstUserObject.id;
+  });
+
+  describe('ACTIVATE USER', () => {
+    it('should successfully activate a user', async () => {
+      const response = await chai.request(server)
+        .get(`/api/v1/user/activate/${firstUserID}`)
+        .set('Authorization', firstUserToken);
+      const activationMessageSubstring = 'Your account has been activated';
+      const { message } = response.body;
+      expect(message.includes(activationMessageSubstring)).to.equal(true);
+    });
   });
 
   describe('User Signup Validations', () => {
@@ -30,7 +50,7 @@ describe('USER TEST SUITE', () => {
           password: 'hhrt----',
         };
         chai.request(server)
-          .post('/api/v1/users')
+          .post(`${baseUrl}`)
           .send(userRequestObject)
           .end((err, res) => {
             expect(res.status).to.equal(400);
@@ -48,7 +68,7 @@ describe('USER TEST SUITE', () => {
           password: 'hhrtuyhgt678',
         };
         chai.request(server)
-          .post('/api/v1/users')
+          .post(`${baseUrl}`)
           .send(userRequestObject)
           .end((err, res) => {
             expect(res.body.message).to.equal(
@@ -66,7 +86,7 @@ describe('USER TEST SUITE', () => {
           password: 'hhrtuyhgt678',
         };
         chai.request(server)
-          .post('/api/v1/users')
+          .post(`${baseUrl}`)
           .send(userRequestObject)
           .end((err, res) => {
             expect(res.status).to.equal(409);
@@ -84,7 +104,7 @@ describe('USER TEST SUITE', () => {
           password: 'hhrtuyhgt678',
         };
         chai.request(server)
-          .post('/api/v1/users')
+          .post(`${baseUrl}`)
           .send(userRequestObject)
           .end((err, res) => {
             expect(res.status).to.equal(409);
@@ -102,7 +122,7 @@ describe('USER TEST SUITE', () => {
           password: 'hhrtuyhgt678',
         };
         chai.request(server)
-          .post('/api/v1/users')
+          .post(`${baseUrl}`)
           .send(userRequestObject)
           .end((err, res) => {
             expect(res.status).to.equal(409);
@@ -120,7 +140,7 @@ describe('USER TEST SUITE', () => {
           password: 'hhrtuyhgt678',
         };
         chai.request(server)
-          .post('/api/v1/users')
+          .post(`${baseUrl}`)
           .send(userRequestObject)
           .end((err, res) => {
             expect(res.status).to.equal(409);
@@ -138,7 +158,7 @@ describe('USER TEST SUITE', () => {
           password: 'hba123',
         };
         chai.request(server)
-          .post('/api/v1/users')
+          .post(`${baseUrl}`)
           .send(userRequestObject)
           .end((err, res) => {
             expect(res.status).to.equal(400);
@@ -156,7 +176,7 @@ describe('USER TEST SUITE', () => {
           password: 'hbasdg3546',
         };
         chai.request(server)
-          .post('/api/v1/users')
+          .post(`${baseUrl}`)
           .send(userRequestObject)
           .end((err, res) => {
             expect(res.status).to.equal(400);
@@ -174,7 +194,7 @@ describe('USER TEST SUITE', () => {
           password: 'hbasdg3546',
         };
         chai.request(server)
-          .post('/api/v1/users')
+          .post(`${baseUrl}`)
           .send(userRequestObject)
           .end((err, res) => {
             expect(res.status).to.equal(400);
@@ -191,7 +211,7 @@ describe('USER TEST SUITE', () => {
         password: 'hbasdg3546',
       };
       chai.request(server)
-        .post('/api/v1/users')
+        .post(`${baseUrl}`)
         .send(userRequestObject)
         .end((err, res) => {
           expect(res.status).to.equal(400);
@@ -208,7 +228,7 @@ describe('USER TEST SUITE', () => {
         password: '',
       };
       chai.request(server)
-        .post('/api/v1/users')
+        .post(`${baseUrl}`)
         .send(userRequestObject)
         .end((err, res) => {
           const errorResult = JSON.parse(res.body.error);
@@ -227,7 +247,7 @@ describe('USER TEST SUITE', () => {
           username: 'abatamaya',
         };
         chai.request(server)
-          .post('/api/v1/users')
+          .post(`${baseUrl}`)
           .send(userRequestObject)
           .end((err, res) => {
             const errorResult = JSON.parse(res.body.error);
@@ -250,7 +270,7 @@ describe('USER TEST SUITE', () => {
           password: 'hhrtuyhgt678'
         };
         chai.request(server)
-          .post('/api/v1/users/login')
+          .post(`${baseUrl}/login`)
           .send(userRequestObject)
           .end((err, res) => {
             expect(res.status).to.equal(200);
@@ -266,7 +286,7 @@ describe('USER TEST SUITE', () => {
           password: 'hhrtuyhgt678'
         };
         chai.request(server)
-          .post('/api/v1/users/login')
+          .post(`${baseUrl}/login`)
           .send(userRequestObject)
           .end((err, res) => {
             expect(res.status).to.equal(200);
@@ -282,7 +302,7 @@ describe('USER TEST SUITE', () => {
           password: 'invalidpassword'
         };
         chai.request(server)
-          .post('/api/v1/users/login')
+          .post(`${baseUrl}/login`)
           .send(userRequestObject)
           .end((err, res) => {
             expect(res.status).to.equal(400);
@@ -298,7 +318,7 @@ describe('USER TEST SUITE', () => {
           password: 'invalidpassword'
         };
         chai.request(server)
-          .post('/api/v1/users/login')
+          .post(`${baseUrl}/login`)
           .send(userRequestObject)
           .end((err, res) => {
             expect(res.status).to.equal(400);
@@ -310,7 +330,7 @@ describe('USER TEST SUITE', () => {
     it('should not login user when required params are not provided',
       (done) => {
         chai.request(server)
-          .post('/api/v1/users/login')
+          .post(`${baseUrl}/login`)
           .send({})
           .end((err, res) => {
             const errorResult = JSON.parse(res.body.error);
@@ -329,7 +349,7 @@ describe('USER TEST SUITE', () => {
         password: '   ',
       };
       chai.request(server)
-        .post('/api/v1/users/login')
+        .post(`${baseUrl}/login`)
         .send(userRequestObject)
         .end((err, res) => {
           const errorResult = JSON.parse(res.body.error);

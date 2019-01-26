@@ -10,7 +10,7 @@ export default {
   categoryValidator(req, res, next) {
     const { category } = req.body;
 
-    if (!categoryEnum.includes(category)) {
+    if (!categoryEnum.includes(category.trim())) {
       const stringifiedAllowedCategories = JSON.stringify(categoryEnum);
       // eslint-disable-next-line
       const errorMessage = `Invalid category [${category}]. Allowed categories are ${stringifiedAllowedCategories}`;
@@ -120,17 +120,14 @@ export default {
     const { params: { slug } } = req;
     const { id: userId } = req.decoded;
     const article = await Article.findOne({ where: { slug } });
-    if (article) {
-      const idFound = await Report.findOne({
-        where: { articleId: article.id, userId }
-      });
+    const userHasPreviouslyReported = await Report.findOne({
+      where: { articleId: article.id, userId }
+    });
 
-      if (idFound) {
-        const error = new Error('Article already reported by you');
-        error.status = 409;
-        return next(error);
-      }
-      return next();
+    if (userHasPreviouslyReported) {
+      const error = new Error('Article already reported by you');
+      error.status = 409;
+      return next(error);
     }
     return next();
   }
