@@ -7,21 +7,17 @@ const { Article, Comment } = models;
 
 export default {
   async addComment(req, res) {
-    const { params: { slug }, decoded: { id } } = req;
-    const article = await Article.findOne({
-      where: { slug: { [iLike]: slug } }
-    });
+    const { params: { slug }, decoded } = req;
+    const article = await Article
+      .findOne({ where: { slug: { [iLike]: slug } } });
     const currentTime = moment().format('MMMM Do YYYY, h:mm:ss a');
     const newComment = await Comment.create({
-      userId: id,
+      userId: decoded.id,
       comment: { [currentTime]: req.body.comment },
       articleId: article.id
     });
     const comment = Object.values(newComment.comment)[0];
-    return res.json({
-      comment,
-      id: newComment.id,
-      updatedAt: newComment.updatedAt
-    });
+    const { id, updatedAt } = newComment;
+    return res.json({ comment, id, updatedAt });
   }
 };
