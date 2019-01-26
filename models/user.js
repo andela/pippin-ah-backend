@@ -30,12 +30,8 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     hooks: {
-      beforeCreate: async (user) => {
-        await user.hashPassword();
-      },
-      beforeUpdate: async (user) => {
-        await user.hashPassword();
-      }
+      beforeCreate: user => user.password && user.hashPassword(),
+      beforeUpdate: user => user.password && user.hashPassword()
     }
   }
   );
@@ -59,11 +55,9 @@ module.exports = (sequelize, DataTypes) => {
 
 
   User.prototype.hashPassword = async function hashPassword() {
-    if (this.password) {
-      const saltRounds = 10;
-      this.password = await bcrypt.hash(this.password, saltRounds);
-      return this.password;
-    }
+    const saltRounds = 10;
+    this.password = await bcrypt.hash(this.password, saltRounds);
+    return this.password;
   };
 
   User.prototype.validPassword = function validPassword(password) {
