@@ -8,7 +8,7 @@ const articleUrl = '/api/v1/articles';
 
 chai.use(chaiHttp);
 
-describe('ARTICLE TEST SUITE', () => {
+describe('GET MULTIPLE ARTICLES', () => {
   before(async () => {
     await models.sequelize.sync({ force: true });
 
@@ -200,7 +200,7 @@ describe('ARTICLE TEST SUITE', () => {
         expect(response.body.count).to.equal(1);
       });
 
-    it('should get all articles with all filters applied',
+    it('should combine several filters in getting only the matching article(s)',
       async () => {
         const response = await chai.request(server)
           .get(
