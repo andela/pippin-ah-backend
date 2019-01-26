@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 const { User } = models;
 const baseUrl = '/api/v1/users';
 
-describe.only('USER TEST SUITE', () => {
+describe('USER TEST SUITE', () => {
   let firstUserToken, firstUserID;
 
   before(async () => {
