@@ -33,7 +33,7 @@ export default {
   },
 
   async getComment(req, res) {
-    const { id } = req.params.id;
+    const { id } = req.params;
     const commentRow = await Comment.findOne({ where: { id } });
     const { comment } = commentRow;
     const latestEdit = Object.values(comment).slice(-1)[0];
