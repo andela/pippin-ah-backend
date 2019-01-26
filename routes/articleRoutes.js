@@ -23,7 +23,12 @@ const {
   getArticles,
 } = Article;
 
-const { addComment, editComment, getComment } = Comment;
+const {
+  addComment,
+  editComment,
+  getComment,
+  getCommentEditHistory
+} = Comment;
 const { like, cancelReaction, dislike } = Reaction;
 
 const {
@@ -108,14 +113,11 @@ router.route('/:slug/comments')
   );
 
 router.route('/:slug/comments/:id')
-  .patch(
-    verifyToken,
-    ensureArticleExists,
-    editComment
-  );
-
-router.route('/:slug/comments/:id')
+  .patch(verifyToken, ensureArticleExists, editComment)
   .get(getComment);
+
+router.route('/:slug/comments/:id/edits')
+  .get(getCommentEditHistory);
 
 router.route('/:slug/like')
   .patch(verifyToken, ensureArticleExists, like);
