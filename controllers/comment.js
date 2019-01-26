@@ -30,5 +30,13 @@ export default {
     await commentRow.update({ comment });
     const updatedComment = Object.values(comment).slice(-1)[0];
     return res.json({ updatedComment });
+  },
+
+  async getComment(req, res) {
+    const { id } = req.params.id;
+    const commentRow = await Comment.findOne({ where: { id } });
+    const { comment } = commentRow;
+    const latestEdit = Object.values(comment).slice(-1)[0];
+    return res.json({ comment: latestEdit });
   }
 };
