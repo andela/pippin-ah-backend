@@ -38,5 +38,12 @@ export default {
     const { comment } = commentRow;
     const latestEdit = Object.values(comment).slice(-1)[0];
     return res.json({ comment: latestEdit });
+  },
+
+  async getCommentEditHistory(req, res) {
+    const { id } = req.params;
+    const commentRow = await Comment.findOne({ where: { id } });
+    const { comment } = commentRow;
+    return res.json({ comment });
   }
 };
