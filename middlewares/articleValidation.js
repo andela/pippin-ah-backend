@@ -10,7 +10,7 @@ export default {
   categoryValidator(req, res, next) {
     const { category } = req.body;
 
-    if (!categoryEnum.includes(category)) {
+    if (!categoryEnum.includes(category.trim())) {
       const stringifiedAllowedCategories = JSON.stringify(categoryEnum);
       // eslint-disable-next-line
       const errorMessage = `Invalid category [${category}]. Allowed categories are ${stringifiedAllowedCategories}`;
