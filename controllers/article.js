@@ -134,7 +134,7 @@ export default {
 
       });
     }
-    const article = await Article.findAll({
+    const articles = await Article.findAll({
       where: {
         [and]: queryArray
       },
@@ -148,7 +148,7 @@ export default {
       }
       ]
     });
-    const responseArray = article.map(item => ({
+    const responseArray = articles.map(item => ({
       author: item.User.username,
       slug: item.slug,
       firstName: item.User.Profile.firstName,
@@ -166,7 +166,7 @@ export default {
     );
     return res.json({
       articles: responseArray,
-      count: article.length
+      count: articles.length
     });
   },
 
