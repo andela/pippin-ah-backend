@@ -53,6 +53,7 @@ const {
 const { rateArticle } = Rating;
 
 router.route('/')
+  .get(categoryQueryValidator, getArticles)
   .post(
     verifyToken,
     expectedParamsValidator,
@@ -71,9 +72,6 @@ router.route('/report/:slug')
     checkIfUserAlreadyReported,
     reportArticle
   );
-
-router.route('/')
-  .get(categoryQueryValidator, getArticles);
 
 router.route('/tag')
   .patch(
