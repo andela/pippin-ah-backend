@@ -95,7 +95,8 @@ class Users {
 
     const tokenPayload = {
       id: user.id,
-      isMentor: user.isMentor
+      isMentor: user.isMentor,
+      isAdmin: user.isAdmin
     };
 
     return res.status(200).json({
@@ -130,7 +131,8 @@ class Users {
     await profile.setUser(user);
     const tokenPayload = {
       id: user.id,
-      isMentor: user.isMentor
+      isMentor: user.isMentor,
+      isAdmin: user.isAdmin
     };
     const token = generateToken(tokenPayload);
 
@@ -173,7 +175,8 @@ class Users {
     if (user) {
       const tokenPayload = {
         id: user.id,
-        isMentor: user.isMentor
+        isMentor: user.isMentor,
+        isAdmin: user.isAdmin
       };
       const token = generateToken(tokenPayload);
       return res.json({
@@ -190,7 +193,8 @@ class Users {
     await newUser.setProfile(profile);
     const tokenPayload = {
       id: newUser.id,
-      isMentor: false
+      isMentor: false,
+      isAdmin: newUser.isAdmin
     };
     const token = generateToken(tokenPayload);
     return res.status(201).json({
