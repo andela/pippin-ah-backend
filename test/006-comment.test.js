@@ -105,9 +105,8 @@ describe('COMMENT TEST SUITE', () => {
           .post(`/api/v1/articles/${slug}/comments`)
           .set('Authorization', accesstoken)
           .send({ comment });
-        const commentText = Object.values(response.body.comment)[0];
         expect(response.status).to.equal(200);
-        expect(commentText)
+        expect(response.body.comment)
           .to.equal(comment);
       });
   });
