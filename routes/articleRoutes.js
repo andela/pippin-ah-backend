@@ -23,8 +23,9 @@ const {
   getArticles,
 } = Article;
 
-const { addComment, editComment } = Comment;
+const { addComment, editComment, getComment } = Comment;
 const { like, cancelReaction, dislike } = Reaction;
+
 const {
   expectedParamsValidator,
   nonEmptyParamsValidator,
@@ -112,6 +113,9 @@ router.route('/:slug/comments/:id')
     ensureArticleExists,
     editComment
   );
+
+router.route('/:slug/comments/:id')
+  .get(getComment);
 
 router.route('/:slug/like')
   .patch(verifyToken, ensureArticleExists, like);
