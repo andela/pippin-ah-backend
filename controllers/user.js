@@ -111,14 +111,21 @@ class Users {
     * @param {object} res - The response object.
     */
   static async register(req, res) {
-    const { username, email, password } = req.body;
+    const {
+      username,
+      email,
+      password,
+      isMentor
+    } = req.body;
 
     const user = await User
       .create({
         username,
         email,
-        password
+        password,
+        isMentor
       });
+
     const profile = new Profile();
     await profile.setUser(user);
     const tokenPayload = {
@@ -132,14 +139,14 @@ class Users {
           padding:15px">
           Welcome To LearnGround </h1><br>
           <h3 style=" text-align:justify";margin-left:50%>
-          The Den Of Great Ideas
+            The Den Of Great Ideas
           </h3>
-           <strong style=" text-align:justify";margin-left:50%>
-           Your Registration was successful </strong><br>
-           <strong style=" text-align:justify";margin-left:50%>
-           Click <a href="${activationUrl}">Activate</a> to activate
-           your account
-           </strong><br>`;
+          <strong style=" text-align:justify";margin-left:50%>
+          Your Registration was successful </strong><br>
+          <strong style=" text-align:justify";margin-left:50%>
+          Click <a href="${activationUrl}">Activate</a> to activate
+          your account
+          </strong><br>`;
 
     sendEmail({ email, subject, html });
     return res.status(201).json({
