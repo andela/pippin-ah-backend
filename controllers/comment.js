@@ -46,5 +46,15 @@ export default {
     const commentRow = await Comment.findOne({ where: { id } });
     const { comment } = commentRow;
     return res.json({ comment });
+  },
+
+  async deleteComment(req, res) {
+    const { params: { id }, decoded } = req;
+    const comment = await Comment
+      .findOne({ where: { id, userId: decoded.id } });
+    await comment.destroy();
+    return res.json.status(204).send({
+      message: 'Comment deleted successfully'
+    });
   }
 };
