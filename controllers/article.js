@@ -121,6 +121,7 @@ export default {
       description: item.description,
       category: item.category,
       body: item.body,
+      slug: item.slug,
       createdOn: dateFns.format(new Date(item.createdAt), 'D MMMM YYYY, h:ssA'),
       modifiedOn: dateFns.format(new Date(item.updatedAt), 'D MMMM YYYY, h:ssA')
     })
