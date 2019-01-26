@@ -127,6 +127,9 @@ export default {
           '$User.Profile.firstName$': {
             [iLike]: `%${author}%`
           },
+          '$User.username$': {
+            [iLike]: `%${author}%`
+          },
         }
 
       });
