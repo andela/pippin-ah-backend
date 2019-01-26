@@ -200,7 +200,7 @@ describe('GET MULTIPLE ARTICLES', () => {
         expect(response.body.count).to.equal(1);
       });
 
-    it('should combine several filters in getting only the matching article(s)',
+    it('should combine several filters in getting just the matching article(s)',
       async () => {
         const response = await chai.request(server)
           .get(
