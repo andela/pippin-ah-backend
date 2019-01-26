@@ -3,15 +3,14 @@ import chaiHttp from 'chai-http';
 import models from '../models';
 import server from '../app';
 
-const { User } = models;
 const baseUrl = '/api/v1/articles';
 
 chai.use(chaiHttp);
 
 describe('Test Suite for Rating', () => {
-  let nonMentorToken,
-    isMentorToken,
+  let firstUserToken,
     secondUserToken,
+    nonMentorToken,
     firstArticleSlug,
     secondArticleSlug;
   before(async () => {
@@ -20,12 +19,20 @@ describe('Test Suite for Rating', () => {
     const firstUserRequestObject = {
       username: 'bugsburney',
       email: 'bugsburney@email.com',
-      password: 'bugsbugs'
+      password: 'bugsbugs',
+      isMentor: true
     };
     const secondUserRequestObject = {
       username: 'daffyduck',
       email: 'daffyduck@email.com',
-      password: 'daffydaffy'
+      password: 'daffydaffy',
+      isMentor: true
+    };
+    const thirdUserRequestObject = {
+      username: 'speedy',
+      email: 'speedy@email.com',
+      password: 'speedycheese',
+      isMentor: false
     };
     const firstArticleRequestObject = {
       title: 'Silicon Valley',
@@ -39,19 +46,21 @@ describe('Test Suite for Rating', () => {
       description: 'Article Description',
       category: 'Science'
     };
-    const firstLoginRequestObject = {
-      usernameOrEmail: 'bugsburney',
-      password: 'bugsbugs'
-    };
-    const secondLoginRequestObject = {
-      usernameOrEmail: 'daffyduck',
-      password: 'daffydaffy'
-    };
 
-    const nonMentorResponseObject = await chai.request(server)
+    const firstUserResponseObject = await chai.request(server)
       .post('/api/v1/users')
       .send(firstUserRequestObject);
-    nonMentorToken = nonMentorResponseObject.body.token;
+    firstUserToken = firstUserResponseObject.body.token;
+
+    const secondUserResponseObject = await chai.request(server)
+      .post('/api/v1/users')
+      .send(secondUserRequestObject);
+    secondUserToken = secondUserResponseObject.body.token;
+
+    const thirdUserResponseObject = await chai.request(server)
+      .post('/api/v1/users')
+      .send(thirdUserRequestObject);
+    nonMentorToken = thirdUserResponseObject.body.token;
 
     await chai.request(server)
       .post('/api/v1/users')
@@ -60,30 +69,8 @@ describe('Test Suite for Rating', () => {
     const firstArticleResponse = await chai.request(server)
       .post(baseUrl)
       .send(firstArticleRequestObject)
-      .set('Authorization', nonMentorToken);
+      .set('Authorization', firstUserToken);
     firstArticleSlug = firstArticleResponse.body.slug;
-
-    const firstUser = await User.findOne({ where: { username: 'bugsburney' } });
-    await firstUser.update({
-      isMentor: true,
-      password: 'bugsbugs'
-    });
-
-    const secondUser = await User.findOne({ where: { username: 'daffyduck' } });
-    await secondUser.update({
-      isMentor: true,
-      password: 'daffydaffy'
-    });
-
-    const isMentorResponseObject = await chai.request(server)
-      .post('/api/v1/users/login')
-      .send(firstLoginRequestObject);
-    isMentorToken = isMentorResponseObject.body.token;
-
-    const secondUserResponseObject = await chai.request(server)
-      .post('/api/v1/users/login')
-      .send(secondLoginRequestObject);
-    secondUserToken = secondUserResponseObject.body.token;
 
     const secondArticleResponse = await chai.request(server)
       .post(baseUrl)
@@ -121,7 +108,7 @@ describe('Test Suite for Rating', () => {
       async () => {
         const response = await chai.request(server)
           .patch(`${baseUrl}/rating/${firstArticleSlug}`)
-          .set('Authorization', isMentorToken)
+          .set('Authorization', firstUserToken)
           .send({ rateValue: 'a' });
         expect(response.status).to.equal(400);
         expect(response.body.error).to.equal('Value must be a number');
@@ -131,7 +118,7 @@ describe('Test Suite for Rating', () => {
       async () => {
         const response = await chai.request(server)
           .patch(`${baseUrl}/rating/${firstArticleSlug}`)
-          .set('Authorization', isMentorToken)
+          .set('Authorization', firstUserToken)
           .send({ rateValue: '8' });
         const errorMessage = 'Value must not be less than 1 or greater than 5';
         expect(response.status).to.equal(400);
@@ -142,7 +129,7 @@ describe('Test Suite for Rating', () => {
       async () => {
         const response = await chai.request(server)
           .patch(`${baseUrl}/rating/${firstArticleSlug}`)
-          .set('Authorization', isMentorToken)
+          .set('Authorization', firstUserToken)
           .send();
         const errorMessage = 'Rate value must be provided';
         expect(response.status).to.equal(400);
@@ -153,7 +140,7 @@ describe('Test Suite for Rating', () => {
       async () => {
         const response = await chai.request(server)
           .patch(`${baseUrl}/rating/${firstArticleSlug}`)
-          .set('Authorization', isMentorToken)
+          .set('Authorization', firstUserToken)
           .send({ rateValue: '4' });
         expect(response.status).to.equal(200);
         expect(response.body.yourRating).to.equal(4);
@@ -163,7 +150,7 @@ describe('Test Suite for Rating', () => {
       async () => {
         const response = await chai.request(server)
           .patch(`${baseUrl}/rating/${secondArticleSlug}`)
-          .set('Authorization', isMentorToken)
+          .set('Authorization', firstUserToken)
           .send({ rateValue: '3' });
         expect(response.status).to.equal(200);
         expect(response.body.yourRating).to.equal(3);
