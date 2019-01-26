@@ -158,10 +158,24 @@ describe('ARTICLE TEST SUITE', () => {
         expect(response.body.count).to.equal(2);
       });
 
-    it('should get all articles of provided author',
+    it('should get all articles of provided author if first name is supplied',
       async () => {
         const response = await chai.request(server)
           .get(`${articleUrl}?author=Jane`);
+        expect(response.body.count).to.equal(2);
+      });
+
+    it('should get all articles of provided author if last name is supplied',
+      async () => {
+        const response = await chai.request(server)
+          .get(`${articleUrl}?author=smith`);
+        expect(response.body.count).to.equal(2);
+      });
+
+    it('should get all articles of provided author if username is supplied',
+      async () => {
+        const response = await chai.request(server)
+          .get(`${articleUrl}?author=davidhook`);
         expect(response.body.count).to.equal(2);
       });
 
