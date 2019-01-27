@@ -59,13 +59,18 @@ export default {
   },
 
   async doesCommentExist(req, res, next) {
-    const { params: { id }, decoded } = req;
+    const { id } = req.params;
     const comment = await Comment.findOne({ where: { id } });
     if (!comment) {
       const error = new Error('Comment does not exist');
       error.status = 404;
       return next(error);
     }
+    return next();
+  },
+
+  async validateUser(req, res, next) {
+    const { params: { id }, decoded } = req;
     const usersComment = await Comment
       .findOne({ where: { id, userId: decoded.id } });
     if (!usersComment) {
@@ -74,5 +79,5 @@ export default {
       return next(error);
     }
     return next();
-  },
+  }
 };

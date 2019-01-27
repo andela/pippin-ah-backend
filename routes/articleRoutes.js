@@ -50,7 +50,8 @@ const {
   isCommentValid,
   isNewCommentValid,
   doesArticleExist,
-  doesCommentExist
+  doesCommentExist,
+  validateUser
 } = commentValidations;
 
 const {
@@ -121,6 +122,7 @@ router.route('/:slug/comments/:id')
     verifyToken,
     doesArticleExist,
     doesCommentExist,
+    validateUser,
     isNewCommentSupplied,
     isNewCommentValid,
     editComment
@@ -128,12 +130,16 @@ router.route('/:slug/comments/:id')
   .get(doesCommentExist, getComment);
 
 router.route('/:slug/comments/:id/edits')
-  .get(getCommentEditHistory);
+  .get(
+    doesCommentExist,
+    getCommentEditHistory
+  );
 
 router.route('/:slug/comments/:id')
   .delete(
     verifyToken,
     doesCommentExist,
+    validateUser,
     deleteComment
   );
 
