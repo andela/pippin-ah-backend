@@ -5,12 +5,10 @@ let strategyCallback;
 let redirectURL;
 
 const mockUser = {
-  id: '5534522347',
-  displayName: 'Jesse Init',
-  username: 'jesseinit',
-  emails: [{ value: 'jesseinit@now.com' }],
-  photos: [{ value: 'https://imgur.com/jesse.jpg' }],
-  provider: 'mock'
+  email: 'mockuser@gmail.com',
+  firstName: 'Johnmock',
+  lastName: 'Larry',
+  imageUrl: 'https://mock.com/mock/image/url'
 };
 
 /**
@@ -21,7 +19,7 @@ const mockUser = {
 function MockStrategy(options, callback) {
   this.name = options.name;
   strategyCallback = callback;
-  ({ redirectURL } = redirectURL);
+  ({ redirectURL } = options);
 }
 
 util.inherits(MockStrategy, passport.Strategy);
@@ -36,4 +34,9 @@ MockStrategy.prototype.authenticate = function auth(req, options) {
   });
 };
 
-export default MockStrategy;
+export default new MockStrategy({
+  name: 'google',
+  redirectURL: '/api/v1/users/google/redirect'
+}, (accessToken, refreshToken, profile, done) => {
+  done(null, profile);
+});
