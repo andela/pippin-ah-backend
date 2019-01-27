@@ -1,11 +1,11 @@
 import passport from 'passport';
 import FacebookStrategy from 'passport-facebook';
 import { Users } from '../../controllers';
-import MockStrategy from './mockStrategy';
+import { facebookMockStrategy } from './mockStrategy';
 
 const { processSocialUser } = Users;
 
-let strategy = new FacebookStrategy({
+const strategy = new FacebookStrategy({
   clientID: process.env.FACEBOOK_ID,
   clientSecret: process.env.FACEBOOK_SECRET,
   callbackURL:
@@ -16,18 +16,11 @@ let strategy = new FacebookStrategy({
   done(null, { email: profile.emails[0].value });
 });
 
-if (process.env.NODE_ENV === 'test') {
-  strategy = new MockStrategy({
-    name: 'facebook',
-    redirectURL: '/api/v1/users/facebook/redirect'
-  }, (accessToken, refreshToken, profile, done) => {
-    done(null, profile);
-  });
-}
+const isTest = process.env.NODE_ENV === 'test';
 
 export default {
   init() {
-    passport.use(strategy);
+    passport.use(isTest ? facebookMockStrategy : strategy);
   },
 
   fbAuthenticate: passport.authenticate(
