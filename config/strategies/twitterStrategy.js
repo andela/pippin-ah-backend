@@ -1,11 +1,11 @@
 import passport from 'passport';
 import Strategy from 'passport-twitter';
 import { Users } from '../../controllers';
-import MockStrategy from './mockStrategy';
+import { twitterMockStrategy } from './mockStrategy';
 
 const { processSocialUser } = Users;
 
-let strategy = new Strategy({
+const strategy = new Strategy({
   consumerKey: process.env.TWITTER_CONSUMER_KEY,
   consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
   callbackURL: '/api/v1/users/twitter/redirect',
@@ -18,18 +18,11 @@ let strategy = new Strategy({
   });
 });
 
-if (process.env.NODE_ENV === 'test') {
-  strategy = new MockStrategy({
-    name: 'twitter',
-    redirectURL: '/api/v1/users/twitter/redirect'
-  }, (accessToken, refreshToken, profile, done) => {
-    done(null, profile);
-  });
-}
+const isTest = process.env.NODE_ENV === 'test';
 
 export default {
   init() {
-    passport.use(strategy);
+    passport.use(isTest ? twitterMockStrategy : strategy);
   },
 
   twitterAuthenticate: passport.authenticate(
