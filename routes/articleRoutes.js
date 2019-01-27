@@ -133,6 +133,7 @@ router.route('/:slug/comments/:id/edits')
 router.route('/:slug/comments/:id')
   .delete(
     verifyToken,
+    doesCommentExist,
     deleteComment
   );
 
