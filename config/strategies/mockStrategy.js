@@ -34,4 +34,29 @@ MockStrategy.prototype.authenticate = function auth(req, options) {
   });
 };
 
-export default MockStrategy;
+const googleMockStrategy = new MockStrategy({
+  name: 'google',
+  redirectURL: '/api/v1/users/google/redirect'
+}, (accessToken, refreshToken, profile, done) => {
+  done(null, profile);
+});
+
+const twitterMockStrategy = new MockStrategy({
+  name: 'twitter',
+  redirectURL: '/api/v1/users/twitter/redirect'
+}, (accessToken, refreshToken, profile, done) => {
+  done(null, profile);
+});
+
+const facebookMockStrategy = new MockStrategy({
+  name: 'facebook',
+  redirectURL: '/api/v1/users/facebook/redirect'
+}, (accessToken, refreshToken, profile, done) => {
+  done(null, profile);
+});
+
+export {
+  googleMockStrategy,
+  twitterMockStrategy,
+  facebookMockStrategy
+};
