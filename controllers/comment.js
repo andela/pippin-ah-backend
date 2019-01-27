@@ -53,7 +53,7 @@ export default {
     const comment = await Comment
       .findOne({ where: { id, userId: decoded.id } });
     await comment.destroy();
-    return res.status(204).json({
+    return res.status(200).json({
       message: 'Comment deleted successfully'
     });
   }
