@@ -45,8 +45,10 @@ const {
 } = articleValidation;
 
 const {
-  ensureCommentInput,
-  ensureValidComment,
+  isCommentSupplied,
+  isNewCommentSupplied,
+  isCommentValid,
+  isNewCommentValid,
   ensureArticleExists
 } = commentValidations;
 
@@ -108,13 +110,19 @@ router.route('/:slug/comments')
   .post(
     verifyToken,
     ensureArticleExists,
-    ensureCommentInput,
-    ensureValidComment,
+    isCommentSupplied,
+    isCommentValid,
     addComment
   );
 
 router.route('/:slug/comments/:id')
-  .patch(verifyToken, ensureArticleExists, editComment)
+  .patch(
+    verifyToken,
+    ensureArticleExists,
+    isNewCommentSupplied,
+    isNewCommentValid,
+    editComment
+  )
   .get(getComment);
 
 router.route('/:slug/comments/:id/edits')
