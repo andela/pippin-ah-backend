@@ -27,7 +27,8 @@ const {
   addComment,
   editComment,
   getComment,
-  getCommentEditHistory
+  getCommentEditHistory,
+  deleteComment
 } = Comment;
 const { like, cancelReaction, dislike } = Reaction;
 
@@ -118,6 +119,12 @@ router.route('/:slug/comments/:id')
 
 router.route('/:slug/comments/:id/edits')
   .get(getCommentEditHistory);
+
+router.route('/:slug/comments/:id')
+  .delete(
+    verifyToken,
+    deleteComment
+  );
 
 router.route('/:slug/like')
   .patch(verifyToken, ensureArticleExists, like);
