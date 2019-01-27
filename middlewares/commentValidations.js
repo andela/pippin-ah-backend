@@ -46,7 +46,7 @@ export default {
     return next();
   },
 
-  async ensureArticleExists(req, res, next) {
+  async doesArticleExist(req, res, next) {
     const article = await Article.findOne({
       where: { slug: { [iLike]: req.params.slug } }
     });
@@ -56,5 +56,23 @@ export default {
       return next(error);
     }
     return next();
-  }
+  },
+
+  async doesCommentExist(req, res, next) {
+    const { params: { id }, decoded } = req;
+    const comment = await Comment.findOne({ where: { id } });
+    const usersComment = await Comment
+      .findOne({ where: { id, userId: decoded.id } });
+    if (!comment) {
+      const error = new Error('Comment does not exist');
+      error.status = 404;
+      return next(error);
+    }
+    if (!usersComment) {
+      const error = new Error('You are not authorized to edit this comment');
+      error.status = 401;
+      return next(error);
+    }
+    return next();
+  },
 };
