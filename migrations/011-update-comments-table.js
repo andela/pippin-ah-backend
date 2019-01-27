@@ -2,8 +2,8 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface
-    .addColumn('Comments', 'comment', { type: Sequelize.JSON }),
+    .removeColumn('Comments', 'comment'),
 
   down: (queryInterface, Sequelize) => queryInterface
-    .removeColumn('Comments', 'comment')
+    .addColumn('Comments', 'comment', { type: Sequelize.STRING })
 };
