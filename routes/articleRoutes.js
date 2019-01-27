@@ -49,7 +49,8 @@ const {
   isNewCommentSupplied,
   isCommentValid,
   isNewCommentValid,
-  ensureArticleExists
+  doesArticleExist,
+  doesCommentExist
 } = commentValidations;
 
 const {
@@ -75,7 +76,7 @@ router.route('/')
 router.route('/report/:slug')
   .post(
     verifyToken,
-    ensureArticleExists,
+    doesArticleExist,
     reportIsRequired,
     reportIsEmpty,
     checkIfUserAlreadyReported,
@@ -91,7 +92,7 @@ router.route('/tag')
 
 router.route('/:slug')
   .get(
-    ensureArticleExists,
+    doesArticleExist,
     getArticleBySlug
   );
 
@@ -99,7 +100,7 @@ router.route('/rating/:slug')
   .patch(
     verifyToken,
     userIsMentor,
-    ensureArticleExists,
+    doesArticleExist,
     isRateValueSupplied,
     inputTypeIsValid,
     ratingIsInRange,
@@ -109,7 +110,7 @@ router.route('/rating/:slug')
 router.route('/:slug/comments')
   .post(
     verifyToken,
-    ensureArticleExists,
+    doesArticleExist,
     isCommentSupplied,
     isCommentValid,
     addComment
@@ -118,7 +119,8 @@ router.route('/:slug/comments')
 router.route('/:slug/comments/:id')
   .patch(
     verifyToken,
-    ensureArticleExists,
+    doesArticleExist,
+    doesCommentExist,
     isNewCommentSupplied,
     isNewCommentValid,
     editComment
@@ -135,12 +137,12 @@ router.route('/:slug/comments/:id')
   );
 
 router.route('/:slug/like')
-  .patch(verifyToken, ensureArticleExists, like);
+  .patch(verifyToken, doesArticleExist, like);
 
 router.route('/:slug/cancelreaction')
-  .patch(verifyToken, ensureArticleExists, cancelReaction);
+  .patch(verifyToken, doesArticleExist, cancelReaction);
 
 router.route('/:slug/dislike')
-  .patch(verifyToken, ensureArticleExists, dislike);
+  .patch(verifyToken, doesArticleExist, dislike);
 
 export default router;
