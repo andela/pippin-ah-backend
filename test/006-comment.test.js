@@ -173,7 +173,9 @@ describe('COMMENT TEST SUITE', () => {
         expect(response.status).to.equal(200);
         expect(response.body.updatedComment).to.equal(thirdComment);
       });
+  });
 
+  describe('GET Comment', () => {
     it('should get comment',
       async () => {
         const response = await chai.request(server)
@@ -191,7 +193,9 @@ describe('COMMENT TEST SUITE', () => {
         expect(response.status).to.equal(200);
         expect(typeof (response.body.comment)).to.equal('object');
       });
+  });
 
+  describe('Delete Comment', () => {
     it('should not delete comment if not created by user',
       async () => {
         const response = await chai.request(server)
