@@ -6,9 +6,10 @@ import server from '../app';
 chai.use(chaiHttp);
 
 describe('COMMENT TEST SUITE', () => {
-  let firstUserToken, secondUserToken, slug;
+  let firstUserToken, secondUserToken, slug, secondCommentID;
   const firstComment = 'This is an insightful article';
   const secondComment = 'What a lovely way to put it!';
+  const thirdComment = 'This got me really thinking.';
   before(async () => {
     await models.sequelize.sync({ force: true });
 
@@ -47,8 +48,8 @@ describe('COMMENT TEST SUITE', () => {
     const articleComment = await chai.request(server)
       .post(`/api/v1/articles/${slug}/comments`)
       .set('Authorization', secondUserToken)
-      .send({ secondComment });
-    const secondCommentID = articleComment.id;
+      .send({ comment: secondComment });
+    secondCommentID = articleComment.body.id;
   });
 
   describe('Add Comment To Article', () => {
@@ -56,7 +57,7 @@ describe('COMMENT TEST SUITE', () => {
       async () => {
         const response = await chai.request(server)
           .post(`/api/v1/articles/${slug}/comments`)
-          .send({ firstComment });
+          .send({ comment: firstComment });
         expect(response.status).to.equal(401);
         expect(response.body.error).to.equal('No token provided');
       });
@@ -66,7 +67,7 @@ describe('COMMENT TEST SUITE', () => {
         const response = await chai.request(server)
           .post(`/api/v1/articles/${slug}/comments`)
           .set('Authorization', 'invalid token')
-          .send({ firstComment });
+          .send({ comment: firstComment });
         expect(response.status).to.equal(401);
         expect(response.body.error).to.equal('Invalid token');
       });
@@ -75,7 +76,7 @@ describe('COMMENT TEST SUITE', () => {
       async () => {
         const response = await chai.request(server)
           .post(`/api/v1/articles/${slug}/comments`)
-          .set('Authorization', accesstoken);
+          .set('Authorization', firstUserToken);
         expect(response.status).to.equal(400);
         expect(response.body.error)
           .to.equal('comment params is missing, empty or invalid');
@@ -85,7 +86,7 @@ describe('COMMENT TEST SUITE', () => {
       async () => {
         const response = await chai.request(server)
           .post(`/api/v1/articles/${slug}/comments`)
-          .set('Authorization', accesstoken)
+          .set('Authorization', firstUserToken)
           .send([]);
         expect(response.status).to.equal(400);
         expect(response.body.error)
@@ -96,7 +97,7 @@ describe('COMMENT TEST SUITE', () => {
       async () => {
         const response = await chai.request(server)
           .post(`/api/v1/articles/${slug}/comments`)
-          .set('Authorization', accesstoken)
+          .set('Authorization', firstUserToken)
           .send({
             comment: 'x'.repeat(1001)
           });
@@ -109,8 +110,8 @@ describe('COMMENT TEST SUITE', () => {
       async () => {
         const response = await chai.request(server)
           .post('/api/v1/articles/noArticle/comments')
-          .set('Authorization', accesstoken)
-          .send({ firstComment });
+          .set('Authorization', firstUserToken)
+          .send({ comment: firstComment });
         expect(response.status).to.equal(404);
         expect(response.body.error)
           .to.equal('Article provided does not exist');
@@ -120,68 +121,94 @@ describe('COMMENT TEST SUITE', () => {
       async () => {
         const response = await chai.request(server)
           .post(`/api/v1/articles/${slug}/comments`)
-          .set('Authorization', accesstoken)
-          .send({ firstComment });
+          .set('Authorization', firstUserToken)
+          .send({ comment: firstComment });
         expect(response.status).to.equal(200);
         expect(response.body.comment)
-          .to.equal(comment);
+          .to.equal(firstComment);
       });
   });
+
   describe('Edit Comment', () => {
+    it('should respond with 404 error if comment does not exist',
+      async () => {
+        const nonExistentID = '771cca62-0f53-4fe6-9811-4fae380f75a7';
+        const response = await chai.request(server)
+          .patch(`/api/v1/articles/${slug}/comments/${nonExistentID}`)
+          .set('Authorization', secondUserToken)
+          .send('');
+        expect(response.status).to.equal(404);
+        expect(response.body.error)
+          .to.equal('Comment does not exist');
+      });
+
     it('should respond with 400 error if newComment field is not provided',
       async () => {
         const response = await chai.request(server)
-          .post(`/api/v1/articles/${slug}/comments`)
-          .set('Authorization', accesstoken);
+          .patch(`/api/v1/articles/${slug}/comments/${secondCommentID}`)
+          .set('Authorization', secondUserToken)
+          .send();
         expect(response.status).to.equal(400);
         expect(response.body.error)
           .to.equal('comment params is missing, empty or invalid');
       });
 
-    it('should respond with 400 error if the comment supplied is not a string',
+    it('should respond with 401 error if comment was not created by user',
       async () => {
         const response = await chai.request(server)
-          .post(`/api/v1/articles/${slug}/comments`)
-          .set('Authorization', accesstoken)
-          .send([]);
-        expect(response.status).to.equal(400);
-        expect(response.body.error)
-          .to.equal('comment params is missing, empty or invalid');
+          .patch(`/api/v1/articles/${slug}/comments/${secondCommentID}`)
+          .set('Authorization', firstUserToken)
+          .send({ newComment: firstComment });
+        const errorMessage = 'You are not authorized to edit this comment';
+        expect(response.status).to.equal(401);
+        expect(response.body.error).to.equal(errorMessage);
       });
 
-    it('should not allow comment entries greater than 1000 characters',
+    it('should edit comment entry with valid parameters',
       async () => {
         const response = await chai.request(server)
-          .post(`/api/v1/articles/${slug}/comments`)
-          .set('Authorization', accesstoken)
-          .send({
-            comment: 'x'.repeat(1001)
-          });
-        expect(response.status).to.equal(400);
-        expect(response.body.error)
-          .to.equal('comment is greater than 1000 characters');
-      });
-
-    it('should not permit comment entry for non-existent articles',
-      async () => {
-        const response = await chai.request(server)
-          .post('/api/v1/articles/noArticle/comments')
-          .set('Authorization', accesstoken)
-          .send({ firstComment });
-        expect(response.status).to.equal(404);
-        expect(response.body.error)
-          .to.equal('Article provided does not exist');
-      });
-
-    it('should add comment entry with valid parameters',
-      async () => {
-        const response = await chai.request(server)
-          .post(`/api/v1/articles/${slug}/comments`)
-          .set('Authorization', accesstoken)
-          .send({ firstComment });
+          .patch(`/api/v1/articles/${slug}/comments/${secondCommentID}`)
+          .set('Authorization', secondUserToken)
+          .send({ newComment: thirdComment });
         expect(response.status).to.equal(200);
-        expect(response.body.comment)
-          .to.equal(comment);
+        expect(response.body.updatedComment).to.equal(thirdComment);
+      });
+
+    it('should get comment',
+      async () => {
+        const response = await chai.request(server)
+          .get(`/api/v1/articles/${slug}/comments/${secondCommentID}`)
+          .set('Authorization', secondUserToken);
+        expect(response.status).to.equal(200);
+        expect(response.body.comment).to.equal(thirdComment);
+      });
+
+    it('should get comment edit history',
+      async () => {
+        const response = await chai.request(server)
+          .get(`/api/v1/articles/${slug}/comments/${secondCommentID}/edits`)
+          .set('Authorization', secondUserToken);
+        expect(response.status).to.equal(200);
+        expect(typeof (response.body.comment)).to.equal('object');
+      });
+
+    it('should not delete comment if not created by user',
+      async () => {
+        const response = await chai.request(server)
+          .delete(`/api/v1/articles/${slug}/comments/${secondCommentID}`)
+          .set('Authorization', firstUserToken);
+        const errorMessage = 'You are not authorized to edit this comment';
+        expect(response.status).to.equal(401);
+        expect(response.body.error).to.equal(errorMessage);
+      });
+
+    it('should delete comment if created by user',
+      async () => {
+        const response = await chai.request(server)
+          .delete(`/api/v1/articles/${slug}/comments/${secondCommentID}`)
+          .set('Authorization', secondUserToken);
+        expect(response.status).to.equal(200);
+        expect(response.body.message).to.equal('Comment deleted successfully');
       });
   });
 });
