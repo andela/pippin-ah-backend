@@ -1,11 +1,11 @@
 import passport from 'passport';
 import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import { Users } from '../../controllers';
-import MockStrategy from './mockStrategy';
+import { googleMockStrategy } from './mockStrategy';
 
 const { processSocialUser } = Users;
 
-let strategy = new GoogleStrategy({
+const strategy = new GoogleStrategy({
   clientID: process.env.GOOGLE_ID,
   clientSecret: process.env.GOOGLE_SECRET,
   callbackURL: '/api/v1/users/google/redirect'
@@ -18,18 +18,11 @@ let strategy = new GoogleStrategy({
   });
 });
 
-if (process.env.NODE_ENV === 'test') {
-  strategy = new MockStrategy({
-    name: 'google',
-    redirectURL: '/api/v1/users/google/redirect'
-  }, (accessToken, refreshToken, profile, done) => {
-    done(null, profile);
-  });
-}
+const isTest = process.env.NODE_ENV === 'test';
 
 export default {
   init() {
-    passport.use(strategy);
+    passport.use(isTest ? googleMockStrategy : strategy);
   },
 
   googleAuthenticate: passport.authenticate(
