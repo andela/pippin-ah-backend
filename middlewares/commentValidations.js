@@ -1,28 +1,48 @@
 import Sequelize from 'sequelize';
 import models from '../models';
 
-const { Article } = models;
+const { Article, Comment } = models;
 const { iLike } = Sequelize.Op;
 const maxLen = 1000;
 
+const isInputSupplied = (input, next) => {
+  if (!input || typeof input !== 'string') {
+    const error = new Error('comment params is missing, empty or invalid');
+    error.status = 400;
+    return next(error);
+  }
+};
+
+const isCommentValid = (input, next) => {
+  if (input.trim().length > maxLen) {
+    const error = new Error(`comment is greater than ${maxLen} characters`);
+    error.status = 400;
+    return next(error);
+  }
+};
+
 export default {
-  ensureCommentInput(req, res, next) {
+  isCommentSupplied(req, res, next) {
     const { comment } = req.body;
-    if (!comment || typeof comment !== 'string') {
-      const error = new Error('comment params is missing, empty or invalid');
-      error.status = 400;
-      return next(error);
-    }
+    isInputSupplied(comment, next);
     return next();
   },
 
-  ensureValidComment(req, res, next) {
+  isNewCommentSupplied(req, res, next) {
+    const { newComment } = req.body;
+    isInputSupplied(newComment, next);
+    return next();
+  },
+
+  isCommentValid(req, res, next) {
     const { comment } = req.body;
-    if (comment.trim().length > maxLen) {
-      const error = new Error(`comment is greater than ${maxLen} characters`);
-      error.status = 400;
-      return next(error);
-    }
+    isCommentValid(comment, next);
+    return next();
+  },
+
+  isNewCommentValid(req, res, next) {
+    const { newComment } = req.body;
+    isCommentValid(newComment, next);
     return next();
   },
 
