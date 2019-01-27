@@ -34,9 +34,4 @@ MockStrategy.prototype.authenticate = function auth(req, options) {
   });
 };
 
-export default new MockStrategy({
-  name: 'google',
-  redirectURL: '/api/v1/users/google/redirect'
-}, (accessToken, refreshToken, profile, done) => {
-  done(null, profile);
-});
+export default MockStrategy;
