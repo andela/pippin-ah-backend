@@ -5,7 +5,7 @@ import server from '../app';
 
 chai.use(chaiHttp);
 
-describe('AUTHENTICATION TEST SUITE', () => {
+describe.only('AUTHENTICATION TEST SUITE', () => {
   before(() => models.sequelize.sync({ force: true }));
 
   describe('JWT AUTHENTICATION', () => {
@@ -36,6 +36,17 @@ describe('AUTHENTICATION TEST SUITE', () => {
         .end((err, res) => {
           expect(res.body.token).to.not.equal(undefined);
           done();
+        });
+    });
+  });
+
+  describe('SOCIAL AUTHENTICATION', () => {
+    describe('Google Authentication Test', () => {
+      it('should successfully register a user via google',
+        async () => {
+          const response = await chai.request(server)
+            .get('/api/v1/users/google');
+          expect(response.status).to.equal(201);
         });
     });
   });
