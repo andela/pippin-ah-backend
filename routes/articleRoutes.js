@@ -125,7 +125,7 @@ router.route('/:slug/comments/:id')
     isNewCommentValid,
     editComment
   )
-  .get(getComment);
+  .get(doesCommentExist, getComment);
 
 router.route('/:slug/comments/:id/edits')
   .get(getCommentEditHistory);
