@@ -13,6 +13,7 @@ describe('REACTION TEST SUITE', () => {
   let id;
   const fakeId = 'E7C7379B-904D-47DE-A958-80E7B3B2FE24';
   const comment = 'This Article is a poor excuse for an Article';
+
   before(async () => {
     await models.sequelize.sync({ force: true });
 
@@ -136,7 +137,15 @@ describe('REACTION TEST SUITE', () => {
       });
   });
 
-  describe('Like a Comment', () => {
+  describe('COMMENT REACTION SUITE', () => {
+    it('should allow a user like a comment', async () => {
+      const response = await chai.request(server)
+        .post(`${baseUrl}/articles/${slug}/comments/${id}/like`)
+        .set('Authorization', token);
+      expect(response.status).to.equal(200);
+      expect(response.text).to.equal('OK');
+    });
+
     it('should like a comment', async () => {
       const response = await chai.request(server)
         .post(`${baseUrl}/articles/${slug}/comments/${id}/like`)
@@ -144,7 +153,7 @@ describe('REACTION TEST SUITE', () => {
       expect(response.status).to.equal(200);
     });
 
-    it('should dislike a comment', async () => {
+    it('should allow a user dislike a comment', async () => {
       const response = await chai.request(server)
         .patch(`${baseUrl}/articles/${slug}/comments/${id}/dislike`)
         .set('Authorization', token);

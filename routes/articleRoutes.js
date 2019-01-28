@@ -139,18 +139,10 @@ router.route('/:slug/comments')
   );
 
 router.route('/:slug/comments/:id/like')
-  .post(
-    verifyToken,
-    doesCommentExist,
-    likeComment
-  );
+  .post(verifyToken, doesCommentExist, likeComment);
 
 router.route('/:slug/comments/:id/dislike')
-  .patch(
-    verifyToken,
-    doesCommentExist,
-    dislikeComment
-  );
+  .patch(verifyToken, doesCommentExist, dislikeComment);
 
 router.route('/:slug/comments/:id')
   .patch(
