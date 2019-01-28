@@ -131,5 +131,17 @@ export default {
       return next(error);
     }
     return next();
-  }
+  },
+
+  async checkIfSlugExists(req, res, next) {
+    const { slug } = req.params;
+
+    const article = await Article.findOne({ where: { slug } });
+    if (article) return next();
+
+    const errorMessage = 'Article does not exist';
+    const error = new Error(errorMessage);
+    error.status = 400;
+    return next(error);
+  },
 };
