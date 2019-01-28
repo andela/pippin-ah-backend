@@ -1,8 +1,4 @@
 import passport from 'passport';
-import util from 'util';
-
-let strategyCallback;
-let redirectURL;
 
 const mockUser = {
   email: 'mockuser@gmail.com',
@@ -12,27 +8,37 @@ const mockUser = {
 };
 
 /**
- * @return {undefined}
- * @param {*} options
- * @param {*} callback
+ * @class Strategy
  */
-function MockStrategy(options, callback) {
-  this.name = options.name;
-  strategyCallback = callback;
-  ({ redirectURL } = options);
+class MockStrategy extends passport.Strategy {
+  /**
+   * Creates an instance of Strategy.
+   * @param {*} options
+   * @param {*} callback
+   * @memberof Strategy
+   */
+  constructor(options, callback) {
+    super(options, callback);
+    this.name = options.name;
+    this.callback = callback;
+    this.redirectURL = options.redirectURL;
+  }
+
+  /**
+   * @override
+   * @returns {Function} - Callback function
+   * @memberof Strategy
+   */
+  authenticate(req, options) {
+    this.callback(null, null, mockUser, (error, user) => {
+      if (options.scope) {
+        this.redirect(this.redirectURL);
+      } else {
+        this.success(user);
+      }
+    });
+  }
 }
-
-util.inherits(MockStrategy, passport.Strategy);
-
-MockStrategy.prototype.authenticate = function auth(req, options) {
-  strategyCallback(null, null, mockUser, (error, user) => {
-    if (options.scope) {
-      this.redirect(redirectURL);
-    } else {
-      this.success(user);
-    }
-  });
-};
 
 const googleMockStrategy = new MockStrategy({
   name: 'google',
