@@ -5,6 +5,8 @@ import server from '../app';
 
 chai.use(chaiHttp);
 
+const baseUrl = '/api/v1/users';
+
 describe('AUTHENTICATION TEST SUITE', () => {
   before(() => models.sequelize.sync({ force: true }));
 
@@ -17,7 +19,7 @@ describe('AUTHENTICATION TEST SUITE', () => {
       };
       chai
         .request(server)
-        .post('/api/v1/users')
+        .post(baseUrl)
         .send(newUser2)
         .end((err, res) => {
           expect(res.body.token).to.not.equal(undefined);
@@ -31,12 +33,47 @@ describe('AUTHENTICATION TEST SUITE', () => {
       };
       chai
         .request(server)
-        .post('/api/v1/users/login')
+        .post(`${baseUrl}/login`)
         .send(newUser2)
         .end((err, res) => {
           expect(res.body.token).to.not.equal(undefined);
           done();
         });
     });
+  });
+
+  describe('SOCIAL AUTHENTICATION', () => {
+    describe('Google Authentication Test', () => {
+      it('should successfully register a user via google',
+        async () => {
+          const response = await chai.request(server)
+            .get(`${baseUrl}/google`);
+          expect(response.status).to.equal(201);
+        });
+      it('should successfully authenticate a returning user via google',
+        async () => {
+          const response = await chai.request(server)
+            .get(`${baseUrl}/google`);
+          expect(response.status).to.equal(200);
+        });
+    });
+
+    describe('Twitter Authentication Test', () => {
+      it('should successfully authenticate a user via twitter',
+        async () => {
+          const response = await chai.request(server)
+            .get(`${baseUrl}/twitter`);
+          expect(response.status).to.equal(200);
+        });
+    });
+  });
+
+  describe('Facebook Authentication Test', () => {
+    it('should successfully authenticate a user via facebook',
+      async () => {
+        const response = await chai.request(server)
+          .get(`${baseUrl}/facebook`);
+        expect(response.status).to.equal(200);
+      });
   });
 });

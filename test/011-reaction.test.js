@@ -140,9 +140,8 @@ describe('REACTION TEST SUITE', () => {
     it('should like a comment',
       async () => {
         const response = await chai.request(server)
-          .post(`${baseUrl}/articles/${slug}/comments/like`)
-          .set('Authorization', token)
-          .send({ id });
+          .post(`${baseUrl}/articles/${slug}/comments/${id}/like`)
+          .set('Authorization', token);
         expect(response.status).to.equal(200);
         expect(response.body.liked).to.equal(true);
       });
@@ -150,18 +149,16 @@ describe('REACTION TEST SUITE', () => {
     it('should dislike a comment',
       async () => {
         const response = await chai.request(server)
-          .patch(`${baseUrl}/articles/${slug}/comments/dislike`)
-          .set('Authorization', token)
-          .send({ id });
+          .patch(`${baseUrl}/articles/${slug}/comments/${id}/dislike`)
+          .set('Authorization', token);
         expect(response.status).to.equal(200);
       });
 
     it('should not allow like action for a non-existent comment',
       async () => {
         const response = await chai.request(server)
-          .post(`${baseUrl}/articles/${slug}/comments/like`)
-          .set('Authorization', token)
-          .send({ fakeId });
+          .post(`${baseUrl}/articles/${slug}/comments/${fakeId}/like`)
+          .set('Authorization', token);
         expect(response.status).to.equal(404);
         expect(response.body.error).to.equal('Comment provided does not exist');
       });

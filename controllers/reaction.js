@@ -64,12 +64,12 @@ export default {
   },
   async likeComment(req, res) {
     const responseObject = await
-    setCommentReaction(true, false, req.body.commentId, req.decoded.id);
+    setCommentReaction(true, false, req.params.commentId, req.decoded.id);
     return res.send(responseObject);
   },
   async dislikeComment(req, res) {
     const responseObject = await
-    setCommentReaction(false, true, req.body.commentId, req.decoded.id);
+    setCommentReaction(false, true, req.params.commentId, req.decoded.id);
     return res.send(responseObject);
   },
 };
