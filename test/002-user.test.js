@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 const { User } = models;
 const baseUrl = '/api/v1/users';
 
-describe('USER TEST SUITE', () => {
+describe.only('USER TEST SUITE', () => {
   let firstUserToken, firstUserID;
 
   before(async () => {
@@ -465,6 +465,42 @@ describe('USER TEST SUITE', () => {
           .send({})
           .set('Authorization', firstUserToken);
         expect(response.status).to.equal(200);
+      });
+  });
+
+  describe('PASSWORD RESET', () => {
+    it('should respond with 400 error when usernameOrEmail is a not provided',
+      async () => {
+        const response = await
+        chai.request(server).post(`${baseUrl}/resetpassword`);
+        expect(response.body.error).to
+          .equal('usernameOrEmail param is missing, empty or invalid');
+      });
+    it('should respond with 400 error when usernameOrEmail is a not a string',
+      async () => {
+        const response = await
+        chai.request(server).post(`${baseUrl}/resetpassword`)
+          .send({ usernameOrEmail: [] });
+        expect(response.body.error).to
+          .equal('usernameOrEmail param is missing, empty or invalid');
+      });
+
+    it('should respond with 404 error when user is not found',
+      async () => {
+        const response = await
+        chai.request(server).post(`${baseUrl}/resetpassword`)
+          .send({ usernameOrEmail: 'fakeuser' });
+        expect(response.body.error).to
+          .equal('user not found');
+      });
+
+    it('should succesfully send reset link to valid user\'s mail',
+      async () => {
+        const response = await
+        chai.request(server).post(`${baseUrl}/resetpassword`)
+          .send({ usernameOrEmail: 'habib180@gmail.com' });
+        expect(response.body.message).to
+          .equal('A reset link has been sent to your mail');
       });
   });
 });
