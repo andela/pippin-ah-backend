@@ -1,6 +1,6 @@
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface
-    .createTable('Commentreactions', {
+    .createTable('commentReactions', {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -40,5 +40,5 @@ module.exports = {
         type: Sequelize.DATE
       }
     }),
-  down: queryInterface => queryInterface.dropTable('Commentreactions')
+  down: queryInterface => queryInterface.dropTable('commentReactions')
 };

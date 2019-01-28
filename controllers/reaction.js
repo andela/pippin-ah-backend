@@ -2,7 +2,7 @@ import Sequelize from 'sequelize';
 import models from '../models';
 
 const { iLike } = Sequelize.Op;
-const { Article, Reaction, Commentreaction } = models;
+const { Article, Reaction, commentReaction } = models;
 
 const setReaction = async (liked, disliked, slug, userId) => {
   const article = await Article.findOne({
@@ -27,7 +27,7 @@ const setReaction = async (liked, disliked, slug, userId) => {
 };
 
 const setCommentReaction = async (liked, disliked, commentId, userId) => {
-  const oldCommentReaction = await Commentreaction.findOne({
+  const oldCommentReaction = await commentReaction.findOne({
     where: {
       commentId,
       commentLikedBy: userId,
@@ -37,7 +37,7 @@ const setCommentReaction = async (liked, disliked, commentId, userId) => {
     await oldCommentReaction.update({ liked: disliked });
     return;
   }
-  await Commentreaction.create({
+  await commentReaction.create({
     commentId,
     commentLikedBy: userId,
     liked,
