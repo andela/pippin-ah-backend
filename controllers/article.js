@@ -177,9 +177,12 @@ export default {
     return res.json(article);
   },
   async bookmarkArticle(req, res) {
-    const { articleId } = req.query;
+    const { slug } = req.params;
 
     const userId = req.decoded.id;
+    const article = await Article.findOne({ where: { slug } });
+    const articleId = article.dataValues.id;
+
     const bookmarkedBy = userId;
     const bookmarked = true;
 
@@ -194,7 +197,10 @@ export default {
   },
   async removeBookmarkedArticle(req, res) {
     const userId = req.decoded.id;
-    const { articleId } = req.query;
+    const { slug } = req.params;
+
+    const article = await Article.findOne({ where: { slug } });
+    const articleId = article.id;
 
     const bookmark = await Bookmark.findOne({
       where: { articleId, bookmarkedBy: userId }
@@ -205,14 +211,20 @@ export default {
   },
   async getBookmarkedArticle(req, res) {
     const userId = req.decoded.id;
+    const bookmarkedBy = userId;
 
-    const bookmarkedArticle = await Article
+    const bookmarkedArticle = await Bookmark
       .findAll({
         where: {
-          userId
-        }
+          bookmarkedBy
+        },
+        include: [{
+          model: Article,
+          attributes: ['slug'],
+        }],
       });
-    const slugArray = bookmarkedArticle.map(item => item.slug);
+    const slugArray = bookmarkedArticle.map(
+      item => item.dataValues.Article.dataValues.slug);
 
     return res.send(slugArray);
   },

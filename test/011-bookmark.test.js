@@ -36,44 +36,20 @@ describe('BOOKMARK TEST SUITE', () => {
       .set('Authorization', accessToken);
   });
 
-  describe('BOOKMARK AN ARTICLE', () => {
-    it('Should not bookmark an article when article id is not provided',
+  describe.only('BOOKMARK AN ARTICLE', () => {
+    // eslint-disable-next-line max-len
+    it('Should not bookmark an article when article the specified slug does not exist',
       async () => {
         const response = await chai.request(server)
-          .post(`${baseUrl}/articles/bookmarks`)
+          .post(`${baseUrl}/articles/bookmarks/the-new-looks`)
           .set('Authorization', accessToken);
         expect(response.status).to.equal(400);
         expect(response.body).to.have.deep.property('error');
-        expect(response.body.error).to.equal('articleId is not specified');
+        expect(response.body.error).to.equal('No article with such Slug');
       }
     );
 
-    it('should not bookmark article when an article id is not a valid uuid',
-      async () => {
-        const articleId = 123;
-        const response = await chai.request(server)
-          .post(`${baseUrl}/articles/bookmarks?articleId=${articleId}`)
-          .set('Authorization', accessToken);
-        expect(response.status).to.equal(400);
-        expect(response.body).to.have.deep.property('error');
-        expect(response.body.error).to.equal('article id is not a valid uuid');
-      }
-    );
-
-    it('should not bookmark article when article id is incorrect',
-      async () => {
-        const articleId = 'e5a2bd7f-46c6-46dc-9c15-1d268e25e590';
-
-        const response = await chai.request(server)
-          .post(`${baseUrl}/articles/bookmarks?articleId=${articleId}`)
-          .set('Authorization', accessToken);
-        expect(response.status).to.equal(400);
-        expect(response.body).to.have.deep.property('error');
-        expect(response.body.error).to.equal('No article with such id exist');
-      }
-    );
-
-    it('should bookmark article when article id is correct',
+    it('should bookmark article when article with the specified slug exist',
       async () => {
         const result = await Article.findOne({
           where: {
@@ -81,9 +57,9 @@ describe('BOOKMARK TEST SUITE', () => {
           },
         });
 
-        const articleId = result.dataValues.id;
+        const { slug } = result.dataValues;
         const response = await chai.request(server)
-          .post(`${baseUrl}/articles/bookmarks?articleId=${articleId}`)
+          .post(`${baseUrl}/articles/bookmarks/${slug}`)
           .set('Authorization', accessToken);
         expect(response.status).to.equal(201);
         expect(response.body.bookmarked).to.equal(true);
@@ -91,6 +67,7 @@ describe('BOOKMARK TEST SUITE', () => {
         expect(response.body).to.have.deep.property('bookmarkedBy');
       }
     );
+
     it('should get array of slug from bookmarked articles',
       async () => {
         const response = await chai.request(server)
@@ -101,32 +78,20 @@ describe('BOOKMARK TEST SUITE', () => {
       }
     );
 
-    it('should not update bookmarkwhen article id is incorrect',
+    it('should not update bookmark article when article slug is incorrect',
       async () => {
-        const articleId = 'e5a2bd7f-46c6-46dc-9c15-1d268e25e590';
+        const slug = 'time-shall-tell-for-perfection';
 
         const response = await chai.request(server)
-          .patch(`${baseUrl}/articles/bookmarks?articleId=${articleId}`)
+          .patch(`${baseUrl}/articles/bookmarks/${slug}`)
           .set('Authorization', accessToken);
         expect(response.status).to.equal(400);
         expect(response.body).to.have.deep.property('error');
-        expect(response.body.error).to.equal('No article with such id exist');
+        expect(response.body.error).to.equal('No article with such Slug');
       }
     );
 
-    it('should not update bookmark when an article id is not a valid uuid',
-      async () => {
-        const articleId = 123;
-        const response = await chai.request(server)
-          .patch(`${baseUrl}/articles/bookmarks?articleId=${articleId}`)
-          .set('Authorization', accessToken);
-        expect(response.status).to.equal(400);
-        expect(response.body).to.have.deep.property('error');
-        expect(response.body.error).to.equal('article id is not a valid uuid');
-      }
-    );
-
-    it('should bookmark article when article id is correct',
+    it('should bookmark article when article slug is correct',
       async () => {
         const result = await Article.findOne({
           where: {
@@ -134,9 +99,9 @@ describe('BOOKMARK TEST SUITE', () => {
           },
         });
 
-        const articleId = result.dataValues.id;
+        const { slug } = result.dataValues;
         const response = await chai.request(server)
-          .patch(`${baseUrl}/articles/bookmarks?articleId=${articleId}`)
+          .patch(`${baseUrl}/articles/bookmarks/${slug}`)
           .set('Authorization', accessToken);
         expect(response.status).to.equal(200);
         expect(response).to.have.deep.property('text');

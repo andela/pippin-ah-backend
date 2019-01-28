@@ -46,7 +46,7 @@ const {
   reportIsEmpty,
   reportIsRequired,
   categoryQueryValidator,
-  bookmarkQueryValidator
+  checkIfSlugExist
 } = articleValidation;
 
 const {
@@ -100,10 +100,13 @@ router.route('/categories')
   .get(categoryQueryValidator, getArticleByCategory);
 
 router.route('/bookmarks')
+  .get(verifyToken, getBookmarkedArticle);
+
+
+router.route('/bookmarks/:slug')
   .all(verifyToken)
-  .post(bookmarkQueryValidator, bookmarkArticle)
-  .get(getBookmarkedArticle)
-  .patch(bookmarkQueryValidator, removeBookmarkedArticle);
+  .post(checkIfSlugExist, bookmarkArticle)
+  .patch(checkIfSlugExist, removeBookmarkedArticle);
 
 
 router.route('/:slug')
