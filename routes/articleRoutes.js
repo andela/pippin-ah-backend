@@ -3,7 +3,8 @@ import {
   Article,
   Comment,
   Reaction,
-  Rating
+  Rating,
+  CommentReaction
 } from '../controllers';
 
 import {
@@ -26,6 +27,9 @@ const {
   removeBookmarkedArticle
 } = Article;
 
+const { like, cancelReaction, dislike } = Reaction;
+const { likeComment, dislikeComment } = CommentReaction;
+
 const {
   addComment,
   editComment,
@@ -34,7 +38,6 @@ const {
   deleteComment
 } = Comment;
 
-const { like, cancelReaction, dislike } = Reaction;
 
 const {
   expectedParamsValidator,
@@ -135,6 +138,12 @@ router.route('/:slug/comments')
     addComment
   );
 
+router.route('/:slug/comments/:id/like')
+  .post(verifyToken, doesCommentExist, likeComment);
+
+router.route('/:slug/comments/:id/dislike')
+  .patch(verifyToken, doesCommentExist, dislikeComment);
+
 router.route('/:slug/comments/:id')
   .patch(
     verifyToken,
@@ -159,6 +168,7 @@ router.route('/:slug/comments/:id')
     doesCommentExist,
     validateUser,
     deleteComment
+
   );
 
 router.route('/:slug/like')

@@ -6,10 +6,12 @@ import server from '../app';
 chai.use(chaiHttp);
 
 describe('COMMENT TEST SUITE', () => {
-  let firstUserToken, secondUserToken, slug, secondCommentID;
+  let slug;
+  let firstUserToken, secondUserToken, secondCommentID;
   const firstComment = 'This is an insightful article';
   const secondComment = 'What a lovely way to put it!';
   const thirdComment = 'This got me really thinking.';
+
   before(async () => {
     await models.sequelize.sync({ force: true });
 
