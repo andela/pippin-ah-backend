@@ -47,7 +47,8 @@ const {
 const {
   ensureCommentInput,
   ensureValidComment,
-  ensureArticleExists
+  ensureArticleExists,
+  ensureCommentExists
 } = commentValidations;
 
 const {
@@ -116,12 +117,14 @@ router.route('/:slug/comments')
 router.route('/:slug/comments/like')
   .post(
     verifyToken,
+    ensureCommentExists,
     likeComment
   );
 
 router.route('/:slug/comments/dislike')
   .patch(
     verifyToken,
+    ensureCommentExists,
     dislikeComment
   );
 

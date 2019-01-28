@@ -1,7 +1,7 @@
 import Sequelize from 'sequelize';
 import models from '../models';
 
-const { Article } = models;
+const { Article, Comment } = models;
 const { iLike } = Sequelize.Op;
 const maxLen = 1000;
 
@@ -37,4 +37,16 @@ export default {
     }
     return next();
   },
+  async ensureCommentExists(req, res, next) {
+    const comment = await Comment.findOne({
+      where: { id: req.body.id }
+    });
+    if (!comment) {
+      const error = new Error('Comment provided does not exist');
+      error.status = 404;
+      return next(error);
+    }
+    return next();
+  }
+
 };

@@ -11,6 +11,7 @@ describe('REACTION TEST SUITE', () => {
   let token;
   let slug;
   let id;
+  const fakeId = 'E7C7379B-904D-47DE-A958-80E7B3B2FE24';
   const comment = 'This Article is a poor excuse for an Article';
   before(async () => {
     await models.sequelize.sync({ force: true });
@@ -154,6 +155,16 @@ describe('REACTION TEST SUITE', () => {
           .send({ id });
         expect(response.status).to.equal(200);
         expect(response.body.disliked).to.equal(true);
+      });
+
+    it('should not allow like action for a non-existent comment',
+      async () => {
+        const response = await chai.request(server)
+          .post(`${baseUrl}/articles/${slug}/comments/like`)
+          .set('Authorization', token)
+          .send({ fakeId });
+        expect(response.status).to.equal(404);
+        expect(response.body.error).to.equal('Comment provided does not exist');
       });
   });
 });
