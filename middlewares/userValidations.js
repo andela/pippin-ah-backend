@@ -252,7 +252,7 @@ export default {
       where: {
         resetToken: token,
         tokenExpires: {
-          [gt]: Date.now() / 1000
+          [gt]: Math.floor(Date.now() / 1000)
         }
       }
     });
