@@ -20,7 +20,6 @@ const {
   getArticleBySlug,
   getArticles,
   reportArticle,
-  getArticleByCategory,
   tagArticle,
   bookmarkArticle,
   getBookmarkedArticle,
