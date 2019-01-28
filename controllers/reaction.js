@@ -37,13 +37,12 @@ const setCommentReaction = async (liked, disliked, commentId, userId) => {
     await Commentreaction.update({ liked: disliked });
     return;
   }
-  const response = await Commentreaction.create({
+  await Commentreaction.create({
     commentId,
     commentLikedBy: userId,
     liked,
     disliked
   });
-  return response;
 };
 
 
@@ -63,13 +62,11 @@ export default {
     return res.sendStatus(200);
   },
   async likeComment(req, res) {
-    const responseObject = await
-    setCommentReaction(true, false, req.params.commentId, req.decoded.id);
-    return res.send(responseObject);
+    await setCommentReaction(true, false, req.params.commentId, req.decoded.id);
+    return res.sendStatus(200);
   },
   async dislikeComment(req, res) {
-    const responseObject = await
-    setCommentReaction(false, true, req.params.commentId, req.decoded.id);
-    return res.send(responseObject);
+    await setCommentReaction(false, true, req.params.commentId, req.decoded.id);
+    return res.sendStatus(200);
   },
 };
