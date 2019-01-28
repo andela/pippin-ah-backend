@@ -17,12 +17,15 @@ const {
   passwordValidator,
   loginParamsValidator,
   loginNonEmptyParamsValidator,
-  invalidCredentials
+  invalidCredentials,
+  ensureUsernameOrEmailParam,
+  usernameOrEmailExists
 } = userValidations;
 
 const {
   login,
-  register
+  register,
+  sendPasswordResetToken
 } = Users;
 
 const {
@@ -82,5 +85,10 @@ router.route('/facebook')
 router.route('/facebook/redirect')
   .get(fbRedirect, fbOnAuthSuccess);
 
+router.route('/resetpassword')
+  .post(ensureUsernameOrEmailParam,
+    usernameOrEmailExists,
+    sendPasswordResetToken
+  );
 
 export default router;
