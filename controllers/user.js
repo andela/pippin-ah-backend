@@ -7,7 +7,7 @@ import models from '../models';
 import { getResetMail } from '../helpers';
 
 dotenv.config();
-const { iLike, or } = Sequelize.Op;
+const { iLike, or, gt } = Sequelize.Op;
 const { User, Profile, Article } = models;
 
 const secret = process.env.SECRET_KEY;
@@ -298,6 +298,32 @@ class Users {
   static validTokenResponse(req, res) {
     res.send({
       message: 'Token is valid. Set password with POST/ to this route'
+    });
+  }
+
+  /**
+    * Controll update a user.
+    * @constructor
+    * @param {object} req - The request object.
+    * @param {object} res - The response object.
+    */
+  static async setNewPassword(req, res) {
+    const { password } = req.body;
+    const { token } = req.params;
+    const user = await User.findOne({
+      where: {
+        resetToken: token,
+        tokenExpires: {
+          [gt]: Math.floor(Date.now() / 1000)
+        }
+      }
+    });
+    user.password = password;
+    user.resetToken = null;
+    user.tokenExpires = null;
+    await user.save();
+    res.send({
+      message: 'Password successfully changed'
     });
   }
 }
