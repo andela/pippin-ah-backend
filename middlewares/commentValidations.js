@@ -57,18 +57,7 @@ export default {
     }
     return next();
   },
-  async ensureCommentExists(req, res, next) {
-    const { id } = req.params;
-    const comment = await Comment.findOne({
-      where: { id }
-    });
-    if (!comment) {
-      const error = new Error('Comment provided does not exist');
-      error.status = 404;
-      return next(error);
-    }
-    return next();
-  },
+
   async doesCommentExist(req, res, next) {
     const { id } = req.params;
     const comment = await Comment.findOne({ where: { id } });

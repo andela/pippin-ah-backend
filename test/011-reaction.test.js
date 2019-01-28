@@ -156,7 +156,7 @@ describe('REACTION TEST SUITE', () => {
         .post(`${baseUrl}/articles/${slug}/comments/${fakeId}/like`)
         .set('Authorization', token);
       expect(response.status).to.equal(404);
-      expect(response.body.error).to.equal('Comment provided does not exist');
+      expect(response.body.error).to.equal('Comment does not exist');
     });
   });
 });

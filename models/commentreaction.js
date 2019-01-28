@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const commentReaction = sequelize.define('commentReaction', {
+  const CommentReaction = sequelize.define('CommentReaction', {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -22,16 +22,16 @@ module.exports = (sequelize, DataTypes) => {
     }
   });
 
-  commentReaction.associate = (models) => {
-    commentReaction.belongsTo(models.Comment, {
+  CommentReaction.associate = (models) => {
+    CommentReaction.belongsTo(models.Comment, {
       foreignKey: 'commentId',
       onDelete: 'CASCADE'
     });
 
-    commentReaction.belongsTo(models.User, {
+    CommentReaction.belongsTo(models.User, {
       foreignKey: 'commentLikedBy',
       onDelete: 'CASCADE'
     });
   };
-  return commentReaction;
+  return CommentReaction;
 };

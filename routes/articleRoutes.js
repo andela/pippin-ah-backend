@@ -3,7 +3,8 @@ import {
   Article,
   Comment,
   Reaction,
-  Rating
+  Rating,
+  CommentReaction
 } from '../controllers';
 
 import {
@@ -26,13 +27,8 @@ const {
   removeBookmarkedArticle
 } = Article;
 
-const {
-  like,
-  cancelReaction,
-  dislike,
-  likeComment,
-  dislikeComment
-} = Reaction;
+const { like, cancelReaction, dislike } = Reaction;
+const { likeComment, dislikeComment } = CommentReaction;
 
 const {
   addComment,
@@ -41,6 +37,7 @@ const {
   getCommentEditHistory,
   deleteComment
 } = Comment;
+
 
 const {
   expectedParamsValidator,
@@ -56,7 +53,6 @@ const {
 } = articleValidation;
 
 const {
-  ensureCommentExists,
   isCommentSupplied,
   isNewCommentSupplied,
   isCommentValid,
@@ -64,7 +60,6 @@ const {
   doesArticleExist,
   doesCommentExist,
   validateUser
-
 } = commentValidations;
 
 const {
@@ -146,14 +141,14 @@ router.route('/:slug/comments')
 router.route('/:slug/comments/:id/like')
   .post(
     verifyToken,
-    ensureCommentExists,
+    doesCommentExist,
     likeComment
   );
 
 router.route('/:slug/comments/:id/dislike')
   .patch(
     verifyToken,
-    ensureCommentExists,
+    doesCommentExist,
     dislikeComment
   );
 
