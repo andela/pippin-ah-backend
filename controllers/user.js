@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import sendEmail from '../services';
 import models from '../models';
+import { getResetMail } from '../helpers';
 
 dotenv.config();
 const { iLike, or } = Sequelize.Op;
@@ -254,6 +255,28 @@ class Users {
     }));
 
     return res.send(responseArray);
+  }
+
+  /**
+    * Controll update a user.
+    * @constructor
+    * @param {object} req - The request object.
+    * @param {object} res - The response object.
+    */
+  static async sendPasswordResetToken(req, res) {
+    const { usernameOrEmail } = req.body;
+    const user = await User
+      .findOne({
+        where: {
+          [or]: [
+            { username: { [iLike]: usernameOrEmail } },
+            { email: { [iLike]: usernameOrEmail } }
+          ]
+        }
+      });
+    const mailHeader = 'LearnGround Password Reset';
+    const resetMail = getResetMail(user.username, mailHeader, 'link');
+    sendEmail({ email: user.email, subject: mailHeader, html: resetMail });
   }
 }
 
