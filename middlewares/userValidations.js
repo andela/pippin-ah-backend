@@ -258,7 +258,7 @@ export default {
     });
     if (!user) {
       const error = new Error('Invalid or expired token');
-      error.status = 400;
+      error.status = 401;
       return next(error);
     }
     next();
