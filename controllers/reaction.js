@@ -34,8 +34,8 @@ const setCommentReaction = async (liked, disliked, commentId, userId) => {
     }
   });
   if (oldCommentReaction) {
-    const response = await Commentreaction.update({ liked: disliked });
-    return response;
+    await Commentreaction.update({ liked: disliked });
+    return;
   }
   const response = await Commentreaction.create({
     commentId,

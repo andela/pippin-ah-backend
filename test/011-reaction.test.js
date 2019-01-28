@@ -154,7 +154,6 @@ describe('REACTION TEST SUITE', () => {
           .set('Authorization', token)
           .send({ id });
         expect(response.status).to.equal(200);
-        expect(response.body.disliked).to.equal(true);
       });
 
     it('should not allow like action for a non-existent comment',
