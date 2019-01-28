@@ -24,7 +24,13 @@ const {
 } = Article;
 
 const { addComment } = Comment;
-const { like, cancelReaction, dislike } = Reaction;
+
+const {
+  like,
+  cancelReaction,
+  dislike,
+  likeComment
+} = Reaction;
 const {
   expectedParamsValidator,
   nonEmptyParamsValidator,
@@ -104,6 +110,12 @@ router.route('/:slug/comments')
     ensureCommentInput,
     ensureValidComment,
     addComment
+  );
+
+router.route('/:slug/comments/like')
+  .post(
+    verifyToken,
+    likeComment
   );
 
 router.route('/:slug/like')
