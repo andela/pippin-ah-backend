@@ -1,6 +1,7 @@
 import Sequelize from 'sequelize';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import crypto from 'crypto';
 import sendEmail from '../services';
 import models from '../models';
 import { getResetMail } from '../helpers';
@@ -274,9 +275,18 @@ class Users {
           ]
         }
       });
+    const resetToken = crypto.randomBytes(16).toString('hex');
+    user.resetToken = resetToken;
+    user.tokenExpires = (Date.now() / 1000) + 900000;
+    await user.save();
     const mailHeader = 'LearnGround Password Reset';
-    const resetMail = getResetMail(user.username, mailHeader, 'link');
+    // eslint-disable-next-line
+    const resetLink = `${req.protocol}://${req.get('host')}/api/v1/resetpassword/${resetToken}`;
+    const resetMail = getResetMail(user.username, mailHeader, resetLink);
     sendEmail({ email: user.email, subject: mailHeader, html: resetMail });
+    res.send({
+      message: 'A reset link has been sent to your mail'
+    });
   }
 }
 
