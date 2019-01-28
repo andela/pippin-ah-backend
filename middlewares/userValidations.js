@@ -2,7 +2,7 @@ import Sequelize from 'sequelize';
 import validation from 'validator';
 import models from '../models';
 
-const { iLike, or } = Sequelize.Op;
+const { iLike, or, gt } = Sequelize.Op;
 const { User } = models;
 
 const requiredParams = ['username', 'email', 'password'];
@@ -206,6 +206,25 @@ export default {
     return next();
   },
 
+  ensurePasswordParams(req, res, next) {
+    const { password, rePassword } = req.body;
+    if (!password || typeof password !== 'string') {
+      const error = new Error(
+        'password param is missing, empty or invalid'
+      );
+      error.status = 400;
+      return next(error);
+    }
+    if (password !== rePassword) {
+      const error = new Error(
+        'passwords do not match'
+      );
+      error.status = 400;
+      return next(error);
+    }
+    next();
+  },
+
   async usernameOrEmailExists(req, res, next) {
     const { usernameOrEmail } = req.body;
     const user = await User
@@ -225,5 +244,23 @@ export default {
       return next(error);
     }
     return next();
+  },
+
+  async isValidToken(req, res, next) {
+    const { token } = req.params;
+    const user = await User.findOne({
+      where: {
+        resetToken: token,
+        tokenExpires: {
+          [gt]: Date.now() / 1000
+        }
+      }
+    });
+    if (!user) {
+      const error = new Error('Invalid or expired token');
+      error.status = 400;
+      return next(error);
+    }
+    next();
   }
 };
