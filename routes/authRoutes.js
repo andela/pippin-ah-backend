@@ -19,13 +19,16 @@ const {
   loginNonEmptyParamsValidator,
   invalidCredentials,
   ensureUsernameOrEmailParam,
-  usernameOrEmailExists
+  usernameOrEmailExists,
+  ensurePasswordParams,
+  isValidToken
 } = userValidations;
 
 const {
   login,
   register,
-  sendPasswordResetToken
+  sendPasswordResetToken,
+  validTokenResponse
 } = Users;
 
 const {
@@ -86,9 +89,25 @@ router.route('/facebook/redirect')
   .get(fbRedirect, fbOnAuthSuccess);
 
 router.route('/resetpassword')
-  .post(ensureUsernameOrEmailParam,
+  .post(
+    ensureUsernameOrEmailParam,
     usernameOrEmailExists,
     sendPasswordResetToken
+  );
+
+router.route('/resetpassword/:token')
+  .post(
+    isValidToken,
+    ensurePasswordParams,
+    passwordValidator,
+    // setNewPassword
+  );
+
+router.route('/resetpassword/:token')
+  .get(
+    isValidToken,
+    validTokenResponse
+    // setNewPassword
   );
 
 export default router;
