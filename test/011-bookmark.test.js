@@ -36,7 +36,7 @@ describe('BOOKMARK TEST SUITE', () => {
       .set('Authorization', accessToken);
   });
 
-  describe.only('BOOKMARK AN ARTICLE', () => {
+  describe('BOOKMARK AN ARTICLE', () => {
     // eslint-disable-next-line max-len
     it('Should not bookmark an article when article the specified slug does not exist',
       async () => {
