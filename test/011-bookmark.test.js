@@ -108,5 +108,14 @@ describe('BOOKMARK TEST SUITE', () => {
         expect(response.text).to.equal('Unbookmarked Successfully');
       }
     );
+    it('should return array of slugs for bookmarked articles',
+      async () => {
+        const response = await chai.request(server)
+          .get(`${baseUrl}/articles/bookmarks`)
+          .set('Authorization', accessToken);
+        expect(response.status).to.equal(200);
+        expect(response.body[0]).to.equal('the-new-boston-JohnDoe');
+      }
+    );
   });
 });

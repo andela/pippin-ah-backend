@@ -97,7 +97,7 @@ router.route('/tag')
   );
 
 router.route('/categories')
-  .get(categoryQueryValidator, getArticleByCategory);
+  .get(categoryQueryValidator, getArticles);
 
 router.route('/bookmarks')
   .get(verifyToken, getBookmarkedArticle);
