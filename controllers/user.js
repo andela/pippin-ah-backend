@@ -281,11 +281,23 @@ class Users {
     await user.save();
     const mailHeader = 'LearnGround Password Reset';
     // eslint-disable-next-line
-    const resetLink = `${req.protocol}://${req.get('host')}/api/v1/resetpassword/${resetToken}`;
+    const resetLink = `${req.protocol}://${req.get('host')}/api/v1/users/resetpassword/${resetToken}`;
     const resetMail = getResetMail(user.username, mailHeader, resetLink);
     sendEmail({ email: user.email, subject: mailHeader, html: resetMail });
     res.send({
       message: 'A reset link has been sent to your mail'
+    });
+  }
+
+  /**
+    * Controll update a user.
+    * @constructor
+    * @param {object} req - The request object.
+    * @param {object} res - The response object.
+    */
+  static validTokenResponse(req, res) {
+    res.send({
+      message: 'Token is valid. Set password with POST/ to this route'
     });
   }
 }
