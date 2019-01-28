@@ -3,7 +3,7 @@ const tableName = 'Users';
 module.exports = {
   up: (queryInterface, Sequelize) => Promise.all([
     queryInterface.addColumn(tableName, 'resetToken', {
-      type: Sequelize.String,
+      type: Sequelize.STRING,
       allowNull: true
     }),
     queryInterface.addColumn(tableName, 'tokenExpires', {
