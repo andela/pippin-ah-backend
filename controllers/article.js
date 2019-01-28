@@ -176,28 +176,29 @@ export default {
     const article = await Article.findOne({ where: { slug } });
     return res.json(article);
   },
-  async bookmarkArticle(req, res) {
-    const { slug } = req.params;
 
-    const userId = req.decoded.id;
+  async bookmarkArticle(req, res) {
+    const {
+      params: { slug },
+      decoded: { id: userId }
+    } = req;
+
     const article = await Article.findOne({ where: { slug } });
-    const articleId = article.dataValues.id;
+    const articleId = article.id;
 
     const bookmarkedBy = userId;
     const bookmarked = true;
 
-    const bookmark = await Bookmark
-      .create({
-        articleId,
-        bookmarkedBy,
-        bookmarked
-      });
+    await Bookmark.create({ articleId, bookmarkedBy, bookmarked });
 
-    return res.status(201).send(bookmark);
+    return res.sendStatus(201);
   },
+
   async removeBookmarkedArticle(req, res) {
-    const userId = req.decoded.id;
-    const { slug } = req.params;
+    const {
+      decoded: { id: userId },
+      params: { slug }
+    } = req;
 
     const article = await Article.findOne({ where: { slug } });
     const articleId = article.id;
@@ -207,25 +208,22 @@ export default {
     });
 
     await bookmark.update({ bookmarked: false });
-    return res.send('Unbookmarked Successfully');
+    return res.sendStatus(200);
   },
-  async getBookmarkedArticle(req, res) {
-    const userId = req.decoded.id;
-    const bookmarkedBy = userId;
 
-    const bookmarkedArticle = await Bookmark
+  async getBookmarkedArticles(req, res) {
+    const { id: bookmarkedBy } = req.decoded;
+
+    const bookmarkedArticles = await Bookmark
       .findAll({
-        where: {
-          bookmarkedBy
-        },
+        where: { bookmarkedBy, bookmarked: true },
         include: [{
           model: Article,
           attributes: ['slug'],
         }],
       });
-    const slugArray = bookmarkedArticle.map(
-      item => item.dataValues.Article.dataValues.slug);
 
+    const slugArray = bookmarkedArticles.map(item => item.Article.slug);
     return res.send(slugArray);
   },
 };

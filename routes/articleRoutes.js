@@ -22,7 +22,7 @@ const {
   reportArticle,
   tagArticle,
   bookmarkArticle,
-  getBookmarkedArticle,
+  getBookmarkedArticles,
   removeBookmarkedArticle
 } = Article;
 
@@ -33,6 +33,7 @@ const {
   getCommentEditHistory,
   deleteComment
 } = Comment;
+
 const { like, cancelReaction, dislike } = Reaction;
 
 const {
@@ -45,7 +46,7 @@ const {
   reportIsEmpty,
   reportIsRequired,
   categoryQueryValidator,
-  checkIfSlugExist
+  checkIfSlugExists
 } = articleValidation;
 
 const {
@@ -99,13 +100,13 @@ router.route('/categories')
   .get(categoryQueryValidator, getArticles);
 
 router.route('/bookmarks')
-  .get(verifyToken, getBookmarkedArticle);
+  .get(verifyToken, getBookmarkedArticles);
 
 
 router.route('/bookmarks/:slug')
   .all(verifyToken)
-  .post(checkIfSlugExist, bookmarkArticle)
-  .patch(checkIfSlugExist, removeBookmarkedArticle);
+  .post(checkIfSlugExists, bookmarkArticle)
+  .patch(checkIfSlugExists, removeBookmarkedArticle);
 
 
 router.route('/:slug')
