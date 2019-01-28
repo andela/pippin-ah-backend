@@ -10,7 +10,8 @@ const baseUrl = '/api/v1';
 describe('REACTION TEST SUITE', () => {
   let token;
   let slug;
-
+  let id;
+  const comment = 'This Article is a poor excuse for an Article';
   before(async () => {
     await models.sequelize.sync({ force: true });
 
@@ -36,6 +37,12 @@ describe('REACTION TEST SUITE', () => {
       .send(articleObject)
       .set('Authorization', token);
     ({ slug } = article.body);
+
+    const responseComment = await chai.request(server)
+      .post(`/api/v1/articles/${slug}/comments/`)
+      .set('Authorization', token)
+      .send({ comment });
+    ({ id } = responseComment.body);
   });
 
   describe('Like an Article', () => {
@@ -125,6 +132,28 @@ describe('REACTION TEST SUITE', () => {
           .patch(`${baseUrl}/articles/${slug}/cancelreaction`)
           .set('Authorization', token);
         expect(response.status).to.equal(200);
+      });
+  });
+
+  describe('Like a Comment', () => {
+    it('should like a comment',
+      async () => {
+        const response = await chai.request(server)
+          .post(`${baseUrl}/articles/${slug}/comments/like`)
+          .set('Authorization', token)
+          .send({ id });
+        expect(response.status).to.equal(200);
+        expect(response.body.liked).to.equal(true);
+      });
+
+    it('should dislike a comment',
+      async () => {
+        const response = await chai.request(server)
+          .patch(`${baseUrl}/articles/${slug}/comments/dislike`)
+          .set('Authorization', token)
+          .send({ id });
+        expect(response.status).to.equal(200);
+        expect(response.body.disliked).to.equal(true);
       });
   });
 });

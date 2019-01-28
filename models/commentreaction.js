@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
     liked: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
+    },
+    disliked: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
   });
 

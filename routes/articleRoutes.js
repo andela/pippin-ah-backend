@@ -29,7 +29,8 @@ const {
   like,
   cancelReaction,
   dislike,
-  likeComment
+  likeComment,
+  dislikeComment
 } = Reaction;
 const {
   expectedParamsValidator,
@@ -116,6 +117,12 @@ router.route('/:slug/comments/like')
   .post(
     verifyToken,
     likeComment
+  );
+
+router.route('/:slug/comments/dislike')
+  .patch(
+    verifyToken,
+    dislikeComment
   );
 
 router.route('/:slug/like')

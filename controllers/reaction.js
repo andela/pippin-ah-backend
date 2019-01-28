@@ -26,22 +26,24 @@ const setReaction = async (liked, disliked, slug, userId) => {
   });
 };
 
-const setCommentReaction = async (liked, commentId, userId) => {
-  const oldReaction = await Commentreaction.findOne({
+const setCommentReaction = async (liked, disliked, commentId, userId) => {
+  const oldCommentReaction = await Commentreaction.findOne({
     where: {
       commentId,
       commentLikedBy: userId,
     }
   });
-  if (oldReaction) {
-    await oldReaction.update({ liked: false });
-    return;
+  if (oldCommentReaction) {
+    const response = await Commentreaction.update({ liked: disliked });
+    return response;
   }
-  await Commentreaction.create({
+  const response = await Commentreaction.create({
     commentId,
     commentLikedBy: userId,
-    liked
+    liked,
+    disliked
   });
+  return response;
 };
 
 
@@ -61,7 +63,13 @@ export default {
     return res.sendStatus(200);
   },
   async likeComment(req, res) {
-    await setCommentReaction(true, req.params.commentId, req.decoded.id);
-    return res.sendStatus(200);
+    const responseObject = await
+    setCommentReaction(true, false, req.body.commentId, req.decoded.id);
+    return res.send(responseObject);
+  },
+  async dislikeComment(req, res) {
+    const responseObject = await
+    setCommentReaction(false, true, req.body.commentId, req.decoded.id);
+    return res.send(responseObject);
   },
 };

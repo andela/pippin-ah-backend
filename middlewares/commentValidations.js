@@ -1,7 +1,7 @@
 import Sequelize from 'sequelize';
 import models from '../models';
 
-const { Article } = models;
+const { Article, Comment } = models;
 const { iLike } = Sequelize.Op;
 const maxLen = 1000;
 
@@ -36,5 +36,5 @@ export default {
       return next(error);
     }
     return next();
-  }
+  },
 };

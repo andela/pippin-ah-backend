@@ -8,6 +8,7 @@ chai.use(chaiHttp);
 describe('COMMENT TEST SUITE', () => {
   let accesstoken;
   let slug;
+
   const comment = 'This is in insightful article';
   before(async () => {
     await models.sequelize.sync({ force: true });
