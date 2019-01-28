@@ -192,5 +192,38 @@ export default {
       return next(error);
     }
     next();
+  },
+
+  ensureUsernameOrEmailParam(req, res, next) {
+    const { usernameOrEmail } = req.body;
+    if (!usernameOrEmail || typeof usernameOrEmail !== 'string') {
+      const error = new Error(
+        'usernameOrEmail param is missing, empty or invalid'
+      );
+      error.status = 400;
+      return next(error);
+    }
+    return next();
+  },
+
+  async usernameOrEmailExists(req, res, next) {
+    const { usernameOrEmail } = req.body;
+    const user = await User
+      .findOne({
+        where: {
+          [or]: [
+            { username: { [iLike]: usernameOrEmail } },
+            { email: { [iLike]: usernameOrEmail } }
+          ]
+        }
+      });
+    if (!user) {
+      const error = new Error(
+        'user not found'
+      );
+      error.status = 400;
+      return next(error);
+    }
+    return next();
   }
 };
