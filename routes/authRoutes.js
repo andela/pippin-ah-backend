@@ -28,7 +28,8 @@ const {
   login,
   register,
   sendPasswordResetToken,
-  validTokenResponse
+  validTokenResponse,
+  setNewPassword
 } = Users;
 
 const {
@@ -100,14 +101,13 @@ router.route('/resetpassword/:token')
     isValidToken,
     ensurePasswordParams,
     passwordValidator,
-    // setNewPassword
+    setNewPassword
   );
 
 router.route('/resetpassword/:token')
   .get(
     isValidToken,
     validTokenResponse
-    // setNewPassword
   );
 
 export default router;
