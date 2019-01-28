@@ -128,7 +128,6 @@ router.route('/:slug/comments')
     addComment
   );
 
-
 router.route('/:slug/comments/:id/like')
   .post(
     verifyToken,
