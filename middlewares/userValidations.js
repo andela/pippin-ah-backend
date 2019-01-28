@@ -240,7 +240,7 @@ export default {
       const error = new Error(
         'user not found'
       );
-      error.status = 400;
+      error.status = 404;
       return next(error);
     }
     return next();
