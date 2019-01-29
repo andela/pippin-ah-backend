@@ -22,7 +22,7 @@ describe('REQUEST TEST SUITE', () => {
   });
 
   describe('MENTORSHIP REQUEST', () => {
-    it('Should not permit mentorship request  when no token is provided',
+    it('Should not permit request to be a mentor when no token is provided',
       async () => {
         const response = await chai
           .request(server)
@@ -30,7 +30,7 @@ describe('REQUEST TEST SUITE', () => {
         expect(response.body.error).to.equal('No token provided');
       });
 
-    it('Should not permit mentorship request with invalid token provided',
+    it('Should not permit request to be a mentor with invalid token provided',
       async () => {
         const response = await chai
           .request(server)
@@ -39,7 +39,7 @@ describe('REQUEST TEST SUITE', () => {
         expect(response.body.error).to.equal('Invalid token');
       });
 
-    it('Should successfully create a mentorship request with valid token',
+    it('Should successfully create request to be a mentor with valid token',
       async () => {
         const response = await chai
           .request(server)
@@ -66,7 +66,7 @@ describe('REQUEST TEST SUITE', () => {
         await currentRequest.save();
       });
 
-    it('Should not permit mentorship request by a mentor',
+    it('Should not permit request to be a mentor by a mentor',
       async () => {
         const response = await chai
           .request(server)
