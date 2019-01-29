@@ -195,10 +195,10 @@ export default {
   },
 
   ensureUsernameOrEmailParam(req, res, next) {
-    const { usernameOrEmail } = req.body;
-    if (!usernameOrEmail || typeof usernameOrEmail !== 'string') {
+    const { email } = req.body;
+    if (!email || typeof email !== 'string') {
       const error = new Error(
-        'usernameOrEmail param is missing, empty or invalid'
+        'email param is missing, empty or invalid'
       );
       error.status = 400;
       return next(error);
@@ -219,15 +219,10 @@ export default {
   },
 
   async usernameOrEmailExists(req, res, next) {
-    const { usernameOrEmail } = req.body;
+    const { email } = req.body;
     const user = await User
       .findOne({
-        where: {
-          [or]: [
-            { username: { [iLike]: usernameOrEmail } },
-            { email: { [iLike]: usernameOrEmail } }
-          ]
-        }
+        where: { email: { [iLike]: email } }
       });
     if (!user) {
       const error = new Error('user not found');
