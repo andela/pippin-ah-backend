@@ -1,6 +1,10 @@
 import express from 'express';
-import Users from '../controllers/user';
-import { verifyToken, userValidations } from '../middlewares';
+import { Users, Request } from '../controllers';
+import {
+  verifyToken,
+  userValidations,
+  requestValidations
+} from '../middlewares';
 
 const {
   emailIsValid,
@@ -16,6 +20,9 @@ const {
   activateUser,
   getAllAuthors
 } = Users;
+
+const { requestToBeMentor } = Request;
+const { canRequestToBeMentor } = requestValidations;
 
 const router = express.Router();
 router.route('/activate/:userId')
@@ -35,5 +42,8 @@ router.route('/')
 
 router.route('/authors')
   .get(verifyToken, getAllAuthors);
+
+router.route('/request')
+  .post(verifyToken, canRequestToBeMentor, requestToBeMentor);
 
 export default router;
