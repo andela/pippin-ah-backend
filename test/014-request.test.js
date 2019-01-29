@@ -66,7 +66,7 @@ describe('REQUEST TEST SUITE', () => {
         await currentRequest.save();
       });
 
-    it('Should not permit request to be a mentor by a mentor',
+    it('Should not permit request to be a mentor if already a mentor',
       async () => {
         const response = await chai
           .request(server)
