@@ -160,7 +160,8 @@ export default {
     })
     );
     return res.json({
-      articles: responseArray
+      articles: responseArray,
+      count: articles.length
     });
   },
 
