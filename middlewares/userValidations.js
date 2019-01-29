@@ -237,9 +237,7 @@ export default {
         }
       });
     if (!user) {
-      const error = new Error(
-        'user not found'
-      );
+      const error = new Error('user not found');
       error.status = 404;
       return next(error);
     }
