@@ -32,6 +32,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
+    resetToken: {
+      type: DataTypes.STRING
+    },
+    tokenExpires: {
+      type: DataTypes.INTEGER
+    }
   }, {
     hooks: {
       beforeCreate: user => user.password && user.hashPassword(),

@@ -21,6 +21,15 @@ export default {
         });
       return res.sendStatus(200);
     }
+  },
+  async requestToBeMentor(req, res) {
+    const request = 'Request to be a mentor';
+    await Request.create({
+      userId: req.decoded.id,
+      request,
+      status: 'pending'
+    });
+    return res.send({ message: 'Your request to be a mentor has been sent' });
   }
 
 };

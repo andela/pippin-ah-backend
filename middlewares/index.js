@@ -7,3 +7,4 @@ export { default as articleValidation } from './articleValidation';
 export { default as followValidations } from './followValidations';
 export { default as commentValidations } from './commentValidations';
 export { default as ratingValidation } from './ratingValidation';
+export { default as requestValidations } from './requestValidations';
