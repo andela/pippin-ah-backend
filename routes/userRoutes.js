@@ -1,6 +1,10 @@
 import express from 'express';
 import { Users, Request } from '../controllers';
-import { verifyToken, userValidations, requestValidations } from '../middlewares';
+import {
+  verifyToken,
+  userValidations,
+  requestValidations
+} from '../middlewares';
 
 const {
   emailIsValid,
