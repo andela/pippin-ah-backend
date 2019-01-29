@@ -207,17 +207,10 @@ export default {
   },
 
   ensurePasswordParams(req, res, next) {
-    const { password, rePassword } = req.body;
+    const { password } = req.body;
     if (!password || typeof password !== 'string') {
       const error = new Error(
         'password param is missing, empty or invalid'
-      );
-      error.status = 400;
-      return next(error);
-    }
-    if (password !== rePassword) {
-      const error = new Error(
-        'passwords do not match'
       );
       error.status = 400;
       return next(error);
