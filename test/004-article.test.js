@@ -272,7 +272,7 @@ describe('ARTICLE TEST SUITE', () => {
       expect(response.body.error).to.equal('Article provided does not exist');
     });
 
-    it('should have amount of returened data as specified', async () => {
+    it('should have amount of returned data as specified', async () => {
       const response = await chai.request(server)
         .get('/api/v1/articles/?limit=2');
       expect(response.status).to.equal(200);
