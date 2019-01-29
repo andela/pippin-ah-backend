@@ -259,7 +259,7 @@ class Users {
   }
 
   /**
-    * Controll update a user.
+    * Controller send password reset token.
     * @constructor
     * @param {object} req - The request object.
     * @param {object} res - The response object.
@@ -290,7 +290,7 @@ class Users {
   }
 
   /**
-    * Controll update a user.
+    * Controller verify a token.
     * @constructor
     * @param {object} req - The request object.
     * @param {object} res - The response object.
@@ -302,7 +302,7 @@ class Users {
   }
 
   /**
-    * Controll update a user.
+    * Controller set new password.
     * @constructor
     * @param {object} req - The request object.
     * @param {object} res - The response object.
