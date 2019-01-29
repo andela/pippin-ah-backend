@@ -5,7 +5,7 @@ const { or } = Sequelize.Op;
 const { Request } = models;
 
 export default {
-  async canRequestMentorship(req, res, next) {
+  async canRequestToBeMentor(req, res, next) {
     const currentRequest = await Request.findOne({
       where: {
         userId: req.decoded.id,

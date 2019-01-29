@@ -21,8 +21,8 @@ const {
   getAllAuthors
 } = Users;
 
-const { requestMentorship } = Request;
-const { canRequestMentorship } = requestValidations;
+const { requestToBeMentor } = Request;
+const { canRequestToBeMentor } = requestValidations;
 
 const router = express.Router();
 router.route('/activate/:userId')
@@ -44,6 +44,6 @@ router.route('/authors')
   .get(verifyToken, getAllAuthors);
 
 router.route('/request')
-  .post(verifyToken, canRequestMentorship, requestMentorship);
+  .post(verifyToken, canRequestToBeMentor, requestToBeMentor);
 
 export default router;

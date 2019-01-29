@@ -3,7 +3,7 @@ import models from '../models';
 const { Request } = models;
 
 export default {
-  async requestMentorship(req, res) {
+  async requestToBeMentor(req, res) {
     const request = 'Request to be a mentor';
     await Request.create({
       userId: req.decoded.id,
