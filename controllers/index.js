@@ -6,3 +6,4 @@ export { default as Follow } from './follow';
 export { default as Comment } from './comment';
 export { default as Reaction } from './reaction';
 export { default as CommentReaction } from './commentReaction';
+export { default as Request } from './request';
