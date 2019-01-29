@@ -470,27 +470,27 @@ describe('USER TEST SUITE', () => {
   });
 
   describe('PASSWORD RESET', () => {
-    it('should respond with 400 error when usernameOrEmail is a not provided',
+    it('should respond with 400 error when email is a not provided',
       async () => {
         const response = await
         chai.request(server).post(`${baseUrl}/resetpassword`);
         expect(response.body.error).to
-          .equal('usernameOrEmail param is missing, empty or invalid');
+          .equal('email param is missing, empty or invalid');
       });
-    it('should respond with 400 error when usernameOrEmail is a not a string',
+    it('should respond with 400 error when email param is a not a string',
       async () => {
         const response = await
         chai.request(server).post(`${baseUrl}/resetpassword`)
-          .send({ usernameOrEmail: [] });
+          .send({ email: [] });
         expect(response.body.error).to
-          .equal('usernameOrEmail param is missing, empty or invalid');
+          .equal('email param is missing, empty or invalid');
       });
 
     it('should respond with 404 error when user is not found',
       async () => {
         const response = await
         chai.request(server).post(`${baseUrl}/resetpassword`)
-          .send({ usernameOrEmail: 'fakeuser' });
+          .send({ email: 'fakeuser' });
         expect(response.body.error).to
           .equal('user not found');
       });
@@ -500,7 +500,7 @@ describe('USER TEST SUITE', () => {
         const response = await
         chai.request(server)
           .post(`${baseUrl}/resetpassword`)
-          .send({ usernameOrEmail: 'habib180@gmail.com' });
+          .send({ email: 'habib180@gmail.com' });
         expect(response.body.message).to
           .equal('A reset link has been sent to your mail');
         const user = await User
@@ -556,28 +556,12 @@ describe('USER TEST SUITE', () => {
           .equal('password param is missing, empty or invalid');
       });
 
-    it('should not allow password change if supplied passwords do not match',
-      async () => {
-        const response = await
-        chai.request(server)
-          .post(`${baseUrl}/resetpassword/${resetToken}`)
-          .send({
-            password: 'matchingPassword',
-            rePassword: 'nonMatching'
-          });
-        expect(response.body.error).to
-          .equal('passwords do not match');
-      });
-
     it('should not allow password change if password contain special character',
       async () => {
         const response = await
         chai.request(server)
           .post(`${baseUrl}/resetpassword/${resetToken}`)
-          .send({
-            password: 'matchingPassword-',
-            rePassword: 'matchingPassword-'
-          });
+          .send({ password: 'matchingPassword-' });
         expect(response.body.error).to
           .equal('password must contain only numbers and alphabets');
       });
@@ -587,10 +571,7 @@ describe('USER TEST SUITE', () => {
         const response = await
         chai.request(server)
           .post(`${baseUrl}/resetpassword/${resetToken}`)
-          .send({
-            password: 'passwor',
-            rePassword: 'passwor'
-          });
+          .send({ password: 'passwor' });
         expect(response.body.error).to
           .equal('Your password must be at least 8 characters');
       });
@@ -600,10 +581,7 @@ describe('USER TEST SUITE', () => {
         const response = await
         chai.request(server)
           .post(`${baseUrl}/resetpassword/${resetToken}`)
-          .send({
-            password: 'validPassword',
-            rePassword: 'validPassword'
-          });
+          .send({ password: 'validPassword' });
         expect(response.body.message).to
           .equal('Password successfully changed');
       });
