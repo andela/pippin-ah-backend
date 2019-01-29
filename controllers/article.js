@@ -127,7 +127,7 @@ export default {
     }
     let offset;
     offset = limit * (page - 1);
-    if (!page || page < 1) offset = 0;
+    if (!page || page < 1 || !limit) offset = 0;
     const articles = await Article.findAll({
       order: [['createdAt', 'DESC']],
       where: { [and]: queryArray },
