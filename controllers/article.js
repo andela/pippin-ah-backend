@@ -99,7 +99,7 @@ export default {
 
   async getArticles(req, res) {
     const {
-      category, author, tag, keywords, limit,
+      category, author, tag, keywords, limit, page
     } = req.query;
     const queryArray = [{
       [or]: {
@@ -125,8 +125,9 @@ export default {
         }
       });
     }
-    const { page } = req.query;
-    const offset = limit * (page - 1);
+    let offset;
+    offset = limit * (page - 1);
+    if (page < 1) offset = 0;
     const articles = await Article.findAll({
       order: [['createdAt', 'DESC']],
       where: { [and]: queryArray },
