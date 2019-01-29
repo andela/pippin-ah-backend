@@ -7,6 +7,7 @@ chai.use(chaiHttp);
 
 const { User } = models;
 const baseUrl = '/api/v1/users';
+let resetToken;
 
 describe('USER TEST SUITE', () => {
   let firstUserToken, firstUserID;
@@ -465,6 +466,124 @@ describe('USER TEST SUITE', () => {
           .send({})
           .set('Authorization', firstUserToken);
         expect(response.status).to.equal(200);
+      });
+  });
+
+  describe('PASSWORD RESET', () => {
+    it('should respond with 400 error when email is a not provided',
+      async () => {
+        const response = await
+        chai.request(server).post(`${baseUrl}/resetpassword`);
+        expect(response.body.error).to
+          .equal('email param is missing, empty or invalid');
+      });
+    it('should respond with 400 error when email param is a not a string',
+      async () => {
+        const response = await
+        chai.request(server).post(`${baseUrl}/resetpassword`)
+          .send({ email: [] });
+        expect(response.body.error).to
+          .equal('email param is missing, empty or invalid');
+      });
+
+    it('should respond with 404 error when user is not found',
+      async () => {
+        const response = await
+        chai.request(server).post(`${baseUrl}/resetpassword`)
+          .send({ email: 'fakeuser' });
+        expect(response.body.error).to
+          .equal('user not found');
+      });
+
+    it('should succesfully send reset link to valid user\'s mail',
+      async () => {
+        const response = await
+        chai.request(server)
+          .post(`${baseUrl}/resetpassword`)
+          .send({ email: 'habib180@gmail.com' });
+        expect(response.body.message).to
+          .equal('A reset link has been sent to your mail');
+        const user = await User
+          .findOne({
+            where: { email: 'habib180@gmail.com' }
+          });
+        ({ resetToken } = user);
+      });
+
+    it('should succesfully verify a valid token',
+      async () => {
+        const response = await
+        chai.request(server)
+          .get(`${baseUrl}/resetpassword/${resetToken}`);
+        expect(response.body.message).to
+          .equal('Token is valid. Set password with POST/ to this route');
+      });
+
+    it('should fail validation for an invalid token',
+      async () => {
+        const response = await
+        chai.request(server)
+          .get(`${baseUrl}/resetpassword/invalidToken`);
+        expect(response.body.error).to
+          .equal('Invalid or expired token');
+      });
+
+    it('should not authorize password change with an invalid token',
+      async () => {
+        const response = await
+        chai.request(server)
+          .post(`${baseUrl}/resetpassword/invalidToken`);
+        expect(response.body.error).to
+          .equal('Invalid or expired token');
+      });
+
+    it('should not authorize password change when password is not supplied',
+      async () => {
+        const response = await
+        chai.request(server)
+          .post(`${baseUrl}/resetpassword/${resetToken}`);
+        expect(response.body.error).to
+          .equal('password param is missing, empty or invalid');
+      });
+
+    it('should not allow password change if supplied password is not a string',
+      async () => {
+        const response = await
+        chai.request(server)
+          .post(`${baseUrl}/resetpassword/${resetToken}`)
+          .send({ password: [] });
+        expect(response.body.error).to
+          .equal('password param is missing, empty or invalid');
+      });
+
+    it('should not allow password change if password contain special character',
+      async () => {
+        const response = await
+        chai.request(server)
+          .post(`${baseUrl}/resetpassword/${resetToken}`)
+          .send({ password: 'matchingPassword-' });
+        expect(response.body.error).to
+          .equal('password must contain only numbers and alphabets');
+      });
+
+    it('should not allow password change if password is less than 8 characters',
+      async () => {
+        const response = await
+        chai.request(server)
+          .post(`${baseUrl}/resetpassword/${resetToken}`)
+          .send({ password: 'passwor' });
+        expect(response.body.error).to
+          .equal('Your password must be at least 8 characters');
+      });
+
+    it('should successfully change password if valid password is provided',
+      async () => {
+        const response = await
+        chai.request(server)
+          .post(`${baseUrl}/resetpassword/${resetToken}`)
+          .send({ password: 'validPassword' });
+        expect(response.body.message).to
+          .equal('Password successfully changed');
       });
   });
 });

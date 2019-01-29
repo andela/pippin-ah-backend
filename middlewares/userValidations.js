@@ -2,7 +2,7 @@ import Sequelize from 'sequelize';
 import validation from 'validator';
 import models from '../models';
 
-const { iLike, or } = Sequelize.Op;
+const { iLike, or, gt } = Sequelize.Op;
 const { User } = models;
 
 const requiredParams = ['username', 'email', 'password'];
@@ -189,6 +189,62 @@ export default {
     if (!validPassword) {
       const error = new Error('Invalid Password');
       error.status = 400;
+      return next(error);
+    }
+    next();
+  },
+
+  ensureUsernameOrEmailParam(req, res, next) {
+    const { email } = req.body;
+    if (!email || typeof email !== 'string') {
+      const error = new Error(
+        'email param is missing, empty or invalid'
+      );
+      error.status = 400;
+      return next(error);
+    }
+    return next();
+  },
+
+  ensurePasswordParams(req, res, next) {
+    const { password } = req.body;
+    if (!password || typeof password !== 'string') {
+      const error = new Error(
+        'password param is missing, empty or invalid'
+      );
+      error.status = 400;
+      return next(error);
+    }
+    next();
+  },
+
+  async usernameOrEmailExists(req, res, next) {
+    const { email } = req.body;
+    const user = await User
+      .findOne({
+        where: { email: { [iLike]: email } }
+      });
+    if (!user) {
+      const error = new Error('user not found');
+      error.status = 404;
+      return next(error);
+    }
+    return next();
+  },
+
+  async isValidToken(req, res, next) {
+    const { token } = req.params;
+    const user = await User.findOne({
+      where: {
+        resetToken: token,
+        tokenExpires: {
+          [gt]: Math.floor(Date.now() / 1000)
+        }
+      }
+    });
+    if (!user) {
+      const error = new Error('Invalid or expired token');
+      error.status = 401;
       return next(error);
     }
     next();

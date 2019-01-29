@@ -1,11 +1,13 @@
 import Sequelize from 'sequelize';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import crypto from 'crypto';
 import sendEmail from '../services';
 import models from '../models';
+import { getResetMail } from '../helpers';
 
 dotenv.config();
-const { iLike, or } = Sequelize.Op;
+const { iLike, or, gt } = Sequelize.Op;
 const { User, Profile, Article } = models;
 
 const secret = process.env.SECRET_KEY;
@@ -254,6 +256,70 @@ class Users {
     }));
 
     return res.send(responseArray);
+  }
+
+  /**
+    * Controller send password reset token.
+    * @constructor
+    * @param {object} req - The request object.
+    * @param {object} res - The response object.
+    */
+  static async sendPasswordResetToken(req, res) {
+    const { email } = req.body;
+    const user = await User
+      .findOne({
+        where: { email: { [iLike]: email } }
+      });
+    const resetToken = crypto.randomBytes(16).toString('hex');
+    user.resetToken = resetToken;
+    user.tokenExpires = (Date.now() / 1000) + 900000;
+    await user.save();
+    const mailHeader = 'LearnGround Password Reset';
+    // eslint-disable-next-line
+    const resetLink = `${req.protocol}://${req.get('host')}/api/v1/users/resetpassword/${resetToken}`;
+    const resetMail = getResetMail(user.username, mailHeader, resetLink);
+    sendEmail({ email: user.email, subject: mailHeader, html: resetMail });
+    res.send({
+      message: 'A reset link has been sent to your mail'
+    });
+  }
+
+  /**
+    * Controller verify a token.
+    * @constructor
+    * @param {object} req - The request object.
+    * @param {object} res - The response object.
+    */
+  static validTokenResponse(req, res) {
+    res.send({
+      message: 'Token is valid. Set password with POST/ to this route'
+    });
+  }
+
+  /**
+    * Controller set new password.
+    * @constructor
+    * @param {object} req - The request object.
+    * @param {object} res - The response object.
+    */
+  static async setNewPassword(req, res) {
+    const { password } = req.body;
+    const { token } = req.params;
+    const user = await User.findOne({
+      where: {
+        resetToken: token,
+        tokenExpires: {
+          [gt]: Math.floor(Date.now() / 1000)
+        }
+      }
+    });
+    user.password = password;
+    user.resetToken = null;
+    user.tokenExpires = null;
+    await user.save();
+    res.send({
+      message: 'Password successfully changed'
+    });
   }
 }
 
