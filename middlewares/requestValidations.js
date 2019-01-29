@@ -19,7 +19,7 @@ export default {
     }
     const { status } = currentRequest;
     const error = new Error(
-      status === 'pending' ? 'You already requested for mentorship'
+      status === 'pending' ? 'You already requested to be a mentor'
         : 'You are already a mentor'
     );
     error.status = 409;

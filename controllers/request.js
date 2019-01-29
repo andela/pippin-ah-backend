@@ -10,6 +10,6 @@ export default {
       request,
       status: 'pending'
     });
-    return res.send({ message: 'Your mentorship request has been sent' });
+    return res.send({ message: 'Your request to be a mentor has been sent' });
   }
 };

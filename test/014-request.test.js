@@ -46,7 +46,7 @@ describe('REQUEST TEST SUITE', () => {
           .post(baseUrl)
           .set('Authorization', token);
         expect(response.body.message)
-          .to.equal('Your mentorship request has been sent');
+          .to.equal('Your request to be a mentor has been sent');
       });
 
     it('Should not permit creating request when there is a pending one',
@@ -57,7 +57,7 @@ describe('REQUEST TEST SUITE', () => {
           .set('Authorization', token);
         expect(response.status).to.equal(409);
         expect(response.body.error)
-          .to.equal('You already requested for mentorship');
+          .to.equal('You already requested to be a mentor');
 
         const currentRequest = await Request.findOne({
           where: { status: 'pending' }
