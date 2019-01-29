@@ -113,15 +113,9 @@ export default {
     if (author) {
       queryArray.push({
         [or]: {
-          '$User.Profile.lastName$': {
-            [iLike]: `%${author}%`
-          },
-          '$User.Profile.firstName$': {
-            [iLike]: `%${author}%`
-          },
-          '$User.username$': {
-            [iLike]: `%${author}%`
-          },
+          '$User.Profile.lastName$': { [iLike]: `%${author}%` },
+          '$User.Profile.firstName$': { [iLike]: `%${author}%` },
+          '$User.username$': { [iLike]: `%${author}%` },
         }
       });
     }
