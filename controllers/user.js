@@ -265,15 +265,10 @@ class Users {
     * @param {object} res - The response object.
     */
   static async sendPasswordResetToken(req, res) {
-    const { usernameOrEmail } = req.body;
+    const { email } = req.body;
     const user = await User
       .findOne({
-        where: {
-          [or]: [
-            { username: { [iLike]: usernameOrEmail } },
-            { email: { [iLike]: usernameOrEmail } }
-          ]
-        }
+        where: { email: { [iLike]: email } }
       });
     const resetToken = crypto.randomBytes(16).toString('hex');
     user.resetToken = resetToken;
