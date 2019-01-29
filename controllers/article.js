@@ -99,8 +99,9 @@ export default {
 
   async getArticles(req, res) {
     const {
-      category, author, tag, keywords, limit, page
+      category, author, tag, keywords, limit
     } = req.query;
+    let offset, { page } = req.query;
     const queryArray = [{
       [or]: {
         title: { [iLike]: keywords ? `%${keywords}%` : '%' },
@@ -119,9 +120,10 @@ export default {
         }
       });
     }
-    let offset;
     offset = limit * (page - 1);
-    if (!page || page < 1 || !limit) offset = 0;
+    if (!page || page < 1 || !limit) {
+      offset = 0; page = 1;
+    }
     const articles = await Article.findAll({
       order: [['createdAt', 'DESC']],
       where: { [and]: queryArray },
@@ -155,7 +157,8 @@ export default {
     );
     return res.json({
       articles: responseArray,
-      count: articles.length
+      count: articles.length,
+      page
     });
   },
 
