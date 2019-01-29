@@ -19,9 +19,14 @@ describe('ARTICLE TEST SUITE', () => {
       email: 'davidhook@hotmail.com',
       password: 'davidhook345'
     };
-
-    const articleRequestObject = {
+    const firstArticleRequestObject = {
       title: 'Halt and Catch Fire',
+      body: 'Article Body',
+      description: 'Sci-fi movie',
+      category: 'Science'
+    };
+    const secondArticleRequestObject = {
+      title: 'Sherlock Holmes',
       body: 'Article Body',
       description: 'Sci-fi movie',
       category: 'Science'
@@ -30,12 +35,16 @@ describe('ARTICLE TEST SUITE', () => {
     const responseObject = await chai.request(server).post('/api/v1/users')
       .send(userRequestObject);
     accesstoken = responseObject.body.token;
-
-    const articleResponse = await chai.request(server)
+    const firstArticleResponse = await chai.request(server)
       .post(baseUrl)
-      .send(articleRequestObject)
+      .send(firstArticleRequestObject)
       .set('Authorization', accesstoken);
-    firstArticleSlug = articleResponse.body.slug;
+    firstArticleSlug = firstArticleResponse.body.slug;
+
+    await chai.request(server)
+      .post(baseUrl)
+      .send(secondArticleRequestObject)
+      .set('Authorization', accesstoken);
   });
 
   describe('CREATE ARTICLE', () => {
@@ -58,12 +67,10 @@ describe('ARTICLE TEST SUITE', () => {
         description: 'Article Description',
         category: 'Science'
       };
-
       const response = await chai.request(server)
         .post(baseUrl)
         .send(articleObject)
         .set('Authorization', accesstoken);
-
       const errorResult = JSON.parse(response.body.error);
       expect(response.status).to.equal(400);
       expect(errorResult[0]).to.equal('title is required');
@@ -77,12 +84,10 @@ describe('ARTICLE TEST SUITE', () => {
         description: 'Article Description',
         category: 'Article Category'
       };
-
       const response = await chai.request(server)
         .post(baseUrl)
         .send(articleObject)
         .set('Authorization', accesstoken);
-
       const errorResult = JSON.parse(response.body.error);
       expect(response.status).to.equal(400);
       expect(errorResult[0]).to.equal('title must not be empty');
@@ -96,12 +101,10 @@ describe('ARTICLE TEST SUITE', () => {
         description: 'Article Description',
         category: 'Science'
       };
-
       const response = await chai.request(server)
         .post(baseUrl)
         .send(articleObject)
         .set('Authorization', accesstoken);
-
       const errorResult = 'You already have an article with the same title';
       expect(response.status).to.equal(400);
       expect(response.body.error).to.equal(errorResult);
@@ -114,12 +117,10 @@ describe('ARTICLE TEST SUITE', () => {
         description: 'Article Description',
         category: 'Science'
       };
-
       const response = await chai.request(server)
         .post(baseUrl)
         .send(articleObject)
         .set('Authorization', accesstoken);
-
       expect(response.status).to.equal(201);
       expect(response.body.title).to.equal('Test Space Trimming');
     });
@@ -131,12 +132,10 @@ describe('ARTICLE TEST SUITE', () => {
         description: 'Article Description',
         category: 'Travel'
       };
-
       const response = await chai.request(server)
         .post('/api/v1/articles')
         .send(articleObject)
         .set('Authorization', accesstoken);
-
       expect(response.status).to.equal(400);
       expect(response.body.error.split(' ')[2]).to.equal('[Travel].');
     });
@@ -148,12 +147,10 @@ describe('ARTICLE TEST SUITE', () => {
         description: 'Article Description',
         category: 'Science'
       };
-
       const response = await chai.request(server)
         .post(baseUrl)
         .set('Authorization', accesstoken)
         .send(articleObject);
-
       expect(response.status).to.equal(201);
       expect(response.body.title).to.equal('New Article');
       expect(response.body.description).to.equal('Article Description');
@@ -165,12 +162,10 @@ describe('ARTICLE TEST SUITE', () => {
       const articleObject = {
         report: 'Article has erotic content, its inappropriate'
       };
-
       const response = await chai.request(server)
         .post(`${baseUrl}/report/${firstArticleSlug}`)
         .set('Authorization', accesstoken)
         .send(articleObject);
-
       expect(response.status).to.equal(201);
       expect(response.body.message).to.equal('Your report has been registered');
     });
@@ -206,7 +201,6 @@ describe('ARTICLE TEST SUITE', () => {
       // eslint-disable-next-line
       expect(response.body.error).to.equal('Report must have at least ten characters');
     });
-
     it('should not allow report for non existent article', async () => {
       const response = await chai.request(server)
         .post(`${baseUrl}/report/article-the-moon`)
@@ -223,12 +217,10 @@ describe('ARTICLE TEST SUITE', () => {
         title: 'New Article',
         tags: 'Article Body'
       };
-
       const response = await chai.request(server)
         .patch(`${baseUrl}/tag`)
         .set('Authorization', accesstoken)
         .send(articleObject);
-
       expect(response.status).to.equal(200);
     });
 
@@ -237,12 +229,10 @@ describe('ARTICLE TEST SUITE', () => {
         title: 'New Article',
         tags: 678899900000,
       };
-
       const response = await chai.request(server)
         .patch(`${baseUrl}/tag`)
         .set('Authorization', accesstoken)
         .send(articleObject);
-
       expect(response.status).to.equal(400);
       expect(response.body.error).to.equal('tag must be a string');
     });
@@ -252,12 +242,10 @@ describe('ARTICLE TEST SUITE', () => {
         title: 'New Article',
         tags: 'Article Body Two',
       };
-
       const response = await chai.request(server)
         .patch(`${baseUrl}/tag`)
         .set('Authorization', accesstoken)
         .send(articleObject);
-
       expect(response.status).to.equal(200);
     });
   });
@@ -266,7 +254,6 @@ describe('ARTICLE TEST SUITE', () => {
     it('should get an article', async () => {
       const response = await chai.request(server)
         .get(`${baseUrl}/${firstArticleSlug}`);
-
       expect(response.status).to.equal(200);
       expect(response.body.slug).to.equal('halt-and-catch-fire-davidhook');
     });
@@ -274,9 +261,29 @@ describe('ARTICLE TEST SUITE', () => {
     it('should not get a non existent article', async () => {
       const response = await chai.request(server)
         .get('/api/v1/articles/non-existing-article');
-
       expect(response.status).to.equal(404);
       expect(response.body.error).to.equal('Article provided does not exist');
+    });
+
+    it('should not get a non existent article', async () => {
+      const response = await chai.request(server)
+        .get('/api/v1/articles/non-existing-article');
+      expect(response.status).to.equal(404);
+      expect(response.body.error).to.equal('Article provided does not exist');
+    });
+
+    it('should have amount of returened data as specified', async () => {
+      const response = await chai.request(server)
+        .get('/api/v1/articles/?limit=2');
+      expect(response.status).to.equal(200);
+      expect(response.body.count).to.equal(2);
+    });
+
+    it('should return first page if query.page is less than 1', async () => {
+      const response = await chai.request(server)
+        .get('/api/v1/articles/?limit=2&page=-3');
+      expect(response.status).to.equal(200);
+      expect(response.body.page).to.equal(1);
     });
   });
 });
