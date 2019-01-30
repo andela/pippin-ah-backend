@@ -1,5 +1,5 @@
 import express from 'express';
-import { Profile, Follow } from '../controllers';
+import { Profile, Follow, getUserStats } from '../controllers';
 import {
   verifyToken,
   profileValidations,
@@ -29,5 +29,8 @@ router.route('/following')
 
 router.route('/followers')
   .get(verifyToken, getFollowers);
+
+router.route('/stats')
+  .get(getUserStats);
 
 export default router;
