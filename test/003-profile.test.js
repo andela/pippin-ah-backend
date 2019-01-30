@@ -5,8 +5,10 @@ import server from '../app';
 
 chai.use(chaiHttp);
 
+const baseUrl = '/api/v1/profile';
+
 describe('PROFILE TEST SUITE', () => {
-  let profileToken, profileToken2;
+  let user1Token, user2Token;
   before(async () => {
     await models.sequelize.sync({ force: true });
 
@@ -24,12 +26,58 @@ describe('PROFILE TEST SUITE', () => {
 
     const responseObject = await chai.request(server).post('/api/v1/users')
       .send(requestObject);
-    profileToken = responseObject.body.token;
+    user1Token = responseObject.body.token;
+
 
     const responseObject2 = await chai.request(server).post('/api/v1/users')
       .send(requestObject2);
-    profileToken2 = responseObject2.body.token;
+    user2Token = responseObject2.body.token;
+
+    const dummyArticles = [
+      {
+        title: 'My best Day1',
+        body: 'It was a great moment',
+        description: 'Experience Recap',
+        category: 'Arts'
+      },
+      {
+        title: 'My best Day2',
+        body: 'It was a great moment',
+        description: 'Experience Recap',
+        category: 'Arts'
+      },
+      {
+        title: 'My best Day3',
+        body: 'It was a great moment',
+        description: 'Experience Recap',
+        category: 'Arts'
+      }
+    ];
+
+    const dummyArticle1 = await chai.request(server)
+      .post('/api/v1/articles')
+      .send(dummyArticles[0])
+      .set('Authorization', user1Token);
+
+    const dummyArticle2 = await chai.request(server)
+      .post('/api/v1/articles')
+      .send(dummyArticles[1])
+      .set('Authorization', user1Token);
+
+    await chai.request(server)
+      .post('/api/v1/articles')
+      .send(dummyArticles[2])
+      .set('Authorization', user1Token);
+
+    await chai.request(server)
+      .patch(`/api/v1/articles/${dummyArticle1.body.slug}/like`)
+      .set('Authorization', user1Token);
+
+    await chai.request(server)
+      .patch(`/api/v1/articles/${dummyArticle2.body.slug}/like`)
+      .set('Authorization', user1Token);
   });
+
 
   describe('Profile Update', () => {
     it('Should update profile when valid inputs are supplied',
@@ -42,8 +90,8 @@ describe('PROFILE TEST SUITE', () => {
         };
 
         const response = await chai.request(server)
-          .patch('/api/v1/profile')
-          .set('Authorization', profileToken)
+          .patch(baseUrl)
+          .set('Authorization', user1Token)
           .send(newProfile);
         expect(response.body.interests[0]).to.equal('Science');
         expect(response.body.firstName).to.equal('Moses');
@@ -59,8 +107,8 @@ describe('PROFILE TEST SUITE', () => {
           imageUrl: true
         };
         const response = await chai.request(server)
-          .patch('/api/v1/profile')
-          .set('Authorization', profileToken)
+          .patch(baseUrl)
+          .set('Authorization', user1Token)
           .send(newProfile);
         expect(response.body.message).to.equal(
           'Profile updated successfully');
@@ -75,8 +123,8 @@ describe('PROFILE TEST SUITE', () => {
           bio: 'sofware developer at google'
         };
         const response = await chai.request(server)
-          .patch('/api/v1/profile')
-          .set('Authorization', profileToken2)
+          .patch(baseUrl)
+          .set('Authorization', user2Token)
           .send(newProfile);
         const errorResult = JSON.parse(response.body.error);
         expect(response.status).to.equal(400);
@@ -94,8 +142,8 @@ describe('PROFILE TEST SUITE', () => {
           bio: 'sofware developer at google'
         };
         const response = await chai.request(server)
-          .patch('/api/v1/profile')
-          .set('Authorization', profileToken2)
+          .patch(baseUrl)
+          .set('Authorization', user2Token)
           .send(newProfile);
         const errorResult = JSON.parse(response.body.error);
         expect(response.status).to.equal(400);
@@ -113,8 +161,8 @@ describe('PROFILE TEST SUITE', () => {
           bio: 'sofware developer at google'
         };
         const response = await chai.request(server)
-          .patch('/api/v1/profile')
-          .set('Authorization', profileToken2)
+          .patch(baseUrl)
+          .set('Authorization', user2Token)
           .send(newProfile);
         const errorResult = JSON.parse(response.body.error);
         expect(response.status).to.equal(400);
@@ -131,8 +179,8 @@ describe('PROFILE TEST SUITE', () => {
           bio: 'sofware developer at google'
         };
         const response = await chai.request(server)
-          .patch('/api/v1/profile')
-          .set('Authorization', profileToken2)
+          .patch(baseUrl)
+          .set('Authorization', user2Token)
           .send(newProfile);
         const errorResult = JSON.parse(response.body.error);
         expect(response.status).to.equal(400);
@@ -154,8 +202,8 @@ describe('PROFILE TEST SUITE', () => {
         const expectedErrorArray = JSON.stringify(newProfile.interests);
 
         const response = await chai.request(server)
-          .patch('/api/v1/profile')
-          .set('Authorization', profileToken2)
+          .patch(baseUrl)
+          .set('Authorization', user2Token)
           .send(newProfile);
         expect(response.status).to.equal(400);
         expect(response.body.error)
@@ -175,12 +223,30 @@ describe('PROFILE TEST SUITE', () => {
     const expectedErrorArray = JSON.stringify(newProfile.interests);
 
     const response = await chai.request(server)
-      .patch('/api/v1/profile')
-      .set('Authorization', profileToken2)
+      .patch(baseUrl)
+      .set('Authorization', user2Token)
       .send(newProfile);
     expect(response.status).to.equal(400);
     expect(response.body.error)
       // eslint-disable-next-line max-len
       .to.equal(`Invalid categories ${expectedErrorArray}. Allowed categories are ["Science","Technology","Engineering","Arts","Mathematics"]`);
+  });
+
+  describe('USER STATS', () => {
+    it('Should get all the articles a user has created',
+      async () => {
+        const response = await chai.request(server)
+          .get(`${baseUrl}/stats`)
+          .set('Authorization', user1Token);
+        expect(response.body.authored.count).to.equal(3);
+      });
+
+    it('Should get all the articles a user has liked',
+      async () => {
+        const response = await chai.request(server)
+          .get(`${baseUrl}/stats`)
+          .set('Authorization', user1Token);
+        expect(response.body.liked.count).to.equal(2);
+      });
   });
 });
