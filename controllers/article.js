@@ -242,6 +242,9 @@ export default {
         fbShareUrl = 'https://www.facebook.com/sharer/sharer.php?u=https%3A/';
         shareUrl = `${fbShareUrl}/${articleUrl}`;
         break;
+      case 'googleplus':
+        shareUrl = `https://plus.google.com/share?url=http%3A//${articleUrl}`;
+        break;
     }
 
     return res.redirect(shareUrl);
