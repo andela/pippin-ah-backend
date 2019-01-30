@@ -5,7 +5,7 @@ import server from '../app';
 
 chai.use(chaiHttp);
 
-const { Request, User } = models;
+const { Request } = models;
 const baseUrl = '/api/v1/user/request';
 let token;
 let token2;
@@ -23,26 +23,14 @@ describe('REQUEST TEST SUITE', () => {
       });
     ({ token } = user.body);
 
-    await chai.request(server).post('/api/v1/users')
+    const adminSignup = await chai.request(server).post('/api/v1/users')
       .send({
         username: 'pennbagley',
         email: 'pennbagley@solomon.com',
-        password: 'johnny28'
+        password: 'johnny28',
+        isAdmin: true
       });
-    const updateUser = await User.findOne({
-      where: { username: 'pennbagley' }
-    });
-    await updateUser.update({
-      isAdmin: true,
-      password: 'johnny28'
-    });
-
-    const adminLogin = await chai.request(server).post('/api/v1/users/login')
-      .send({
-        usernameOrEmail: 'pennbagley',
-        password: 'johnny28'
-      });
-    token2 = adminLogin.body.token;
+    token2 = adminSignup.body.token;
   });
 
   describe('MENTORSHIP REQUEST', () => {

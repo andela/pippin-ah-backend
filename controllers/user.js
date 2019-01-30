@@ -118,7 +118,8 @@ class Users {
       username,
       email,
       password,
-      isMentor
+      isMentor,
+      isAdmin
     } = req.body;
 
     const user = await User
@@ -126,7 +127,8 @@ class Users {
         username,
         email,
         password,
-        isMentor
+        isMentor,
+        isAdmin
       });
 
     const profile = new Profile();
