@@ -125,7 +125,7 @@ describe('REQUEST TEST SUITE', () => {
       async () => {
         const response = await chai
           .request(server)
-          .patch(`${baseUrl}/approve/${5}`)
+          .patch(`${baseUrl}/approve/5`)
           .set('Authorization', adminToken);
         expect(response.body.error).to.equal('Invalid uuid');
       });
@@ -163,7 +163,7 @@ describe('REQUEST TEST SUITE', () => {
       async () => {
         const response = await chai
           .request(server)
-          .patch(`${baseUrl}/reject/${5}`)
+          .patch(`${baseUrl}/reject/5`)
           .set('Authorization', adminToken);
         expect(response.body.error).to.equal('Invalid uuid');
       });

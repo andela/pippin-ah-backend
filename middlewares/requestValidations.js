@@ -28,9 +28,7 @@ export default {
 
   async doesRequestExist(req, res, next) {
     const requestFound = await Request.findOne({
-      where: {
-        id: req.params.id
-      }
+      where: { id: req.params.id }
     });
     if (requestFound) {
       return next();
