@@ -96,7 +96,7 @@ describe('REQUEST TEST SUITE', () => {
       async () => {
         const response = await chai
           .request(server)
-          .patch(`${baseUrl}/resolve/${fakeId}`)
+          .patch(`${baseUrl}/approve/${fakeId}`)
           .set('Authorization', token);
         expect(response.body.error)
           .to.equal('Request not found');
@@ -106,7 +106,7 @@ describe('REQUEST TEST SUITE', () => {
       async () => {
         const response = await chai
           .request(server)
-          .patch(`${baseUrl}/resolve/${id}`)
+          .patch(`${baseUrl}/approve/${id}`)
           .set('Authorization', token);
         expect(response.body.error)
           .to.equal('Unauthorized');
@@ -116,7 +116,7 @@ describe('REQUEST TEST SUITE', () => {
       async () => {
         const response = await chai
           .request(server)
-          .patch(`${baseUrl}/resolve/${id}`)
+          .patch(`${baseUrl}/approve/${id}`)
           .set('Authorization', adminToken);
         expect(response.status).to.equal(200);
       });
@@ -125,7 +125,45 @@ describe('REQUEST TEST SUITE', () => {
       async () => {
         const response = await chai
           .request(server)
-          .patch(`${baseUrl}/resolve/${5}`)
+          .patch(`${baseUrl}/approve/${5}`)
+          .set('Authorization', adminToken);
+        expect(response.body.error).to.equal('Invalid uuid');
+      });
+
+    it('Should not allow reject, when request is not found',
+      async () => {
+        const response = await chai
+          .request(server)
+          .patch(`${baseUrl}/reject/${fakeId}`)
+          .set('Authorization', token);
+        expect(response.body.error)
+          .to.equal('Request not found');
+      });
+
+    it('Only an admin should be allowed to reject request',
+      async () => {
+        const response = await chai
+          .request(server)
+          .patch(`${baseUrl}/reject/${id}`)
+          .set('Authorization', token);
+        expect(response.body.error)
+          .to.equal('Unauthorized');
+      });
+
+    it('if request is found Admin should be able to reject request',
+      async () => {
+        const response = await chai
+          .request(server)
+          .patch(`${baseUrl}/reject/${id}`)
+          .set('Authorization', adminToken);
+        expect(response.status).to.equal(200);
+      });
+
+    it('should not reject request if uuid is invalid',
+      async () => {
+        const response = await chai
+          .request(server)
+          .patch(`${baseUrl}/reject/${5}`)
           .set('Authorization', adminToken);
         expect(response.body.error).to.equal('Invalid uuid');
       });

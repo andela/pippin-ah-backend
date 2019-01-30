@@ -13,7 +13,7 @@ const {
   usernameExistsValidator,
   passwordValidator
 } = userValidations;
-const { approveRequest } = Request;
+const { approveRequest, rejectRequest } = Request;
 const {
   getUser,
   updateUser,
@@ -45,13 +45,22 @@ router.route('/')
     updateUser
   );
 
-router.route('/request/resolve/:id')
+router.route('/request/approve/:id')
   .patch(
     verifyToken,
     checkForUuid,
     doesRequestExist,
     verifyAdmin,
     approveRequest
+  );
+
+router.route('/request/reject/:id')
+  .patch(
+    verifyToken,
+    checkForUuid,
+    doesRequestExist,
+    verifyAdmin,
+    rejectRequest
   );
 
 router.route('/authors')

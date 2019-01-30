@@ -17,6 +17,17 @@ export default {
       .update({ status: 'approved' });
     return res.sendStatus(200);
   },
+
+  async rejectRequest(req, res) {
+    const { params: { id } } = req;
+    const foundRequest = await Request
+      .findOne({ where: { id } });
+
+    await foundRequest
+      .update({ status: 'rejected' });
+    return res.sendStatus(200);
+  },
+
   async requestToBeMentor(req, res) {
     const request = 'Request to be a mentor';
     const response = await Request.create({
