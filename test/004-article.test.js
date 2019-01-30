@@ -293,4 +293,30 @@ describe('ARTICLE TEST SUITE', () => {
       expect(response.body.count).to.equal(4);
     });
   });
+
+  describe('Share Article', () => {
+    it('should redirect to twitter if selected as prvider', async () => {
+      const response = await chai.request(server)
+        .get(`/api/v1/articles/${firstArticleSlug}/share/twitter`);
+      expect(response.status).to.equal(200);
+    });
+
+    it('should redirect to facebook if selected as prvider', async () => {
+      const response = await chai.request(server)
+        .get(`/api/v1/articles/${firstArticleSlug}/share/facebook`);
+      expect(response.status).to.equal(200);
+    });
+
+    it('should redirect to googleplus if selected as prvider', async () => {
+      const response = await chai.request(server)
+        .get(`/api/v1/articles/${firstArticleSlug}/share/googleplus`);
+      expect(response.status).to.equal(200);
+    });
+
+    it('should return status 400 if provider is not valid', async () => {
+      const response = await chai.request(server)
+        .get(`/api/v1/articles/${firstArticleSlug}/share/invalidprovider`);
+      expect(response.status).to.equal(400);
+    });
+  });
 });
