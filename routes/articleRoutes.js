@@ -169,7 +169,6 @@ router.route('/:slug/comments/:id')
     doesCommentExist,
     validateUser,
     deleteComment
-
   );
 
 router.route('/:slug/like')
