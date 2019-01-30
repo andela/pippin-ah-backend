@@ -265,13 +265,6 @@ describe('ARTICLE TEST SUITE', () => {
       expect(response.body.error).to.equal('Article provided does not exist');
     });
 
-    it('should not get a non existent article', async () => {
-      const response = await chai.request(server)
-        .get('/api/v1/articles/non-existing-article');
-      expect(response.status).to.equal(404);
-      expect(response.body.error).to.equal('Article provided does not exist');
-    });
-
     it('should have amount of returned data as specified', async () => {
       const response = await chai.request(server)
         .get('/api/v1/articles/?limit=2');
