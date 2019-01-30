@@ -24,6 +24,30 @@ export default {
     );
     error.status = 409;
     return next(error);
-  }
+  },
 
+  async doesRequestExist(req, res, next) {
+    const requestFound = await Request.findOne({
+      where: {
+        id: req.params.id
+      }
+    });
+    if (requestFound) {
+      return next();
+    }
+    const error = new Error('Request not found');
+    error.status = 409;
+    return next(error);
+  },
+
+  async verifyAdmin(req, res, next) {
+    const { decoded: { isAdmin } } = req;
+
+    if (isAdmin) {
+      return next();
+    }
+    const error = new Error('Only an admin can resolve request');
+    error.status = 409;
+    return next(error);
+  }
 };

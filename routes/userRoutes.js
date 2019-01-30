@@ -22,7 +22,11 @@ const {
 } = Users;
 
 const { requestToBeMentor } = Request;
-const { canRequestToBeMentor } = requestValidations;
+const {
+  canRequestToBeMentor,
+  doesRequestExist,
+  verifyAdmin
+} = requestValidations;
 
 const router = express.Router();
 router.route('/activate/:userId')
@@ -40,9 +44,11 @@ router.route('/')
     updateUser
   );
 
-router.route('/request/resolve')
+router.route('/request/resolve/:id')
   .patch(
     verifyToken,
+    doesRequestExist,
+    verifyAdmin,
     approveRequest
   );
 

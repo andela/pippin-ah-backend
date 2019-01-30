@@ -5,9 +5,12 @@ import server from '../app';
 
 chai.use(chaiHttp);
 
-const { Request } = models;
+const { Request, User } = models;
 const baseUrl = '/api/v1/user/request';
 let token;
+let token2;
+let id;
+const fakeid = 'BBECD162-0754-44CB-9974-5725E7EA7A94';
 
 describe('REQUEST TEST SUITE', () => {
   before(async () => {
@@ -19,6 +22,27 @@ describe('REQUEST TEST SUITE', () => {
         password: 'johnny777'
       });
     ({ token } = user.body);
+
+    await chai.request(server).post('/api/v1/users')
+      .send({
+        username: 'pennbagley',
+        email: 'pennbagley@solomon.com',
+        password: 'johnny28'
+      });
+    const updateUser = await User.findOne({
+      where: { username: 'pennbagley' }
+    });
+    await updateUser.update({
+      isAdmin: true,
+      password: 'johnny28'
+    });
+
+    const adminLogin = await chai.request(server).post('/api/v1/users/login')
+      .send({
+        usernameOrEmail: 'pennbagley',
+        password: 'johnny28'
+      });
+    token2 = adminLogin.body.token;
   });
 
   describe('MENTORSHIP REQUEST', () => {
@@ -45,6 +69,7 @@ describe('REQUEST TEST SUITE', () => {
           .request(server)
           .post(baseUrl)
           .set('Authorization', token);
+        ({ id } = response.body);
         expect(response.body.message)
           .to.equal('Your request to be a mentor has been sent');
       });
@@ -75,6 +100,37 @@ describe('REQUEST TEST SUITE', () => {
         expect(response.status).to.equal(409);
         expect(response.body.error)
           .to.equal('You are already a mentor');
+      });
+  });
+
+  describe('RESOLVE REQUEST', () => {
+    it('Should not allow resolve when request is not found',
+      async () => {
+        const response = await chai
+          .request(server)
+          .patch(`${baseUrl}/resolve/${fakeid}`)
+          .set('Authorization', token);
+        expect(response.body.error)
+          .to.equal('Request not found');
+      });
+
+    it('Only an admin should be allowed to resolve request',
+      async () => {
+        const response = await chai
+          .request(server)
+          .patch(`${baseUrl}/resolve/${id}`)
+          .set('Authorization', token);
+        expect(response.body.error)
+          .to.equal('Only an admin can resolve request');
+      });
+
+    it('if request is found Admin should be able to resolve request',
+      async () => {
+        const response = await chai
+          .request(server)
+          .patch(`${baseUrl}/resolve/${id}`)
+          .set('Authorization', token2);
+        expect(response.status).to.equal(200);
       });
   });
 });
