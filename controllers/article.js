@@ -233,8 +233,7 @@ export default {
 
     switch (provider) {
       default:
-        shareUrl = articleUrl;
-        break;
+        return res.redirect(400, articleUrl);
       case 'twitter':
         shareUrl = `https://twitter.com/home?status=http%3A//${articleUrl}`;
         break;
