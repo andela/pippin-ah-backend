@@ -121,7 +121,7 @@ describe('REQUEST TEST SUITE', () => {
           .patch(`${baseUrl}/resolve/${id}`)
           .set('Authorization', token);
         expect(response.body.error)
-          .to.equal('Only an admin can resolve request');
+          .to.equal('Unauthorized');
       });
 
     it('if request is found Admin should be able to resolve request',

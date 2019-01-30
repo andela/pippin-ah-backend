@@ -48,8 +48,8 @@ export default {
       return next();
     }
 
-    const error = new Error('Only an admin can resolve request');
-    error.status = 409;
+    const error = new Error('Unauthorized');
+    error.status = 401;
     return next(error);
   }
 };
