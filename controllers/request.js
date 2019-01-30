@@ -8,17 +8,13 @@ export default {
     const foundUser = await User
       .findOne({ where: { id: decoded.id } });
     await foundUser
-      .update({
-        isMentor: true
-      });
+      .update({ isMentor: true });
 
     const foundRequest = await Request
       .findOne({ where: { id } });
 
     await foundRequest
-      .update({
-        status: 'approved'
-      });
+      .update({ status: 'approved' });
     return res.sendStatus(200);
   },
   async requestToBeMentor(req, res) {
