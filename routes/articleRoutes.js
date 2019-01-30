@@ -24,7 +24,8 @@ const {
   tagArticle,
   bookmarkArticle,
   getBookmarkedArticles,
-  removeBookmarkedArticle
+  removeBookmarkedArticle,
+  shareArticle
 } = Article;
 
 const { like, cancelReaction, dislike } = Reaction;
@@ -179,5 +180,8 @@ router.route('/:slug/cancelreaction')
 
 router.route('/:slug/dislike')
   .patch(verifyToken, doesArticleExist, dislike);
+
+router.route('/:slug/share/:provider')
+  .get(doesArticleExist, shareArticle);
 
 export default router;
