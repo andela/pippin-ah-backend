@@ -10,7 +10,7 @@ const baseUrl = '/api/v1/user/request';
 let token;
 let token2;
 let id;
-const fakeid = 'BBECD162-0754-44CB-9974-5725E7EA7A94';
+const fakeId = 'BBECD162-0754-44CB-9974-5725E7EA7A94';
 
 describe('REQUEST TEST SUITE', () => {
   before(async () => {
@@ -96,7 +96,7 @@ describe('REQUEST TEST SUITE', () => {
       async () => {
         const response = await chai
           .request(server)
-          .patch(`${baseUrl}/resolve/${fakeid}`)
+          .patch(`${baseUrl}/resolve/${fakeId}`)
           .set('Authorization', token);
         expect(response.body.error)
           .to.equal('Request not found');
