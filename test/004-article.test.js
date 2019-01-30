@@ -295,19 +295,19 @@ describe('ARTICLE TEST SUITE', () => {
   });
 
   describe('Share Article', () => {
-    it('should redirect to twitter if selected as prvider', async () => {
+    it('should redirect to twitter if selected as provider', async () => {
       const response = await chai.request(server)
         .get(`/api/v1/articles/${firstArticleSlug}/share/twitter`);
       expect(response.status).to.equal(200);
     });
 
-    it('should redirect to facebook if selected as prvider', async () => {
+    it('should redirect to facebook if selected as provider', async () => {
       const response = await chai.request(server)
         .get(`/api/v1/articles/${firstArticleSlug}/share/facebook`);
       expect(response.status).to.equal(200);
     });
 
-    it('should redirect to googleplus if selected as prvider', async () => {
+    it('should redirect to googleplus if selected as provider', async () => {
       const response = await chai.request(server)
         .get(`/api/v1/articles/${firstArticleSlug}/share/googleplus`);
       expect(response.status).to.equal(200);
