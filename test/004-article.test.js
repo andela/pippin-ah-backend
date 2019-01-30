@@ -285,5 +285,19 @@ describe('ARTICLE TEST SUITE', () => {
       expect(response.status).to.equal(200);
       expect(response.body.page).to.equal(1);
     });
+
+    it('should return first page if query.page is not provided', async () => {
+      const response = await chai.request(server)
+        .get('/api/v1/articles/?limit=2');
+      expect(response.status).to.equal(200);
+      expect(response.body.page).to.equal(1);
+    });
+
+    it('should return all articles if limit is not provided', async () => {
+      const response = await chai.request(server)
+        .get('/api/v1/articles/?page=1');
+      expect(response.status).to.equal(200);
+      expect(response.body.page).to.equal(1);
+    });
   });
 });
