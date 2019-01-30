@@ -25,7 +25,8 @@ const { requestToBeMentor } = Request;
 const {
   canRequestToBeMentor,
   doesRequestExist,
-  verifyAdmin
+  verifyAdmin,
+  checkForUuid
 } = requestValidations;
 
 const router = express.Router();
@@ -47,6 +48,7 @@ router.route('/')
 router.route('/request/resolve/:id')
   .patch(
     verifyToken,
+    checkForUuid,
     doesRequestExist,
     verifyAdmin,
     approveRequest

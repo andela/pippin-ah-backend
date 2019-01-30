@@ -51,5 +51,16 @@ export default {
     const error = new Error('Unauthorized');
     error.status = 401;
     return next(error);
+  },
+
+  checkForUuid(req, res, next) {
+    // eslint-disable-next-line
+    const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    if (!uuid.test(req.params.id)) {
+      const error = new Error('Invalid uuid');
+      error.status = 400;
+      return next(error);
+    }
+    return next();
   }
 };

@@ -120,5 +120,14 @@ describe('REQUEST TEST SUITE', () => {
           .set('Authorization', adminToken);
         expect(response.status).to.equal(200);
       });
+
+    it('should not resolve request if uuid is invalid',
+      async () => {
+        const response = await chai
+          .request(server)
+          .patch(`${baseUrl}/resolve/${5}`)
+          .set('Authorization', adminToken);
+        expect(response.body.error).to.equal('Invalid uuid');
+      });
   });
 });
