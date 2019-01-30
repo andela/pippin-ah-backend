@@ -106,7 +106,6 @@ router.route('/categories')
 router.route('/bookmarks')
   .get(verifyToken, getBookmarkedArticles);
 
-
 router.route('/bookmarks/:slug')
   .all(verifyToken)
   .post(checkIfSlugExists, bookmarkArticle)
