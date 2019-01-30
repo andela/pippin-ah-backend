@@ -224,4 +224,22 @@ export default {
     const slugArray = bookmarkedArticles.map(item => item.Article.slug);
     return res.send(slugArray);
   },
+
+  async shareArticle(req, res) {
+    const { slug } = req.params;
+    const { provider } = req.params;
+    const articleUrl = `${req.get('host')}/api/v1/articles/${slug}`;
+    let shareUrl, fbShareUrl;
+
+    switch (provider) {
+      default:
+        shareUrl = articleUrl;
+        break;
+      case 'twitter':
+        shareUrl = `https://twitter.com/home?status=http%3A//${articleUrl}`;
+        break;
+    }
+
+    return res.redirect(shareUrl);
+  }
 };
