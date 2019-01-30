@@ -1,5 +1,5 @@
 import express from 'express';
-import { Profile, Follow, getUserStats } from '../controllers';
+import { Profile, Follow } from '../controllers';
 import {
   verifyToken,
   profileValidations,
@@ -7,7 +7,7 @@ import {
 } from '../middlewares';
 
 const { interestsValidator, nameValidator } = profileValidations;
-const { updateProfile } = Profile;
+const { updateProfile, getUserStats } = Profile;
 const { canFollowUser } = followValidations;
 const { followUser, getFollowing, getFollowers } = Follow;
 const router = express.Router();
@@ -31,6 +31,6 @@ router.route('/followers')
   .get(verifyToken, getFollowers);
 
 router.route('/stats')
-  .get(getUserStats);
+  .get(verifyToken, getUserStats);
 
 export default router;
