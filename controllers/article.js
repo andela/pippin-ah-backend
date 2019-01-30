@@ -4,10 +4,18 @@ import models from '../models';
 import { generateSlug, getReadTime, categories } from '../helpers';
 
 const {
-  Article, User, Profile, Report, Bookmark
+  Article,
+  User,
+  Profile,
+  Report,
+  Bookmark
 } = models;
 const {
-  iLike, and, or, notIn, contains
+  iLike,
+  and,
+  or,
+  notIn,
+  contains
 } = Sequelize.Op;
 
 export default {
