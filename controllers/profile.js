@@ -3,7 +3,7 @@ import models from '../models';
 
 dotenv.config();
 
-const { Profile } = models;
+const { Profile, Article, Reaction } = models;
 
 /**
  * @class
@@ -54,6 +54,48 @@ class Profiles {
       bio: responseData.bio,
       interests: responseData.interests,
       imageURL: responseData.imageURL
+    });
+  }
+
+  /**
+    * Represents a controller.
+    * @constructor
+    * @param {object} req - The request object.
+    * @param {object} res - The response object.
+    */
+  static async getUserStats(req, res) {
+    const { id } = req.decoded;
+    const authoredArticles = await Article.findAll({
+      where: { userId: id },
+      attributes: ['slug', 'description', 'title']
+    });
+    const likedArticles = await Reaction.findAll({
+      where: {
+        likedOrDislikedBy: id,
+        liked: true
+      },
+      attributes: [],
+      include: [
+        {
+          model: Article,
+          attributes: ['slug', 'description', 'title']
+        }
+      ]
+    });
+    const formattedLikedArticles = likedArticles.map(item => ({
+      slug: item.Article.slug,
+      description: item.Article.description,
+      title: item.Article.title
+    }));
+    res.json({
+      authored: {
+        articles: authoredArticles,
+        count: authoredArticles.length
+      },
+      liked: {
+        articles: formattedLikedArticles,
+        count: formattedLikedArticles.length
+      }
     });
   }
 }
