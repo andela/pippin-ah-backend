@@ -238,6 +238,10 @@ export default {
       case 'twitter':
         shareUrl = `https://twitter.com/home?status=http%3A//${articleUrl}`;
         break;
+      case 'facebook':
+        fbShareUrl = 'https://www.facebook.com/sharer/sharer.php?u=https%3A/';
+        shareUrl = `${fbShareUrl}/${articleUrl}`;
+        break;
     }
 
     return res.redirect(shareUrl);
