@@ -102,43 +102,40 @@ export default {
       category,
       author,
       tag,
-      keywords
+      keywords,
+      limit = 50
     } = req.query;
-    const queryArray = [
-      {
-        [or]: {
-          title: { [iLike]: keywords ? `%${keywords}%` : '%' },
-          description: { [iLike]: keywords ? `%${keywords}%` : '%' },
-          body: { [iLike]: keywords ? `%${keywords}%` : '%' }
-        },
+
+    let offset, { page } = req.query;
+    page = Number(page);
+
+    const queryArray = [{
+      [or]: {
+        title: { [iLike]: keywords ? `%${keywords}%` : '%' },
+        description: { [iLike]: keywords ? `%${keywords}%` : '%' },
+        body: { [iLike]: keywords ? `%${keywords}%` : '%' }
       },
-      {
-        category: category || categories
-      },
-      {
-        tags: tag ? { [contains]: [tag] } : { [notIn]: [] }
-      }
-    ];
+    },
+    { category: category || categories },
+    { tags: tag ? { [contains]: [tag] } : { [notIn]: [] } }];
     if (author) {
       queryArray.push({
         [or]: {
-          '$User.Profile.lastName$': {
-            [iLike]: `%${author}%`
-          },
-          '$User.Profile.firstName$': {
-            [iLike]: `%${author}%`
-          },
-          '$User.username$': {
-            [iLike]: `%${author}%`
-          },
+          '$User.Profile.lastName$': { [iLike]: `%${author}%` },
+          '$User.Profile.firstName$': { [iLike]: `%${author}%` },
+          '$User.username$': { [iLike]: `%${author}%` },
         }
-
       });
     }
+    offset = limit * (page - 1);
+    if (!page || page < 1) {
+      offset = 0; page = 1;
+    }
     const articles = await Article.findAll({
-      where: {
-        [and]: queryArray
-      },
+      order: [['createdAt', 'DESC']],
+      where: { [and]: queryArray },
+      limit,
+      offset,
       include: [{
         model: User,
         required: false,
@@ -146,9 +143,9 @@ export default {
           model: Profile,
           required: false,
         }]
-      }
-      ]
+      }]
     });
+
     const responseArray = articles.map(item => ({
       author: item.User.username,
       slug: item.slug,
@@ -167,7 +164,8 @@ export default {
     );
     return res.json({
       articles: responseArray,
-      count: articles.length
+      count: articles.length,
+      page
     });
   },
 
