@@ -297,7 +297,7 @@ describe('ARTICLE TEST SUITE', () => {
       const response = await chai.request(server)
         .get('/api/v1/articles/?page=1');
       expect(response.status).to.equal(200);
-      expect(response.body.page).to.equal(1);
+      expect(response.body.count).to.equal(4);
     });
   });
 });
