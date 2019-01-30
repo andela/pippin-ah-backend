@@ -99,9 +99,16 @@ export default {
 
   async getArticles(req, res) {
     const {
-      category, author, tag, keywords, limit
+      category,
+      author,
+      tag,
+      keywords,
+      limit = 50
     } = req.query;
+
     let offset, { page } = req.query;
+    page = Number(page);
+
     const queryArray = [{
       [or]: {
         title: { [iLike]: keywords ? `%${keywords}%` : '%' },
@@ -121,7 +128,7 @@ export default {
       });
     }
     offset = limit * (page - 1);
-    if (!page || page < 1 || !limit) {
+    if (!page || page < 1) {
       offset = 0; page = 1;
     }
     const articles = await Article.findAll({
