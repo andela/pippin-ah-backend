@@ -61,6 +61,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'articleId',
       onDelete: 'CASCADE'
     });
+
+    Article.hasMany(models.Reaction, {
+      foreignKey: 'articleId',
+      onDelete: 'CASCADE'
+    });
   };
   return Article;
 };
