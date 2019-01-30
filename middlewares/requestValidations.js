@@ -35,6 +35,7 @@ export default {
     if (requestFound) {
       return next();
     }
+
     const error = new Error('Request not found');
     error.status = 409;
     return next(error);
@@ -46,6 +47,7 @@ export default {
     if (isAdmin) {
       return next();
     }
+
     const error = new Error('Only an admin can resolve request');
     error.status = 409;
     return next(error);
