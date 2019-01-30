@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 const { Request } = models;
 const baseUrl = '/api/v1/user/request';
 let token;
-let token2;
+let adminToken;
 let id;
 const fakeId = 'BBECD162-0754-44CB-9974-5725E7EA7A94';
 
@@ -30,7 +30,7 @@ describe('REQUEST TEST SUITE', () => {
         password: 'johnny28',
         isAdmin: true
       });
-    token2 = adminSignup.body.token;
+    adminToken = adminSignup.body.token;
   });
 
   describe('MENTORSHIP REQUEST', () => {
@@ -117,7 +117,7 @@ describe('REQUEST TEST SUITE', () => {
         const response = await chai
           .request(server)
           .patch(`${baseUrl}/resolve/${id}`)
-          .set('Authorization', token2);
+          .set('Authorization', adminToken);
         expect(response.status).to.equal(200);
       });
   });
