@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<head>
+  <title>Pusher Test</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+  <script src="https://js.pusher.com/4.3/pusher.min.js"></script>
+  <script>
+
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('672d4a2dcf394b52247d', {
+      cluster: 'eu',
+      forceTLS: true
+    });
+
+    var channel = pusher.subscribe('commentNotification');
+    channel.bind('11e928e9-9578-4b26-b052-76bbeb22d346', function(data) {
+     fetchNotification();
+    });
+  </script>
+</head>
+<body>
+  <div id="header">
+<span id="number">0</span>
+    <i class="far fa-bell icon-2x notification"></i>
+    <h1 >LearnGround2019</h1>
+  </div>
+  <script src="./main.js"></script>
+</body>

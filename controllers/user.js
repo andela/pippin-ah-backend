@@ -91,9 +91,18 @@ class Users {
             { username: { [iLike]: usernameOrEmail } },
             { email: { [iLike]: usernameOrEmail } }
           ]
-        }
+        },
+        include: [{
+          model: Notification,
+          attributes: ['body', 'id']
+        }]
       });
     await user.validPassword(password);
+    const notificationArray = user.Notifications.map(item => ({
+      notificationMessage: item.body,
+      notificationId: item.id
+    })
+    );
 
     const tokenPayload = {
       id: user.id,
@@ -103,7 +112,8 @@ class Users {
 
     return res.status(200).json({
       message: 'Login was successful',
-      token: generateToken(tokenPayload)
+      token: generateToken(tokenPayload),
+      notifications: notificationArray
     });
   }
 
@@ -138,6 +148,11 @@ class Users {
       isMentor: user.isMentor,
       isAdmin: user.isAdmin
     };
+
+    const notification = await Notification.findAll({
+      where: { userId: user.id }
+    });
+
     const token = generateToken(tokenPayload);
 
     const activationUrl = `${userActivationUrl}${user.id}`;
@@ -159,6 +174,7 @@ class Users {
       message: 'An email has been sent to your email address',
       username: user.username,
       email: user.email,
+      notification,
       token
     });
   }

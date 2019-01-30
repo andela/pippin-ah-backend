@@ -20,6 +20,7 @@ initPassport();
 
 app.use(cors());
 
+
 // Normal express config defaults
 app.use(require('morgan')('dev'));
 

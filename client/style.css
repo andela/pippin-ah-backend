@@ -1,0 +1,17 @@
+#header {
+  background-color: brown;
+  color: white;
+  margin: 13% 40% 1% 40%;
+  padding: 5px 10px;
+}
+
+.notification {
+  margin: 1%  40% -50px 40%;
+  font-size: 40px;
+}
+#number{
+  color: white;
+  margin: -5%  2% 0 40%;
+}
+
+

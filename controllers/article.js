@@ -1,6 +1,7 @@
 import Sequelize from 'sequelize';
 import dateFns from 'date-fns';
 import models from '../models';
+import { Notifier } from '../services';
 import { generateSlug, getReadTime, categories } from '../helpers';
 
 const {
@@ -8,7 +9,8 @@ const {
   User,
   Profile,
   Report,
-  Bookmark
+  Bookmark,
+  Follow
 } = models;
 const {
   iLike,
@@ -42,6 +44,15 @@ export default {
         userId,
         readTime: getReadTime(body.trim())
       });
+
+    const followersIdArray = await Follow.findAll({
+      where: { userId },
+      attributes: ['followerId']
+    });
+
+    followersIdArray.forEach((followerId) => {
+      Notifier.notifyFollowers(followerId.followerId, userId, article.title);
+    });
 
     return res.status(201).json({
       title: article.title,
