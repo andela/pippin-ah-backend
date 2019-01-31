@@ -12,7 +12,9 @@ const {
   User,
   Profile,
   Article,
-  Notification
+  Notification,
+  Reaction,
+  Follow
 } = models;
 
 const secret = process.env.SECRET_KEY;
@@ -39,18 +41,57 @@ class Users {
     const user = await User.findOne(
       {
         where: { id },
-        include: [{ model: Profile }]
+        attributes: ['username', 'isMentor'],
+        include: [
+          {
+            model: Profile,
+            attributes: ['firstName', 'lastName', 'imageUrl', 'bio']
+          },
+          {
+            model: Article,
+            attributes: ['title', 'body', 'description', 'slug', 'aveRating'],
+            include: {
+              model: Reaction
+            }
+          },
+          {
+            model: Follow,
+            attributes: ['followerId'],
+            as: 'followerDetails'
+          },
+        ],
+        group: [
+          'User.id',
+          'Profile.id',
+          'Articles.id',
+          'Articles->Reactions.id',
+          'followerDetails.id'
+        ],
+        order: [
+          [Sequelize.fn('MAX', Sequelize.col('aveRating')), 'DESC NULLS LAST'],
+          [Sequelize.fn('COUNT', Sequelize.col('liked')), 'DESC'],
+          [Sequelize.fn('LENGTH', Sequelize.col('body')), 'DESC']
+        ]
       });
-    const profile = user.Profile;
+    const topArticles = user.Articles.slice(0, 5).map(item => ({
+      slug: item.slug,
+      title: item.title,
+      description: item.description,
+      aveRating: item.aveRating
+    }));
+
     return res.json({
       username: user.username,
       email: user.email,
       isMentor: user.isMentor,
-      profile: {
-        firstName: profile.firstName,
-        lastName: profile.lastName,
-        bio: profile.bio,
-        imageUrl: profile.imageUrl
+      firstName: user.Profile.firstName,
+      lastName: user.Profile.lastName,
+      bio: user.Profile.bio,
+      imageUrl: user.Profile.imageUrl,
+      followers: user.followerDetails.length,
+      articles: {
+        top: topArticles,
+        total: user.Articles.length
       }
     });
   }
