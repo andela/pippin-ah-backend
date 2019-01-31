@@ -197,6 +197,10 @@ router.route('/:slug/highlights')
   .post(
     verifyToken,
     addHighlight
+  )
+  .get(
+    verifyToken,
+    getAllHighlights
   );
 
 export default router;
