@@ -4,7 +4,7 @@ import pusherConfig from './pusherConfig';
 const { Article, User, Notification } = models;
 
 export default {
-  async notifyInApp(articleId, commenterId) {
+  async newCommentNotification(articleId, commenterId) {
     const article = await Article.findOne({ where: { id: articleId }, });
     const commenter = await User.findOne({ where: { id: commenterId } });
     const { userId, title } = article;
@@ -17,7 +17,7 @@ export default {
     pusherConfig.trigger('notification', userId, {});
   },
 
-  async notifyFollowers(followerId, authorId, articleTitle) {
+  async notifyFollowersOfNewArticle(followerId, authorId, articleTitle) {
     const author = await User.findOne({ where: { id: authorId } });
 
     const authorsName = author.username;

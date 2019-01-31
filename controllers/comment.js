@@ -20,7 +20,7 @@ export default {
 
     const comment = Object.values(newComment.comment)[0];
     const { id, updatedAt } = newComment;
-    await Notifier.notifyInApp(article.id, decoded.id);
+    await Notifier.newCommentNotification(article.id, decoded.id);
 
     return res.json({ comment, id, updatedAt });
   },
