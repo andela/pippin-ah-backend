@@ -2,7 +2,7 @@ import Sequelize from 'sequelize';
 import models from '../models';
 
 const { iLike } = Sequelize.Op;
-const { User } = models;
+const { User, Follow } = models;
 
 export default {
   async canFollowUser(req, res, next) {
@@ -19,7 +19,7 @@ export default {
       error.status = 400;
       return next(error);
     }
-    const alreadyFollowing = await userToFollow.getFollows({
+    const alreadyFollowing = await userToFollow.getUserDetails({
       where: {
         followerId: req.decoded.id
       }
