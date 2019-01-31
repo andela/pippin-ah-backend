@@ -18,15 +18,12 @@ export default {
       error.status = 400;
       return next(error);
     }
-
     return next();
   },
 
   categoryQueryValidator(req, res, next) {
     const { category } = req.query;
-    if (!category) {
-      return next();
-    }
+    if (!category) return next();
 
     if (!categoryEnum.includes(category)) {
       const errorMessage = `Invalid category ${category}`;
@@ -37,7 +34,6 @@ export default {
     return next();
   },
 
-
   expectedParamsValidator(req, res, next) {
     const errorArray = [];
 
@@ -47,9 +43,7 @@ export default {
       }
     });
 
-    if (!errorArray.length) {
-      return next();
-    }
+    if (!errorArray.length) return next();
 
     const errorMessage = JSON.stringify(errorArray);
     const error = new Error(errorMessage);
@@ -66,9 +60,7 @@ export default {
       }
     });
 
-    if (!errorArray.length) {
-      return next();
-    }
+    if (!errorArray.length) return next();
 
     const errorMessage = JSON.stringify(errorArray);
     const error = new Error(errorMessage);
@@ -135,10 +127,8 @@ export default {
 
   async checkIfSlugExists(req, res, next) {
     const { slug } = req.params;
-
     const article = await Article.findOne({ where: { slug } });
     if (article) return next();
-
     const errorMessage = 'Article does not exist';
     const error = new Error(errorMessage);
     error.status = 400;
