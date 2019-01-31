@@ -112,6 +112,39 @@ export default {
       return next(error);
     }
     return next();
+  },
+
+  async isCommentDuplicate(req, res, next) {
+    const {
+      body: { comment },
+      decoded: { id: userId },
+      params: { slug }
+    } = req;
+
+    const article = await Article.findOne({
+      where: { slug },
+      include: [{
+        model: Comment,
+        required: false,
+        attributes: ['id', 'userId', 'comment']
+      }]
+    });
+
+    const articleCommentsRaw = article.Comments;
+    const articleComments = articleCommentsRaw.map(item => ({
+      userId: item.userId,
+      commentTexts: Object.values(item.comment)
+    }));
+
+    const identicalComment = articleComments.find(element => element
+      .userId === userId && element.commentTexts.includes(comment.trim()));
+
+    if (identicalComment) {
+      const error = new Error('You\'ve already posted this comment');
+      error.status = 400;
+      return next(error);
+    }
+    return next();
   }
 
 };
