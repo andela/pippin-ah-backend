@@ -10,7 +10,7 @@ const {
   Profile,
   Report,
   Bookmark,
-  Follow
+  Comment
 } = models;
 const {
   iLike,
@@ -185,8 +185,32 @@ export default {
 
   async getArticleBySlug(req, res) {
     const { slug } = req.params;
-    const article = await Article.findOne({ where: { slug } });
-    return res.json(article);
+    const article = await Article.findOne({
+      where: { slug },
+      include: [{
+        model: Comment,
+        required: false,
+        attributes: ['id', 'userId', 'comment']
+      }]
+    });
+
+    const response = {
+      id: article.id,
+      title: article.title,
+      body: article.body,
+      description: article.description,
+      tags: article.tags,
+      slug: article.slug,
+      rating: article.rating,
+      aveRating: article.aveRating,
+      category: article.category,
+      readTime: article.readTime,
+      createdAt: article.createdAt,
+      updatedAt: article.updatedAt,
+      comments: article.Comments
+    };
+
+    return res.json(response);
   },
 
   async bookmarkArticle(req, res) {
