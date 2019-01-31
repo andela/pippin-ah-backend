@@ -140,16 +140,14 @@ export default {
     const {
       title, body, description, category
     } = req.body;
-    if (
-      !(isString(title))
-      || !(isString(body))
-      || !(isString(description))
-      || !(isString(category))
-    ) {
-      const error = new Error('Invalid Input!');
-      error.status = 400;
-      return next(error);
-    }
+    const inputArray = [title, body, description, category];
+    inputArray.forEach((input) => {
+      if (!isString(input)) {
+        const error = new Error('Invalid input type for this param!');
+        error.status = 400;
+        return next(error);
+      }
+    });
     return next();
   }
 };
