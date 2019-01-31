@@ -1,5 +1,4 @@
 
-
 module.exports = (sequelize, DataTypes) => {
   const Request = sequelize.define('Request', {
     id: {
@@ -21,14 +20,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   );
-
   Request.associate = (models) => {
     Request.belongsTo(models.User, {
       foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
   };
-
-
   return Request;
 };
