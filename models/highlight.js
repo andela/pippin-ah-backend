@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Highlight.belongsTo(models.User, {
-      foreignKey: 'bookmarkedBy',
+      foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
   };
