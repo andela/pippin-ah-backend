@@ -6,5 +6,4 @@ export default (typeChecker = '', inputArray = '', next) => {
       return next(error);
     }
   });
-  return next();
 };
