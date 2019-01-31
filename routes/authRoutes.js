@@ -1,5 +1,5 @@
 import express from 'express';
-import Users from '../controllers/user';
+import { Users } from '../controllers';
 import { userValidations } from '../middlewares';
 import {
   googleStrategy,
