@@ -77,7 +77,6 @@ export default {
   async tagArticle(req, res) {
     let normalizedTags;
     const { title, tags } = req.body;
-
     const { id: userId } = req.decoded;
     const article = await Article.findOne({ where: { userId, title } });
 
