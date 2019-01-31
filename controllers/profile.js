@@ -87,6 +87,34 @@ class Profiles {
       description: item.Article.description,
       title: item.Article.title
     }));
+    let topArticles = await Article.findAll({
+      attributes: ['slug', 'description', 'title'],
+      include: [
+        {
+          model: Reaction,
+          attributes: ['liked'],
+          where: { liked: true }
+        }
+      ]
+    });
+    topArticles.sort((a, b) => b.Reactions.length - a.Reactions.length);
+    let formattedTopArticles = topArticles.map(item => ({
+      slug: item.slug,
+      description: item.description,
+      title: item.title
+    }));
+
+    if (!topArticles.length) {
+      topArticles = await Article.findAll({
+        attributes: ['slug', 'description', 'title', 'body']
+      });
+      topArticles.sort((a, b) => b.body.length - a.body.length);
+      formattedTopArticles = topArticles.map(item => ({
+        slug: item.slug,
+        description: item.description,
+        title: item.title
+      }));
+    }
     res.json({
       authored: {
         articles: authoredArticles,
@@ -95,6 +123,10 @@ class Profiles {
       liked: {
         articles: formattedLikedArticles,
         count: formattedLikedArticles.length
+      },
+      top: {
+        articles: formattedTopArticles.slice(0, 5),
+        count: formattedTopArticles.slice(0, 5).length
       }
     });
   }
