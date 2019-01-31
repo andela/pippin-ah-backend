@@ -32,15 +32,24 @@ export default {
   },
 
   async getHighlight(req, res) {
-    const { id } = req.params;
-    const highlight = await Highlight.findOne({ where: { id } });
+    const { decoded: { id: userId }, params: { id } } = req;
+    const highlight = await Highlight
+      .findOne({ where: { id, userId } });
     return res.json({ highlight });
   },
 
-  async removeHighlight(req, res) {
-    const { id } = req.params;
-    const highlight = await Highlight.findOne({ where: { id } });
+  async editHighlightComment(req, res) {
+    const { params: { id }, decoded, body: { newComment } } = req;
+    const highlightRow = await Highlight
+      .findOne({ where: { id, userId: decoded.id } });
+    await highlightRow.update({ comment: newComment });
+    return res.json({ highlightRow });
+  },
 
+  async removeHighlight(req, res) {
+    const { params: { id }, decoded } = req;
+    const highlight = await Highlight
+      .findOne({ where: { id, userId: decoded.id } });
     await highlight.destroy();
     return res.status(200).json({
       message: 'Highlight removed successfully'
