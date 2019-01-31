@@ -55,8 +55,8 @@ describe('NOTIFIER TEST SUITE', () => {
     ({ slug } = articleResponse.body);
   });
 
-  describe('NOTIFICATION TEST SUIT', () => {
-    it('Should create record in NOTIFICATION table',
+  describe('NOTIFICATION TEST SUITE', () => {
+    it('Should create record in notification table when a comment is made',
       async () => {
         const response = await chai.request(server)
           .post(`/api/v1/articles/${slug}/comments`)
@@ -84,12 +84,19 @@ describe('NOTIFIER TEST SUITE', () => {
       }
     );
 
-    it('Should update notificat status from unread to read',
+    it('Should update notification status from unread to read',
       async () => {
+        const notificationObject = await Notification.findOne({
+          where: { id: notificationId }
+        });
+        const notificationStatus = notificationObject.status;
+        expect(notificationStatus).to.equal('unread');
+
         const response = await chai.request(server)
           .patch(`/api/v1/user/notifications?notificationId=${notificationId}`)
           .set('Authorization', accessToken);
         expect(response.status).to.equal(200);
+        expect(response.body.status).to.equal('read');
       }
     );
   });
