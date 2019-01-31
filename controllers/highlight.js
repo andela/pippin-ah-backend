@@ -20,7 +20,7 @@ export default {
       .findOne({ where: { slug: { [iLike]: slug } } });
     const articleId = article.id;
 
-    await Highlight.create({
+    const highlight = await Highlight.create({
       articleId,
       userId,
       highlightedText,
@@ -28,7 +28,13 @@ export default {
       stopIndex,
       comment
     });
-    return res.sendStatus(201);
+    return res.status(201).json({
+      highlightedText: highlight.highlightedText,
+      comment: highlight.comment,
+      startIndex: highlight.startIndex,
+      stopIndex: highlight.stopIndex,
+      articleId: highlight.articleId
+    });
   },
 
   async getAllHighlights(req, res) {
