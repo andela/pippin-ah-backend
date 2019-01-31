@@ -2,13 +2,7 @@ import Sequelize from 'sequelize';
 import models from '../models';
 
 const { Article, Highlight } = models;
-const {
-  iLike,
-  and,
-  or,
-  notIn,
-  contains
-} = Sequelize.Op;
+const { iLike } = Sequelize.Op;
 
 export default {
   async highlightArticle(req, res) {
@@ -22,7 +16,8 @@ export default {
         comment
       }
     } = req;
-    const article = await Article.findOne({ where: { slug } });
+    const article = await Article
+      .findOne({ where: { slug: { [iLike]: slug } } });
     const articleId = article.id;
 
     await Highlight.create({
