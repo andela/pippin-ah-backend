@@ -9,7 +9,8 @@ import {
   authRoutes,
   userRoutes,
   articleRoutes,
-  profileRoutes
+  profileRoutes,
+  notificationRoutes
 } from './routes';
 
 dotenv.config();
@@ -39,6 +40,7 @@ app.use('/api/v1/users', authRoutes);
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/profile', profileRoutes);
 app.use('/api/v1/articles', articleRoutes);
+app.use('/api/v1/notifications', notificationRoutes);
 app.use(notFoundRoute);
 app.use(errorHandler);
 

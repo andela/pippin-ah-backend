@@ -20,7 +20,7 @@ const {
   getUser,
   updateUser,
   activateUser,
-  getAllAuthors
+  getAllAuthors,
 } = Users;
 
 const { requestToBeMentor } = Request;

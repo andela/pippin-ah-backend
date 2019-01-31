@@ -7,3 +7,4 @@ export { default as Comment } from './comment';
 export { default as Reaction } from './reaction';
 export { default as CommentReaction } from './commentReaction';
 export { default as Request } from './request';
+export { default as Notification } from './notification';
