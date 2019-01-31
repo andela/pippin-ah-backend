@@ -59,6 +59,7 @@ const {
   isNewCommentSupplied,
   isCommentValid,
   isNewCommentValid,
+  isCommentDuplicate,
   doesArticleExist,
   doesCommentExist,
   validateUser
@@ -137,6 +138,7 @@ router.route('/:slug/comments')
     doesArticleExist,
     isCommentSupplied,
     isCommentValid,
+    isCommentDuplicate,
     addComment
   );
 
