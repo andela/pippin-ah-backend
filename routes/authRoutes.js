@@ -21,7 +21,8 @@ const {
   ensureUsernameOrEmailParam,
   usernameOrEmailExists,
   ensurePasswordParams,
-  isValidToken
+  isValidToken,
+  isInputTypeValid
 } = userValidations;
 
 const {
@@ -53,6 +54,7 @@ const router = express.Router();
 
 router.route('/')
   .post(
+    isInputTypeValid,
     expectedParamsValidator,
     nonEmptyParamsValidator,
     emailIsValid,
@@ -65,6 +67,7 @@ router.route('/')
 
 router.route('/login')
   .post(
+    isInputTypeValid,
     loginParamsValidator,
     loginNonEmptyParamsValidator,
     invalidCredentials,

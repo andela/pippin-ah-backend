@@ -1,6 +1,8 @@
 import Sequelize from 'sequelize';
 import validation from 'validator';
+import { isString } from 'util';
 import models from '../models';
+import inputTypeValidator from './inputTypeValidator';
 
 const { iLike, or, gt } = Sequelize.Op;
 const { User } = models;
@@ -248,5 +250,18 @@ export default {
       return next(error);
     }
     next();
+  },
+
+  async isInputTypeValid(req, res, next) {
+    const {
+      username, email, usernameOrEmail, password
+    } = req.body;
+    const initialArray = [username, email, usernameOrEmail, password];
+    const inputArray = [];
+    initialArray.forEach((param) => {
+      if (param) inputArray.push(param);
+    });
+    inputTypeValidator(isString, inputArray, next);
+    return next();
   }
 };

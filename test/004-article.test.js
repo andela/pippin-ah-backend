@@ -140,6 +140,22 @@ describe('ARTICLE TEST SUITE', () => {
       expect(response.body.error.split(' ')[2]).to.equal('[Travel].');
     });
 
+    it('should not create an article with invalid inputType', async () => {
+      const articleObject = {
+        title: ['Trip', 'to', 'Paris'],
+        body: 'Article Body',
+        description: 'Article Description',
+        category: 'Travel'
+      };
+      const response = await chai.request(server)
+        .post('/api/v1/articles')
+        .send(articleObject)
+        .set('Authorization', accesstoken);
+      expect(response.status).to.equal(400);
+      expect(response.body.error)
+        .to.equal('Invalid input type for this param!');
+    });
+
     it('should successfully create an article', async () => {
       const articleObject = {
         title: 'New Article',

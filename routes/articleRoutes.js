@@ -50,7 +50,8 @@ const {
   reportIsEmpty,
   reportIsRequired,
   categoryQueryValidator,
-  checkIfSlugExists
+  checkIfSlugExists,
+  isInputValid
 } = articleValidation;
 
 const {
@@ -58,6 +59,7 @@ const {
   isNewCommentSupplied,
   isCommentValid,
   isNewCommentValid,
+  isCommentDuplicate,
   doesArticleExist,
   doesCommentExist,
   validateUser
@@ -77,6 +79,7 @@ router.route('/')
   .post(
     verifyToken,
     expectedParamsValidator,
+    isInputValid,
     nonEmptyParamsValidator,
     existingTitleValidator,
     categoryValidator,
@@ -135,6 +138,7 @@ router.route('/:slug/comments')
     doesArticleExist,
     isCommentSupplied,
     isCommentValid,
+    isCommentDuplicate,
     addComment
   );
 

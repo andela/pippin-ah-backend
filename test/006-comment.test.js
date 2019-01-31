@@ -129,6 +129,17 @@ describe('COMMENT TEST SUITE', () => {
         expect(response.body.comment)
           .to.equal(firstComment);
       });
+
+    it('should not allow duplicate comment by user',
+      async () => {
+        const response = await chai.request(server)
+          .post(`/api/v1/articles/${slug}/comments`)
+          .set('Authorization', firstUserToken)
+          .send({ comment: firstComment });
+        expect(response.status).to.equal(400);
+        expect(response.body.error)
+          .to.equal('You\'ve already posted this comment');
+      });
   });
 
   describe('Edit Comment', () => {
