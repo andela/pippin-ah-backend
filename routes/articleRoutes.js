@@ -4,7 +4,8 @@ import {
   Comment,
   Reaction,
   Rating,
-  CommentReaction
+  CommentReaction,
+  Highlight
 } from '../controllers';
 
 import {
@@ -39,6 +40,12 @@ const {
   deleteComment
 } = Comment;
 
+const {
+  addHighlight,
+  getAllHighlights,
+  editHighlightComment,
+  removeHighlight
+} = Highlight;
 
 const {
   expectedParamsValidator,
@@ -185,5 +192,11 @@ router.route('/:slug/dislike')
 
 router.route('/:slug/share/:provider')
   .get(doesArticleExist, shareArticle);
+
+router.route('/:slug/highlights')
+  .post(
+    verifyToken,
+    addHighlight
+  );
 
 export default router;
