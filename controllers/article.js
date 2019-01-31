@@ -51,7 +51,10 @@ export default {
     });
 
     followersIdArray.forEach((followerId) => {
-      Notifier.notifyFollowersOfNewArticle(followerId.followerId, userId, article.title);
+      Notifier.notifyFollowersOfNewArticle(
+        followerId.followerId,
+        userId, article.title
+      );
     });
 
     return res.status(201).json({
