@@ -8,7 +8,9 @@ import { getResetMail } from '../helpers';
 
 dotenv.config();
 const { iLike, or, gt } = Sequelize.Op;
-const { User, Profile, Article } = models;
+const {
+ User, Profile, Article, Notification 
+} = models;
 
 const secret = process.env.SECRET_KEY;
 const time = { expiresIn: '72hrs' };

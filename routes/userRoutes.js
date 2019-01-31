@@ -21,8 +21,6 @@ const {
   updateUser,
   activateUser,
   getAllAuthors,
-  getAllNotifications,
-  updateNotification
 } = Users;
 
 const { requestToBeMentor } = Request;
@@ -75,10 +73,5 @@ router.route('/authors').get(verifyToken, getAllAuthors);
 
 router.route('/request')
   .post(verifyToken, canRequestToBeMentor, requestToBeMentor);
-
-router.route('/notifications')
-  .all(verifyToken)
-  .get(getAllNotifications)
-  .patch(updateNotification);
 
 export default router;
