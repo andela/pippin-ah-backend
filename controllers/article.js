@@ -224,4 +224,28 @@ export default {
     const slugArray = bookmarkedArticles.map(item => item.Article.slug);
     return res.send(slugArray);
   },
+
+  async shareArticle(req, res) {
+    const { slug } = req.params;
+    const { provider } = req.params;
+    const articleUrl = `${req.get('host')}/api/v1/articles/${slug}`;
+    let shareUrl, fbShareUrl;
+
+    switch (provider) {
+      default:
+        return res.redirect(400, articleUrl);
+      case 'twitter':
+        shareUrl = `https://twitter.com/home?status=http%3A//${articleUrl}`;
+        break;
+      case 'facebook':
+        fbShareUrl = 'https://www.facebook.com/sharer/sharer.php?u=https%3A/';
+        shareUrl = `${fbShareUrl}/${articleUrl}`;
+        break;
+      case 'googleplus':
+        shareUrl = `https://plus.google.com/share?url=http%3A//${articleUrl}`;
+        break;
+    }
+
+    return res.redirect(shareUrl);
+  }
 };

@@ -24,7 +24,8 @@ const {
   tagArticle,
   bookmarkArticle,
   getBookmarkedArticles,
-  removeBookmarkedArticle
+  removeBookmarkedArticle,
+  shareArticle
 } = Article;
 
 const { like, cancelReaction, dislike } = Reaction;
@@ -105,7 +106,6 @@ router.route('/categories')
 router.route('/bookmarks')
   .get(verifyToken, getBookmarkedArticles);
 
-
 router.route('/bookmarks/:slug')
   .all(verifyToken)
   .post(checkIfSlugExists, bookmarkArticle)
@@ -168,7 +168,6 @@ router.route('/:slug/comments/:id')
     doesCommentExist,
     validateUser,
     deleteComment
-
   );
 
 router.route('/:slug/like')
@@ -179,5 +178,8 @@ router.route('/:slug/cancelreaction')
 
 router.route('/:slug/dislike')
   .patch(verifyToken, doesArticleExist, dislike);
+
+router.route('/:slug/share/:provider')
+  .get(doesArticleExist, shareArticle);
 
 export default router;
