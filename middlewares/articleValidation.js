@@ -1,4 +1,5 @@
 import Sequelize from 'sequelize';
+import { isString } from 'util';
 import models from '../models';
 import { categories as categoryEnum } from '../helpers';
 
@@ -134,4 +135,21 @@ export default {
     error.status = 400;
     return next(error);
   },
+
+  async isInputValid(req, res, next) {
+    const {
+      title, body, description, category
+    } = req.body;
+    if (
+      !(isString(title))
+      || !(isString(body))
+      || !(isString(description))
+      || !(isString(category))
+    ) {
+      const error = new Error('Invalid Input!');
+      error.status = 400;
+      return next(error);
+    }
+    return next();
+  }
 };
