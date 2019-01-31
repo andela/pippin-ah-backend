@@ -67,6 +67,7 @@ router.route('/')
 
 router.route('/login')
   .post(
+    isInputTypeValid,
     loginParamsValidator,
     loginNonEmptyParamsValidator,
     invalidCredentials,
