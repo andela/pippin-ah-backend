@@ -10,7 +10,7 @@ const articleUrl = '/api/v1/articles';
 let article1Response;
 let article2Response;
 
-describe.only('PROFILE TEST SUITE', () => {
+describe('PROFILE TEST SUITE', () => {
   let user1Token, user2Token;
   before(async () => {
     await models.sequelize.sync({ force: true });
