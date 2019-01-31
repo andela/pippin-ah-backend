@@ -203,4 +203,14 @@ router.route('/:slug/highlights')
     getAllHighlights
   );
 
+router.route('/:slug/highlights/:id')
+  .patch(
+    verifyToken,
+    editHighlightComment
+  )
+  .delete(
+    verifyToken,
+    removeHighlight
+  );
+
 export default router;
