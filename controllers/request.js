@@ -5,26 +5,20 @@ const { User, Request } = models;
 export default {
   async approveRequest(req, res) {
     const { params: { id }, decoded } = req;
-    const foundUser = await User
-      .findOne({ where: { id: decoded.id } });
-    await foundUser
-      .update({ isMentor: true });
+    const foundUser = await User.findOne({ where: { id: decoded.id } });
+    await foundUser.update({ isMentor: true });
 
-    const foundRequest = await Request
-      .findOne({ where: { id } });
+    const foundRequest = await Request.findOne({ where: { id } });
 
-    await foundRequest
-      .update({ status: 'approved' });
+    await foundRequest.update({ status: 'approved' });
     return res.sendStatus(200);
   },
 
   async rejectRequest(req, res) {
     const { params: { id } } = req;
-    const foundRequest = await Request
-      .findOne({ where: { id } });
+    const foundRequest = await Request.findOne({ where: { id } });
 
-    await foundRequest
-      .update({ status: 'rejected' });
+    await foundRequest.update({ status: 'rejected' });
     return res.sendStatus(200);
   },
 

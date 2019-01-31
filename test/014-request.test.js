@@ -103,38 +103,35 @@ describe('REQUEST TEST SUITE', () => {
   });
 
   describe('RESOLVE REQUEST', () => {
-    it('Should not allow resolve when request is not found',
-      async () => {
-        const response = await chai
-          .request(server)
-          .patch(`${baseUrl}/approve/${fakeId}`)
-          .set('Authorization', firstUserToken);
-        expect(response.body.error)
-          .to.equal('Request not found');
-      });
+    it('Should not approve a request that does not exist', async () => {
+      const response = await chai
+        .request(server)
+        .patch(`${baseUrl}/approve/${fakeId}`)
+        .set('Authorization', firstUserToken);
+      expect(response.body.error)
+        .to.equal('Request not found');
+    });
 
-    it('Only an admin should be allowed to resolve request',
-      async () => {
-        const response = await chai
-          .request(server)
-          .patch(`${baseUrl}/approve/${firstRequestId}`)
-          .set('Authorization', firstUserToken);
-        expect(response.body.error)
-          .to.equal('Unauthorized');
+    it('should only permit request approvals for admin users', async () => {
+      const response = await chai
+        .request(server)
+        .patch(`${baseUrl}/approve/${firstRequestId}`)
+        .set('Authorization', firstUserToken);
+      expect(response.body.error)
+        .to.equal('Unauthorized');
 
-        const createRequestResponse = await chai.request(server).post(baseUrl)
-          .set('Authorization', adminToken);
-        secondRequestId = createRequestResponse.body.id;
-      });
+      const createRequestResponse = await chai.request(server).post(baseUrl)
+        .set('Authorization', adminToken);
+      secondRequestId = createRequestResponse.body.id;
+    });
 
-    it('if request is found Admin should be able to resolve request',
-      async () => {
-        const response = await chai
-          .request(server)
-          .patch(`${baseUrl}/approve/${secondRequestId}`)
-          .set('Authorization', adminToken);
-        expect(response.status).to.equal(200);
-      });
+    it('should allow admin approve valid requests', async () => {
+      const response = await chai
+        .request(server)
+        .patch(`${baseUrl}/approve/${secondRequestId}`)
+        .set('Authorization', adminToken);
+      expect(response.status).to.equal(200);
+    });
 
     it('should not resolve request if uuid is invalid',
       async () => {
@@ -145,17 +142,16 @@ describe('REQUEST TEST SUITE', () => {
         expect(response.body.error).to.equal('Invalid uuid');
       });
 
-    it('Should not allow reject, when request is not found',
-      async () => {
-        const response = await chai
-          .request(server)
-          .patch(`${baseUrl}/reject/${fakeId}`)
-          .set('Authorization', firstUserToken);
-        expect(response.body.error)
-          .to.equal('Request not found');
-      });
+    it('should not allow rejection of a nonexistent request', async () => {
+      const response = await chai
+        .request(server)
+        .patch(`${baseUrl}/reject/${fakeId}`)
+        .set('Authorization', firstUserToken);
+      expect(response.body.error)
+        .to.equal('Request not found');
+    });
 
-    it('Only an admin should be allowed to reject request',
+    it('should allow admin reject valid requests',
       async () => {
         const response = await chai
           .request(server)
@@ -169,16 +165,15 @@ describe('REQUEST TEST SUITE', () => {
         thirdRequestId = createRequestResponse2.body.id;
       });
 
-    it('if request is found Admin should be able to reject request',
-      async () => {
-        const response = await chai
-          .request(server)
-          .patch(`${baseUrl}/reject/${thirdRequestId}`)
-          .set('Authorization', adminToken);
-        expect(response.status).to.equal(200);
-      });
+    it('should allow admin reject valid requests', async () => {
+      const response = await chai
+        .request(server)
+        .patch(`${baseUrl}/reject/${thirdRequestId}`)
+        .set('Authorization', adminToken);
+      expect(response.status).to.equal(200);
+    });
 
-    it('should not reject request if request is already rejected ',
+    it('should not allow rejection of an already rejected request',
       async () => {
         const response = await chai
           .request(server)
@@ -189,23 +184,21 @@ describe('REQUEST TEST SUITE', () => {
           'You request has already been rejected');
       });
 
-    it('should not approve request if request is already approved ',
-      async () => {
-        const response = await chai
-          .request(server)
-          .patch(`${baseUrl}/approve/${firstRequestId}`)
-          .set('Authorization', adminToken);
-        expect(response.status).to.equal(409);
-        expect(response.body.error).to.equal('You are already a mentor');
-      });
+    it('should not allow approval of an already approved request', async () => {
+      const response = await chai
+        .request(server)
+        .patch(`${baseUrl}/approve/${firstRequestId}`)
+        .set('Authorization', adminToken);
+      expect(response.status).to.equal(409);
+      expect(response.body.error).to.equal('You are already a mentor');
+    });
 
-    it('should not reject request if uuid is invalid',
-      async () => {
-        const response = await chai
-          .request(server)
-          .patch(`${baseUrl}/reject/5`)
-          .set('Authorization', adminToken);
-        expect(response.body.error).to.equal('Invalid uuid');
-      });
+    it('should not reject request if uuid is invalid', async () => {
+      const response = await chai
+        .request(server)
+        .patch(`${baseUrl}/reject/5`)
+        .set('Authorization', adminToken);
+      expect(response.body.error).to.equal('Invalid uuid');
+    });
   });
 });
