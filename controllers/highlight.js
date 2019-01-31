@@ -1,0 +1,44 @@
+import Sequelize from 'sequelize';
+import models from '../models';
+
+const { Article, Highlight } = models;
+const {
+  iLike,
+  and,
+  or,
+  notIn,
+  contains
+} = Sequelize.Op;
+
+export default {
+  async highlightArticle(req, res) {
+    const {
+      params: { slug },
+      decoded: { id: userId },
+      body: {
+        highlightedText,
+        startIndex,
+        stopIndex,
+        comment
+      }
+    } = req;
+    const article = await Article.findOne({ where: { slug } });
+    const articleId = article.id;
+
+    await Highlight.create({
+      articleId,
+      userId,
+      highlightedText,
+      startIndex,
+      stopIndex,
+      comment
+    });
+    return res.sendStatus(201);
+  },
+
+  async getHighlight(req, res) {
+    const { id } = req.params;
+    const highlight = await Highlight.findOne({ where: { id } });
+    return res.json({ highlight });
+  }
+};
