@@ -5,7 +5,7 @@ const { Article, Highlight } = models;
 const { iLike } = Sequelize.Op;
 
 export default {
-  async highlightArticle(req, res) {
+  async addHighlight(req, res) {
     const {
       params: { slug },
       decoded: { id: userId },
