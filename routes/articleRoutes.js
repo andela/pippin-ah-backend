@@ -50,7 +50,8 @@ const {
   reportIsEmpty,
   reportIsRequired,
   categoryQueryValidator,
-  checkIfSlugExists
+  checkIfSlugExists,
+  isInputValid
 } = articleValidation;
 
 const {
@@ -77,6 +78,7 @@ router.route('/')
   .post(
     verifyToken,
     expectedParamsValidator,
+    isInputValid,
     nonEmptyParamsValidator,
     existingTitleValidator,
     categoryValidator,
