@@ -1,7 +1,7 @@
 import Sequelize from 'sequelize';
 import { isString } from 'util';
 import models from '../models';
-import { categories as categoryEnum } from '../helpers';
+import { categories as categoryEnum, inputTypeValidator } from '../helpers';
 
 const { Article, Report } = models;
 const requiredParams = ['title', 'body', 'description', 'category'];
@@ -141,13 +141,7 @@ export default {
       title, body, description, category
     } = req.body;
     const inputArray = [title, body, description, category];
-    inputArray.forEach((input) => {
-      if (!isString(input)) {
-        const error = new Error('Invalid input type for this param!');
-        error.status = 400;
-        return next(error);
-      }
-    });
+    inputTypeValidator(isString, inputArray, next);
     return next();
   }
 };
