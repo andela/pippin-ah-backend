@@ -31,11 +31,14 @@ export default {
     return res.sendStatus(201);
   },
 
-  async getHighlight(req, res) {
-    const { decoded: { id: userId }, params: { id } } = req;
-    const highlight = await Highlight
-      .findOne({ where: { id, userId } });
-    return res.json({ highlight });
+  async getAllHighlights(req, res) {
+    const { decoded: { id: userId }, params: { slug } } = req;
+    const article = await Article
+      .findOne({ where: { slug: { [iLike]: slug } } });
+    const articleId = article.id;
+    const highlights = await Highlight
+      .findOne({ where: { articleId, userId } });
+    return res.json({ highlights });
   },
 
   async editHighlightComment(req, res) {
