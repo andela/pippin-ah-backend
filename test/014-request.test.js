@@ -7,9 +7,12 @@ chai.use(chaiHttp);
 
 const { Request } = models;
 const baseUrl = '/api/v1/user/request';
-let token;
+let firstUserToken;
+let secondUserToken;
 let adminToken;
-let id;
+let firstRequestId;
+let secondRequestId;
+let thirdRequestId;
 const fakeId = 'BBECD162-0754-44CB-9974-5725E7EA7A94';
 
 describe('REQUEST TEST SUITE', () => {
@@ -21,7 +24,15 @@ describe('REQUEST TEST SUITE', () => {
         email: 'john@solomon.com',
         password: 'johnny777'
       });
-    ({ token } = user.body);
+    firstUserToken = user.body.token;
+
+    const secondUser = await chai.request(server).post('/api/v1/users')
+      .send({
+        username: 'Sarahigbin',
+        email: 'sarah@igbin.com',
+        password: 'johnny222'
+      });
+    secondUserToken = secondUser.body.token;
 
     const adminSignup = await chai.request(server).post('/api/v1/users')
       .send({
@@ -56,8 +67,8 @@ describe('REQUEST TEST SUITE', () => {
         const response = await chai
           .request(server)
           .post(baseUrl)
-          .set('Authorization', token);
-        ({ id } = response.body);
+          .set('Authorization', firstUserToken);
+        firstRequestId = response.body.id;
         expect(response.body.message)
           .to.equal('Your request to be a mentor has been sent');
       });
@@ -67,7 +78,7 @@ describe('REQUEST TEST SUITE', () => {
         const response = await chai
           .request(server)
           .post(baseUrl)
-          .set('Authorization', token);
+          .set('Authorization', firstUserToken);
         expect(response.status).to.equal(409);
         expect(response.body.error)
           .to.equal('You already requested to be a mentor');
@@ -84,7 +95,7 @@ describe('REQUEST TEST SUITE', () => {
         const response = await chai
           .request(server)
           .post(baseUrl)
-          .set('Authorization', token);
+          .set('Authorization', firstUserToken);
         expect(response.status).to.equal(409);
         expect(response.body.error)
           .to.equal('You are already a mentor');
@@ -97,7 +108,7 @@ describe('REQUEST TEST SUITE', () => {
         const response = await chai
           .request(server)
           .patch(`${baseUrl}/approve/${fakeId}`)
-          .set('Authorization', token);
+          .set('Authorization', firstUserToken);
         expect(response.body.error)
           .to.equal('Request not found');
       });
@@ -106,17 +117,21 @@ describe('REQUEST TEST SUITE', () => {
       async () => {
         const response = await chai
           .request(server)
-          .patch(`${baseUrl}/approve/${id}`)
-          .set('Authorization', token);
+          .patch(`${baseUrl}/approve/${firstRequestId}`)
+          .set('Authorization', firstUserToken);
         expect(response.body.error)
           .to.equal('Unauthorized');
+
+        const createRequestResponse = await chai.request(server).post(baseUrl)
+          .set('Authorization', adminToken);
+        secondRequestId = createRequestResponse.body.id;
       });
 
     it('if request is found Admin should be able to resolve request',
       async () => {
         const response = await chai
           .request(server)
-          .patch(`${baseUrl}/approve/${id}`)
+          .patch(`${baseUrl}/approve/${secondRequestId}`)
           .set('Authorization', adminToken);
         expect(response.status).to.equal(200);
       });
@@ -135,7 +150,7 @@ describe('REQUEST TEST SUITE', () => {
         const response = await chai
           .request(server)
           .patch(`${baseUrl}/reject/${fakeId}`)
-          .set('Authorization', token);
+          .set('Authorization', firstUserToken);
         expect(response.body.error)
           .to.equal('Request not found');
       });
@@ -144,19 +159,44 @@ describe('REQUEST TEST SUITE', () => {
       async () => {
         const response = await chai
           .request(server)
-          .patch(`${baseUrl}/reject/${id}`)
-          .set('Authorization', token);
+          .patch(`${baseUrl}/reject/${firstRequestId}`)
+          .set('Authorization', firstUserToken);
         expect(response.body.error)
           .to.equal('Unauthorized');
+
+        const createRequestResponse2 = await chai.request(server).post(baseUrl)
+          .set('Authorization', secondUserToken);
+        thirdRequestId = createRequestResponse2.body.id;
       });
 
     it('if request is found Admin should be able to reject request',
       async () => {
         const response = await chai
           .request(server)
-          .patch(`${baseUrl}/reject/${id}`)
+          .patch(`${baseUrl}/reject/${thirdRequestId}`)
           .set('Authorization', adminToken);
         expect(response.status).to.equal(200);
+      });
+
+    it('should not reject request if request is already rejected ',
+      async () => {
+        const response = await chai
+          .request(server)
+          .patch(`${baseUrl}/reject/${thirdRequestId}`)
+          .set('Authorization', adminToken);
+        expect(response.status).to.equal(409);
+        expect(response.body.error).to.equal(
+          'You request has already been rejected');
+      });
+
+    it('should not approve request if request is already approved ',
+      async () => {
+        const response = await chai
+          .request(server)
+          .patch(`${baseUrl}/approve/${firstRequestId}`)
+          .set('Authorization', adminToken);
+        expect(response.status).to.equal(409);
+        expect(response.body.error).to.equal('You are already a mentor');
       });
 
     it('should not reject request if uuid is invalid',

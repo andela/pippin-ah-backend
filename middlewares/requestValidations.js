@@ -60,5 +60,22 @@ export default {
       return next(error);
     }
     return next();
-  }
+  },
+
+  async checkStatus(req, res, next) {
+    const { params: { id } } = req;
+    const approvedOrRejected = await Request.findOne({
+      where: { id, status: { [or]: ['rejected', 'approved'] } }
+    });
+    if (!approvedOrRejected) {
+      return next();
+    }
+    const { status } = approvedOrRejected;
+    const error = new Error(
+      status === 'approved' ? 'You are already a mentor'
+        : 'You request has already been rejected'
+    );
+    error.status = 409;
+    return next(error);
+  },
 };

@@ -26,7 +26,8 @@ const {
   canRequestToBeMentor,
   doesRequestExist,
   verifyAdmin,
-  checkForUuid
+  checkForUuid,
+  checkStatus
 } = requestValidations;
 
 const router = express.Router();
@@ -51,6 +52,7 @@ router.route('/request/approve/:id')
     checkForUuid,
     doesRequestExist,
     verifyAdmin,
+    checkStatus,
     approveRequest
   );
 
@@ -60,6 +62,7 @@ router.route('/request/reject/:id')
     checkForUuid,
     doesRequestExist,
     verifyAdmin,
+    checkStatus,
     rejectRequest
   );
 
