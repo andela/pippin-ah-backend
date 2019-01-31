@@ -74,7 +74,7 @@ describe('NOTIFIER TEST SUITE', () => {
     it('Should get all notification that has not been read',
       async () => {
         const response = await chai.request(server)
-          .get('/api/v1/user/notifications')
+          .get('/api/v1/notifications')
           .set('Authorization', accessToken);
         expect(response.status).to.equal(200);
         expect(response.body[0]).to.have.deep.property('notficationId');
@@ -93,7 +93,7 @@ describe('NOTIFIER TEST SUITE', () => {
         expect(notificationStatus).to.equal('unread');
 
         const response = await chai.request(server)
-          .patch(`/api/v1/user/notifications?notificationId=${notificationId}`)
+          .patch(`/api/v1/notifications/${notificationId}/mark-as-read`)
           .set('Authorization', accessToken);
         expect(response.status).to.equal(200);
         expect(response.body.status).to.equal('read');

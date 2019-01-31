@@ -6,9 +6,8 @@ const { getAllNotifications, markAsRead } = Notification;
 
 const router = express.Router();
 
-router.route('/')
-  .all(verifyToken)
-  .get(getAllNotifications)
-  .patch(markAsRead);
+router.route('/').get(verifyToken, getAllNotifications);
+
+router.route('/:notificationId/mark-as-read').patch(verifyToken, markAsRead);
 
 export default router;
