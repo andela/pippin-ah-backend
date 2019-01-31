@@ -13,7 +13,9 @@ const {
   usernameExistsValidator,
   passwordValidator
 } = userValidations;
+
 const { approveRequest, rejectRequest } = Request;
+
 const {
   getUser,
   updateUser,
@@ -22,6 +24,7 @@ const {
 } = Users;
 
 const { requestToBeMentor } = Request;
+
 const {
   canRequestToBeMentor,
   doesRequestExist,
@@ -31,8 +34,8 @@ const {
 } = requestValidations;
 
 const router = express.Router();
-router.route('/activate/:userId')
-  .get(activateUser);
+
+router.route('/activate/:userId').get(activateUser);
 
 router.route('/')
   .all(verifyToken)
@@ -66,8 +69,7 @@ router.route('/request/reject/:id')
     rejectRequest
   );
 
-router.route('/authors')
-  .get(verifyToken, getAllAuthors);
+router.route('/authors').get(verifyToken, getAllAuthors);
 
 router.route('/request')
   .post(verifyToken, canRequestToBeMentor, requestToBeMentor);
