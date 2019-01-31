@@ -2,7 +2,7 @@ import Sequelize from 'sequelize';
 import validation from 'validator';
 import { isString } from 'util';
 import models from '../models';
-import { inputTypeValidator } from '../helpers';
+import inputTypeValidator from './inputTypeValidator';
 
 const { iLike, or, gt } = Sequelize.Op;
 const { User } = models;

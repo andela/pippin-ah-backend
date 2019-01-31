@@ -1,7 +1,8 @@
 import Sequelize from 'sequelize';
 import { isString } from 'util';
 import models from '../models';
-import { categories as categoryEnum, inputTypeValidator } from '../helpers';
+import inputTypeValidator from './inputTypeValidator';
+import { categories as categoryEnum } from '../helpers';
 
 const { Article, Report } = models;
 const requiredParams = ['title', 'body', 'description', 'category'];
