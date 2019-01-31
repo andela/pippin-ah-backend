@@ -10,6 +10,7 @@ const {
   Profile,
   Report,
   Bookmark,
+  Follow,
   Comment
 } = models;
 const {
