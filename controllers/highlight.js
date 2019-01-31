@@ -43,7 +43,7 @@ export default {
       .findOne({ where: { slug: { [iLike]: slug } } });
     const articleId = article.id;
     const highlights = await Highlight
-      .findOne({ where: { articleId, userId } });
+      .findAll({ where: { articleId, userId } });
     return res.json({ highlights });
   },
 
@@ -63,5 +63,5 @@ export default {
     return res.status(200).json({
       message: 'Highlight removed successfully'
     });
-  },
+  }
 };
