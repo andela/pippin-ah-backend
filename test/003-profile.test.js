@@ -6,8 +6,11 @@ import server from '../app';
 chai.use(chaiHttp);
 
 const baseUrl = '/api/v1/profile';
+const articleUrl = '/api/v1/articles';
+let article1Response;
+let article2Response;
 
-describe('PROFILE TEST SUITE', () => {
+describe.only('PROFILE TEST SUITE', () => {
   let user1Token, user2Token;
   before(async () => {
     await models.sequelize.sync({ force: true });
@@ -36,7 +39,7 @@ describe('PROFILE TEST SUITE', () => {
     const dummyArticles = [
       {
         title: 'My best Day1',
-        body: 'It was a great moment',
+        body: 'This is the longest article on learnGround',
         description: 'Experience Recap',
         category: 'Arts'
       },
@@ -54,28 +57,32 @@ describe('PROFILE TEST SUITE', () => {
       }
     ];
 
-    const dummyArticle1 = await chai.request(server)
-      .post('/api/v1/articles')
+    article1Response = await chai.request(server)
+      .post(articleUrl)
       .send(dummyArticles[0])
       .set('Authorization', user1Token);
 
-    const dummyArticle2 = await chai.request(server)
-      .post('/api/v1/articles')
+    article2Response = await chai.request(server)
+      .post(articleUrl)
       .send(dummyArticles[1])
       .set('Authorization', user1Token);
 
     await chai.request(server)
-      .post('/api/v1/articles')
+      .post(articleUrl)
       .send(dummyArticles[2])
       .set('Authorization', user1Token);
 
     await chai.request(server)
-      .patch(`/api/v1/articles/${dummyArticle1.body.slug}/like`)
+      .patch(`${articleUrl}/${article1Response.body.slug}/like`)
       .set('Authorization', user1Token);
 
     await chai.request(server)
-      .patch(`/api/v1/articles/${dummyArticle2.body.slug}/like`)
+      .patch(`${articleUrl}/${article2Response.body.slug}/like`)
       .set('Authorization', user1Token);
+
+    await chai.request(server)
+      .patch(`${articleUrl}/${article2Response.body.slug}/like`)
+      .set('Authorization', user2Token);
   });
 
 
@@ -247,6 +254,35 @@ describe('PROFILE TEST SUITE', () => {
           .get(`${baseUrl}/stats`)
           .set('Authorization', user1Token);
         expect(response.body.liked.count).to.equal(2);
+      });
+
+    it('Should get the most liked article as the top article',
+      async () => {
+        const response = await chai.request(server)
+          .get(`${baseUrl}/stats`)
+          .set('Authorization', user1Token);
+        expect(response.body.top.articles[0].slug)
+          .to.equal(article2Response.body.slug);
+        await chai.request(server)
+          .patch(`${articleUrl}/${article1Response.body.slug}/cancelreaction`)
+          .set('Authorization', user1Token);
+
+        await chai.request(server)
+          .patch(`${articleUrl}/${article2Response.body.slug}/cancelreaction`)
+          .set('Authorization', user1Token);
+
+        await chai.request(server)
+          .patch(`${articleUrl}/${article2Response.body.slug}/cancelreaction`)
+          .set('Authorization', user2Token);
+      });
+    // eslint-disable-next-line max-len
+    it('Should get the lengthiest article as top article when there are no liked articles',
+      async () => {
+        const response = await chai.request(server)
+          .get(`${baseUrl}/stats`)
+          .set('Authorization', user1Token);
+        expect(response.body.top.articles[0].slug)
+          .to.equal(article1Response.body.slug);
       });
   });
 });
