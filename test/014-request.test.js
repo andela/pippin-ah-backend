@@ -179,7 +179,7 @@ describe('REQUEST TEST SUITE', () => {
           .request(server)
           .patch(`${baseUrl}/reject/${thirdRequestId}`)
           .set('Authorization', adminToken);
-        expect(response.status).to.equal(409);
+        expect(response.status).to.equal(403);
         expect(response.body.error).to.equal(
           'You request has already been rejected');
       });
@@ -189,7 +189,7 @@ describe('REQUEST TEST SUITE', () => {
         .request(server)
         .patch(`${baseUrl}/approve/${firstRequestId}`)
         .set('Authorization', adminToken);
-      expect(response.status).to.equal(409);
+      expect(response.status).to.equal(403);
       expect(response.body.error).to.equal('You are already a mentor');
     });
 
