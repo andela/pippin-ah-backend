@@ -2,7 +2,7 @@ import Sequelize from 'sequelize';
 import models from '../models';
 
 const { iLike } = Sequelize.Op;
-const { User, Follow } = models;
+const { User } = models;
 
 export default {
   async canFollowUser(req, res, next) {
