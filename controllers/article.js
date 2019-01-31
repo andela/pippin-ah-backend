@@ -1,7 +1,7 @@
 import Sequelize from 'sequelize';
 import dateFns from 'date-fns';
 import models from '../models';
-import { AppNotifier } from '../services';
+import { Notifier } from '../services';
 import { generateSlug, getReadTime, categories } from '../helpers';
 
 const {
@@ -51,7 +51,7 @@ export default {
     });
 
     followersIdArray.forEach((followerId) => {
-      AppNotifier.notifyFollowers(followerId.followerId, userId, article.title);
+      Notifier.notifyFollowers(followerId.followerId, userId, article.title);
     });
 
     return res.status(201).json({
