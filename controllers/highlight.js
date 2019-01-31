@@ -40,5 +40,15 @@ export default {
     const { id } = req.params;
     const highlight = await Highlight.findOne({ where: { id } });
     return res.json({ highlight });
-  }
+  },
+
+  async removeHighlight(req, res) {
+    const { id } = req.params;
+    const highlight = await Highlight.findOne({ where: { id } });
+
+    await highlight.destroy();
+    return res.status(200).json({
+      message: 'Highlight removed successfully'
+    });
+  },
 };
