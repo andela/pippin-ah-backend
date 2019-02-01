@@ -37,10 +37,10 @@ class Users {
     * @param {object} res - The response object.
     */
   static async getUser(req, res) {
-    const { id } = req.decoded;
+    const { username } = req.params;
     const user = await User.findOne(
       {
-        where: { id },
+        where: { username },
         attributes: ['username', 'isMentor'],
         include: [
           {
@@ -51,12 +51,19 @@ class Users {
             model: Article,
             attributes: ['title', 'body', 'description', 'slug', 'aveRating'],
             include: {
-              model: Reaction
+              model: Reaction,
+              where: { liked: true },
+              required: false
             }
           },
           {
             model: Follow,
             attributes: ['followerId'],
+            as: 'userDetails'
+          },
+          {
+            model: Follow,
+            attributes: ['userId'],
             as: 'followerDetails'
           },
         ],
@@ -65,6 +72,7 @@ class Users {
           'Profile.id',
           'Articles.id',
           'Articles->Reactions.id',
+          'userDetails.id',
           'followerDetails.id'
         ],
         order: [
@@ -88,7 +96,8 @@ class Users {
       lastName: user.Profile.lastName,
       bio: user.Profile.bio,
       imageUrl: user.Profile.imageUrl,
-      followers: user.followerDetails.length,
+      followers: user.userDetails.length,
+      following: user.followerDetails.length,
       articles: {
         top: topArticles,
         total: user.Articles.length
