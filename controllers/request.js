@@ -15,9 +15,8 @@ export default {
     await foundRequest.update({ status: 'approved' });
 
     const subject = 'LEARNGROUND REQUEST UPDATE';
-    const { email } = foundUser;
-    const userName = foundUser.username;
-    const html = emailMessages.acceptMentorshipMessage(userName);
+    const { email, username } = foundUser;
+    const html = emailMessages.acceptMentorshipMessage(username);
     sendEmail({ email, subject, html });
 
     return res.sendStatus(200);
@@ -36,9 +35,8 @@ export default {
     await foundRequest.update({ status: 'rejected' });
 
     const subject = 'LEARNGROUND REQUEST UPDATE';
-    const { email } = foundRequest.User;
-    const userName = foundRequest.User.username;
-    const html = emailMessages.rejectMentorshipMessage(userName);
+    const { email, username } = foundRequest.User;
+    const html = emailMessages.rejectMentorshipMessage(username);
     sendEmail({ email, subject, html });
 
     return res.sendStatus(200);
@@ -47,26 +45,22 @@ export default {
   async requestToBeMentor(req, res) {
     const userId = req.decoded.id;
     const request = 'Request to be a mentor';
-    const status = 'pending';
     const subject = 'MENTORSHIP REQUEST UPDATE';
-    const response = await Request.create({ userId, request, status });
+    const response = await Request.create({ userId, request });
 
-    const requestUser = await User.findOne({ where: { id: userId } });
+    const requester = await User.findOne({ where: { id: userId } });
 
-    const requestUsername = requestUser.username;
-    const requestMentorshipMessage = emailMessages
-      .requestMentorshipMessage(requestUsername);
+    const html = emailMessages.requestMentorshipMessage(requester.username);
 
     const admins = await User.findAll({
       where: { isAdmin: true },
       attributes: ['email']
     });
 
-    const adminEmailArray = admins.map(admin => admin.email);
-    adminEmailArray.forEach(email => sendEmail({
-      email,
+    admins.forEach(admin => sendEmail({
+      email: admin.email,
       subject,
-      html: requestMentorshipMessage
+      html
     }));
 
     return res.send({
@@ -74,5 +68,4 @@ export default {
       id: response.id
     });
   }
-
 };
