@@ -29,6 +29,7 @@ export default {
       comment
     });
     return res.status(201).json({
+      id: highlight.id,
       highlightedText: highlight.highlightedText,
       comment: highlight.comment,
       startIndex: highlight.startIndex,
@@ -56,7 +57,7 @@ export default {
       .findOne({ where: { id, userId: decoded.id } });
     await highlight.destroy();
     return res.status(200).json({
-      message: 'Highlight removed successfully'
+      message: 'Highlight removed successfully!'
     });
   }
 };
