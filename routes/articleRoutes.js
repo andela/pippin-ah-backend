@@ -202,6 +202,7 @@ router.route('/:slug/share/:provider')
 router.route('/:slug/highlights')
   .post(
     verifyToken,
+    doesArticleExist,
     isHighlightInputSupplied,
     isHighlightInputTypeValid,
     addHighlight
