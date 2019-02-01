@@ -2,9 +2,9 @@ import Sequelize from 'sequelize';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
-import sendEmail from '../services';
+import { sendEmail } from '../services';
 import models from '../models';
-import { getResetMail } from '../helpers';
+import { getResetMail, emailMessages } from '../helpers';
 
 dotenv.config();
 const { iLike, or, gt } = Sequelize.Op;
@@ -212,18 +212,7 @@ class Users {
     const token = generateToken(tokenPayload);
 
     const activationUrl = `${userActivationUrl}${user.id}`;
-    const html = `<h1 style=" text-align:justify";margin-left:50%;
-          padding:15px">
-          Welcome To LearnGround </h1><br>
-          <h3 style=" text-align:justify";margin-left:50%>
-            The Den Of Great Ideas
-          </h3>
-          <strong style=" text-align:justify";margin-left:50%>
-          Your Registration was successful </strong><br>
-          <strong style=" text-align:justify";margin-left:50%>
-          Click <a href="${activationUrl}">Activate</a> to activate
-          your account
-          </strong><br>`;
+    const html = emailMessages.registerMessage(activationUrl);
 
     sendEmail({ email, subject, html });
     return res.status(201).json({
