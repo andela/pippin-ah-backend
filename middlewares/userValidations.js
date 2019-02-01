@@ -262,6 +262,7 @@ export default {
       if (param) inputArray.push(param);
     });
     inputTypeValidator(isString, inputArray, next);
+    return next();
   },
 
   async isUsernameExists(req, res, next) {

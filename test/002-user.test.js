@@ -10,7 +10,7 @@ const baseUrl = '/api/v1/users';
 const articleUrl = '/api/v1/articles';
 let resetToken;
 
-describe.only('USER TEST SUITE', () => {
+describe('USER TEST SUITE', () => {
   let firstUserToken, firstUserID, secondUserToken, thirdUserToken;
   let article1Response, article2Response, article3Response;
 
