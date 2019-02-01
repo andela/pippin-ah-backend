@@ -43,7 +43,8 @@ const {
 
 const {
   addHighlight,
-  getAllHighlights
+  getAllHighlights,
+  removeHighlight
 } = Highlight;
 
 const {
@@ -208,6 +209,12 @@ router.route('/:slug/highlights')
   .get(
     verifyToken,
     getAllHighlights
+  );
+
+router.route('/:slug/highlights/:id')
+  .delete(verifyToken,
+    doesArticleExist,
+    removeHighlight
   );
 
 export default router;
