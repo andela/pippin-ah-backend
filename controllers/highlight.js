@@ -24,8 +24,8 @@ export default {
       articleId,
       userId,
       highlightedText,
-      startIndex,
-      stopIndex,
+      startIndex: Number(startIndex),
+      stopIndex: Number(stopIndex),
       comment
     });
     return res.status(201).json({
