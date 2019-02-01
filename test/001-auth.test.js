@@ -5,40 +5,52 @@ import server from '../app';
 
 chai.use(chaiHttp);
 
+const { User } = models;
 const baseUrl = '/api/v1/users';
 
 describe('AUTHENTICATION TEST SUITE', () => {
-  before(() => models.sequelize.sync({ force: true }));
+  let userToken;
+  before(async () => {
+    await models.sequelize.sync({ force: true });
+
+    const userRequestObject = {
+      username: 'danmarriage',
+      email: 'danmarriage@hotmail.com',
+      password: 'danmarry'
+    };
+
+    const userResponseObject = await chai.request(server)
+      .post('/api/v1/users')
+      .send(userRequestObject);
+    const { username } = userResponseObject.body;
+    userToken = userResponseObject.body.token;
+
+    const user = await User.findOne({ where: { username } });
+    await user.destroy();
+  });
 
   describe('JWT AUTHENTICATION', () => {
-    it('should return a token on successful registration', (done) => {
+    it('should return a token on successful registration', async () => {
       const newUser2 = {
-        username: 'ebenezer',
-        email: 'ebenezer@gmail.com',
-        password: 'secretstuff'
+        username: 'joshbunny',
+        email: 'joshbunny@gmail.com',
+        password: 'joshbunnyspassword'
       };
-      chai
-        .request(server)
+      const response = await chai.request(server)
         .post(baseUrl)
-        .send(newUser2)
-        .end((err, res) => {
-          expect(res.body.token).to.not.equal(undefined);
-          done();
-        });
+        .send(newUser2);
+      expect(response.body.token).to.not.equal(undefined);
     });
-    it('should return a token on successful login', (done) => {
+
+    it('should return a token on successful login', async () => {
       const newUser2 = {
-        usernameOrEmail: 'ebenezer',
-        password: 'secretstuff'
+        usernameOrEmail: 'joshbunny',
+        password: 'joshbunnyspassword'
       };
-      chai
-        .request(server)
+      const response = await chai.request(server)
         .post(`${baseUrl}/login`)
-        .send(newUser2)
-        .end((err, res) => {
-          expect(res.body.token).to.not.equal(undefined);
-          done();
-        });
+        .send(newUser2);
+      expect(response.body.token).to.not.equal(undefined);
     });
   });
 
