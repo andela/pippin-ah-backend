@@ -1,7 +1,9 @@
 import { isString } from 'util';
 import { isNumeric } from 'validator';
-import { Highlight } from '../models';
+import models from '../models';
 import inputTypeValidator from './inputTypeValidator';
+
+const { Highlight } = models;
 
 export default {
   isHighlightInputSupplied(req, res, next) {
