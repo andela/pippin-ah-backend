@@ -52,9 +52,11 @@ export default {
   },
 
   async removeHighlight(req, res) {
-    const { params: { id }, decoded } = req;
+    const { params: { id, slug }, decoded } = req;
+    const article = await Article.findOne({ where: { slug } });
+    const articleId = article.id;
     const highlight = await Highlight
-      .findOne({ where: { id, userId: decoded.id } });
+      .findOne({ where: { id, articleId, userId: decoded.id } });
     await highlight.destroy();
     return res.status(200).json({
       message: 'Highlight removed successfully!'
