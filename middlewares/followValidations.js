@@ -19,7 +19,7 @@ export default {
       error.status = 400;
       return next(error);
     }
-    const alreadyFollowing = await userToFollow.getFollowerDetails({
+    const alreadyFollowing = await userToFollow.getUserDetails({
       where: {
         followerId: req.decoded.id
       }
@@ -31,5 +31,4 @@ export default {
     }
     return next();
   }
-
 };

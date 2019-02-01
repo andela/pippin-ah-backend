@@ -59,12 +59,12 @@ class Users {
           {
             model: Follow,
             attributes: ['followerId'],
-            as: 'followerDetails'
+            as: 'userDetails'
           },
           {
             model: Follow,
             attributes: ['userId'],
-            as: 'userDetails'
+            as: 'followerDetails'
           },
         ],
         group: [
@@ -81,6 +81,7 @@ class Users {
           [Sequelize.fn('LENGTH', Sequelize.col('body')), 'DESC']
         ]
       });
+
     const topArticles = user.Articles.slice(0, 5).map(item => ({
       slug: item.slug,
       title: item.title,
@@ -96,8 +97,8 @@ class Users {
       lastName: user.Profile.lastName,
       bio: user.Profile.bio,
       imageUrl: user.Profile.imageUrl,
-      followers: user.followerDetails.length,
-      following: user.userDetails.length,
+      following: user.followerDetails.length,
+      followers: user.userDetails.length,
       articles: {
         top: topArticles,
         total: user.Articles.length
