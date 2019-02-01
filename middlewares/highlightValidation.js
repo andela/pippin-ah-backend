@@ -1,8 +1,9 @@
-import { isString, isNumber } from 'util';
+import { isString } from 'util';
+import { isNumeric } from 'validator';
 import inputTypeValidator from './inputTypeValidator';
 
 export default {
-  isInputSupplied(req, res, next) {
+  isHighlightInputSupplied(req, res, next) {
     const {
       highlightedText,
       startIndex,
@@ -10,21 +11,23 @@ export default {
       comment
     } = req.body;
 
+    // eslint-disable-next-line
+    const requiredParams = ['highlightedText', 'startIndex', 'stopIndex', 'comment'];
     const inputArray = [highlightedText, startIndex, stopIndex, comment];
-    const errorArray = [];
 
     inputArray.forEach((input) => {
-      if (!input) errorArray.push(`${input} is required`);
+      if (!input) {
+        // eslint-disable-next-line
+        const errorMessage = `A required param is not supplied. required params are [${requiredParams}]`;
+        const error = new Error(errorMessage);
+        error.status = 400;
+        return next(error);
+      }
     });
-
-    if (!errorArray.length) return next();
-    const errorMessage = JSON.stringify(errorArray);
-    const error = new Error(errorMessage);
-    error.status = 400;
-    return next(error);
+    return next();
   },
 
-  isInputTypeValid(req, res, next) {
+  isHighlightInputTypeValid(req, res, next) {
     const {
       highlightedText,
       startIndex,
@@ -33,8 +36,10 @@ export default {
     } = req.body;
     const stringInputArray = [highlightedText, comment];
     const numericInputArray = [startIndex, stopIndex];
-    inputTypeValidator(isString, stringInputArray, next);
-    inputTypeValidator(isNumber, numericInputArray, next);
+    const strErrorMsg = '[highlightedText] and [comment] have to be strings!';
+    const numErrorMsg = '[startIndex] and [stopIndex] have to be strings!';
+    inputTypeValidator(isString, stringInputArray, strErrorMsg, next);
+    inputTypeValidator(isNumeric, numericInputArray, numErrorMsg, next);
     return next();
   }
 };
