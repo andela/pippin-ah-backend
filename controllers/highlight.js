@@ -48,5 +48,15 @@ export default {
       return res.json({ message: 'You have no highlights yet!' });
     }
     return res.json({ highlights });
+  },
+
+  async removeHighlight(req, res) {
+    const { params: { id }, decoded } = req;
+    const highlight = await Highlight
+      .findOne({ where: { id, userId: decoded.id } });
+    await highlight.destroy();
+    return res.status(200).json({
+      message: 'Highlight removed successfully'
+    });
   }
 };
