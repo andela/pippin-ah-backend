@@ -11,15 +11,11 @@ export default {
       comment
     } = req.body;
 
-    // eslint-disable-next-line
-    const requiredParams = ['highlightedText', 'startIndex', 'stopIndex', 'comment'];
     const inputArray = [highlightedText, startIndex, stopIndex, comment];
 
     inputArray.forEach((input) => {
       if (!input) {
-        // eslint-disable-next-line
-        const errorMessage = `A required param is not supplied. required params are [${requiredParams}]`;
-        const error = new Error(errorMessage);
+        const error = new Error('Required params are not supplied');
         error.status = 400;
         return next(error);
       }
@@ -37,7 +33,7 @@ export default {
     const stringInputArray = [highlightedText, comment];
     const numericInputArray = [startIndex, stopIndex];
     const strErrorMsg = '[highlightedText] and [comment] have to be strings!';
-    const numErrorMsg = '[startIndex] and [stopIndex] have to be strings!';
+    const numErrorMsg = '[startIndex] and [stopIndex] have to be numeric!';
     inputTypeValidator(isString, stringInputArray, strErrorMsg, next);
     inputTypeValidator(isNumeric, numericInputArray, numErrorMsg, next);
     return next();
