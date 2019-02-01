@@ -59,12 +59,12 @@ class Users {
           {
             model: Follow,
             attributes: ['followerId'],
-            as: 'userDetails'
+            as: 'followerDetails'
           },
           {
             model: Follow,
             attributes: ['userId'],
-            as: 'followerDetails'
+            as: 'userDetails'
           },
         ],
         group: [
@@ -96,8 +96,8 @@ class Users {
       lastName: user.Profile.lastName,
       bio: user.Profile.bio,
       imageUrl: user.Profile.imageUrl,
-      followers: user.userDetails.length,
-      following: user.followerDetails.length,
+      followers: user.followerDetails.length,
+      following: user.userDetails.length,
       articles: {
         top: topArticles,
         total: user.Articles.length
