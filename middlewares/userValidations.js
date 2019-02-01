@@ -261,7 +261,8 @@ export default {
     initialArray.forEach((param) => {
       if (param) inputArray.push(param);
     });
-    inputTypeValidator(isString, inputArray, next);
+    const errorMessage = 'Input types have to be strings!';
+    inputTypeValidator(isString, inputArray, errorMessage, next);
     return next();
   }
 };

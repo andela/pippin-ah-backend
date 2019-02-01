@@ -142,7 +142,8 @@ export default {
       title, body, description, category
     } = req.body;
     const inputArray = [title, body, description, category];
-    inputTypeValidator(isString, inputArray, next);
+    const errorMessage = 'Input types have to be string!';
+    inputTypeValidator(isString, inputArray, errorMessage, next);
     return next();
   }
 };
