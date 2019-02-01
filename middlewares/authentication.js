@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { decode } from 'punycode';
 import models from '../models';
 
 const { User } = models;
@@ -23,7 +22,7 @@ const verifyToken = (req, res, next) => {
       return next(error);
     }
 
-    const user = await User.findOne({ where: { id: decoded.id } });
+    const user = await User.findByPk(decoded.id);
     if (!user) {
       error = new Error('Invalid token');
       error.status = 401;
