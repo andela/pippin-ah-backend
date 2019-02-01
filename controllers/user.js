@@ -2,7 +2,7 @@ import Sequelize from 'sequelize';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
-import { sendEmail } from '../services';
+import sendEmail from '../services';
 import models from '../models';
 import { getResetMail, emailMessages } from '../helpers';
 

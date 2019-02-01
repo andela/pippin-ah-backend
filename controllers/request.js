@@ -1,5 +1,5 @@
 import models from '../models';
-import { sendEmail } from '../services';
+import sendEmail from '../services';
 import { emailMessages } from '../helpers';
 
 const { User, Request } = models;
