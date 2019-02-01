@@ -39,7 +39,6 @@ router.route('/activate/:userId').get(activateUser);
 
 router.route('/')
   .all(verifyToken)
-  .get(getUser)
   .patch(
     passwordValidator,
     isUsernameValidator,
@@ -73,5 +72,8 @@ router.route('/authors').get(verifyToken, getAllAuthors);
 
 router.route('/request')
   .post(verifyToken, canRequestToBeMentor, requestToBeMentor);
+
+router.route('/:username')
+  .get(verifyToken, getUser);
 
 export default router;
