@@ -49,5 +49,18 @@ export default {
       return next(error);
     }
     return next();
+  },
+
+  async doesUserOwnHighlight(req, res, next) {
+    const { params: { id }, decoded } = req;
+    const highlight = await Highlight
+      .findOne({ where: { id, userId: decoded.id } });
+    if (!highlight) {
+      const errorMessage = 'You are not authorized to delete this highlight!';
+      const error = new Error(errorMessage);
+      error.status = 401;
+      return next(error);
+    }
+    return next();
   }
 };
