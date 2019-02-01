@@ -3,7 +3,7 @@
   "info": {
     "version": "1.0",
     "title": "Learn Ground Api Documentation",
-    "description": "TODO: Add Description",
+    "description": "Learn Ground Api Docs",
     "contact": {}
   },
   "host": "learnground-api-staging.herokuapp.com",
@@ -75,6 +75,22 @@
               }
             },
             "headers": {}
+          },
+          "400": {
+            "description": "Returns 400 for invalid email or password",
+            "example": {
+              "application/json": {
+                
+                  "error": "Invalid Credentials"
+                
+                }
+            }
+          },
+          "409": {
+            "description": "Email Already Exists"
+          },
+          "500": {
+            "description": "Server Error"
           }
         }
       }
@@ -1557,6 +1573,64 @@
           }
         }
       }
+    },
+    "/notifications": {
+      "get": {
+        "description": "",
+        "summary": "Get All Notifications from your followers",
+        "operationId": "NotificationsGet",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GetAllNotificationsfromyourfollowersResponse"
+              }
+            },
+            "examples": {
+              "application/json": [
+                {
+                  "body": "newUsername just commented on your article: How to be a developer",
+                  "notficationId": "ea17bf8c-4066-47c6-8191-b2be236a68d9",
+                  "status": "unread"
+                }
+              ]
+            },
+            "headers": {}
+          }
+        }
+      }
+    },
+    "/notifications/ea17bf8c-4066-47c6-8191-b2be236a68d9/mark-as-read": {
+      "patch": {
+        "description": "",
+        "summary": "Mark Notification as read",
+        "operationId": "NotificationsEa17bf8c406647c68191B2be236a68d9MarkAsReadPatch",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/MarkNotificationasreadResponse"
+            },
+            "examples": {
+              "application/json": {
+                "status": "read",
+                "createdAt": "2019-02-01T17:41:20.769Z"
+              }
+            },
+            "headers": {}
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -2690,6 +2764,54 @@
         "articles",
         "count",
         "page"
+      ]
+    },
+    "GetAllNotificationsfromyourfollowersResponse": {
+      "title": "GetAllNotificationsfromyourfollowersResponse",
+      "example": {
+        "body": "newUsername just commented on your article: How to be a developer",
+        "notficationId": "ea17bf8c-4066-47c6-8191-b2be236a68d9",
+        "status": "unread"
+      },
+      "type": "object",
+      "properties": {
+        "body": {
+          "example": "newUsername just commented on your article: How to be a developer",
+          "type": "string"
+        },
+        "notficationId": {
+          "example": "ea17bf8c-4066-47c6-8191-b2be236a68d9",
+          "type": "string"
+        },
+        "status": {
+          "example": "unread",
+          "type": "string"
+        }
+      },
+      "required": [
+        "body",
+        "notficationId",
+        "status"
+      ]
+    },
+    "MarkNotificationasreadResponse": {
+      "title": "MarkNotificationasreadResponse",
+      "example": {
+        "status": "read",
+        "createdAt": "2019-02-01T17:41:20.769Z"
+      },
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "createdAt"
       ]
     }
   },
