@@ -1,0 +1,298 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Learn Ground Api Documentation",
+    "description": "TODO: Add Description",
+    "contact": {}
+  },
+  "host": "learnground-api-staging.herokuapp.com",
+  "basePath": "/api/v1",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "description": "",
+        "summary": "Signup",
+        "operationId": "UsersPost",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "email",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SignupResponse"
+            },
+            "examples": {
+              "application/json": {
+                "message": "An email has been sent to your email address",
+                "username": "blakelively",
+                "email": "blake2019@gmail.com",
+                "notification": [],
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNGFiNDlkLTg5YWEtNGJiNC04NzFhLTExZDZlODc0YTMyYyIsImlzTWVudG9yIjpmYWxzZSwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTU0OTAzMjE3NCwiZXhwIjoxNTQ5MjkxMzc0fQ.cvC_GKZ1Ieq7FiT0KMxSuQJq5E7GxJGeCwYDZ0lL-Qo"
+              }
+            },
+            "headers": {}
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "description": "",
+        "summary": "SignIn",
+        "operationId": "UsersLoginPost",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "parameters": [
+          {
+            "name": "usernameOrEmail",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SignInResponse"
+            },
+            "examples": {
+              "application/json": {
+                "message": "Login was successful",
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNGFiNDlkLTg5YWEtNGJiNC04NzFhLTExZDZlODc0YTMyYyIsImlzTWVudG9yIjpmYWxzZSwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTU0OTAzMjI5NiwiZXhwIjoxNTQ5MjkxNDk2fQ.2VA5lZuXXrtssd6N7Ex0JPYX8lCgXqF6K6JfPZaEigU",
+                "notifications": []
+              }
+            },
+            "headers": {}
+          }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "description": "",
+        "summary": "Get current User",
+        "operationId": "UserGet",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/GetcurrentUserResponse"
+            },
+            "examples": {
+              "application/json": {
+                "username": "blakelively",
+                "email": "blake2019@gmail.com",
+                "isMentor": false,
+                "profile": {
+                  "firstName": null,
+                  "lastName": null,
+                  "bio": null,
+                  "imageUrl": null
+                }
+              }
+            },
+            "headers": {}
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "SignupResponse": {
+      "title": "SignupResponse",
+      "example": {
+        "message": "An email has been sent to your email address",
+        "username": "blakelively",
+        "email": "blake2019@gmail.com",
+        "notification": [],
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNGFiNDlkLTg5YWEtNGJiNC04NzFhLTExZDZlODc0YTMyYyIsImlzTWVudG9yIjpmYWxzZSwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTU0OTAzMjE3NCwiZXhwIjoxNTQ5MjkxMzc0fQ.cvC_GKZ1Ieq7FiT0KMxSuQJq5E7GxJGeCwYDZ0lL-Qo"
+      },
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "notification": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "token": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "message",
+        "username",
+        "email",
+        "notification",
+        "token"
+      ]
+    },
+    "SignInResponse": {
+      "title": "SignInResponse",
+      "example": {
+        "message": "Login was successful",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNGFiNDlkLTg5YWEtNGJiNC04NzFhLTExZDZlODc0YTMyYyIsImlzTWVudG9yIjpmYWxzZSwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTU0OTAzMjI5NiwiZXhwIjoxNTQ5MjkxNDk2fQ.2VA5lZuXXrtssd6N7Ex0JPYX8lCgXqF6K6JfPZaEigU",
+        "notifications": []
+      },
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "notifications": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "message",
+        "token",
+        "notifications"
+      ]
+    },
+    "GetcurrentUserResponse": {
+      "title": "GetcurrentUserResponse",
+      "example": {
+        "username": "blakelively",
+        "email": "blake2019@gmail.com",
+        "isMentor": false,
+        "profile": {
+          "firstName": null,
+          "lastName": null,
+          "bio": null,
+          "imageUrl": null
+        }
+      },
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "isMentor": {
+          "type": "boolean"
+        },
+        "profile": {
+          "$ref": "#/definitions/Profile"
+        }
+      },
+      "required": [
+        "username",
+        "email",
+        "isMentor",
+        "profile"
+      ]
+    },
+    "Profile": {
+      "title": "Profile",
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "bio": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "tags": []
+}

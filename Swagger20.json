@@ -1,0 +1,163 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Learn Ground Api Documentation",
+    "description": "Learn Ground",
+    "contact": {}
+  },
+  "host": "learnground-api-staging.herokuapp.com",
+  "basePath": "/api/v1/",
+  "schemes": [],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "description": "Register  a user",
+        "summary": "User signup",
+        "operationId": "User post",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "username",
+            "type": "string",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/userSignUp"
+            }
+          }    
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "example": {
+              "application/json": {
+                  "message": "An email has been sent to your email address",
+                  "username": "habibaudu",
+                  "email": "habibaudu@gmail.com",
+                  "notification": [],
+                  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk4NjRiNmZhLTM0ZGYtNGU4OS1hY2Y1LWM3NjdkMjZlMWUxOSIsImlzTWVudG9yIjpmYWxzZSwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTU0OTAxNjg1NCwiZXhwIjoxNTQ5Mjc2MDU0fQ.8w3uKLOFzDlK89pd3fdn-7i7whaqg634BIBCrR0sps8"
+                }
+            }
+          },
+          "409": {
+            "description": "Returns 409 for same email and same username",
+            "example": {
+              "application/json": {
+                
+                  "error": "Email already in use"
+                
+                }
+            }
+          },
+          "400": {
+            "description": "Returns 400 if password is less than 8 characters and username less than 6 characters",
+            "example": {
+              "application/json": {
+                
+                "error": "Your password must be at least 8 characters"
+                
+                }
+            }
+          }
+
+        }
+      }
+    
+  },
+  "/users/login": {
+    "post": {
+      "description": "Login a user",
+      "summary": "User login",
+      "operationId": "Login User",
+      "produces": [
+        "application/json"
+      ],
+      "parameters": [
+        {
+          "in": "body",
+          "name": "usernameOrEmail",
+          "type": "string",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/userSignIn"
+          }
+        }    
+      ],
+      "responses": {
+        "200": {
+          "description": "",
+          "example": {
+            "application/json": {
+              "message": "Login was successful",
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk4NjRiNmZhLTM0ZGYtNGU4OS1hY2Y1LWM3NjdkMjZlMWUxOSIsImlzTWVudG9yIjpmYWxzZSwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTU0OTAxNjg1NCwiZXhwIjoxNTQ5Mjc2MDU0fQ.8w3uKLOFzDlK89pd3fdn-7i7whaqg634BIBCrR0sps8",
+                "notification": []
+              }
+          }
+        },
+        "400": {
+          "description": "Returns 400 for invalid email or password",
+          "example": {
+            "application/json": {
+              
+                "error": "Invalid Credentials"
+              
+              }
+          }
+        }
+      }
+    }
+  },
+
+  "definitions": {
+    "userSignUp": {
+      "example": {
+        "username": "habibaudu",
+        "password": "password",
+        "email": "habibaudu@gmail.com"
+      },
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "example": "habibaudu"
+        },
+        "password": {
+          "type": "string",
+          "example": "password"
+        },
+        "email": {
+          "type": "string",
+          "example": "habibaudu@gmail.com"
+        }
+      }
+    },
+    "userSignIn": {
+      "example": {
+        "usernameOrEmail": "habibaudu",
+        "password": "password"
+      },
+      "type": "object",
+      "properties": {
+        "usernameOrEmail": {
+          "type": "string",
+          "example": "habibaudu"
+        },
+        "password": {
+          "type": "string",
+          "example": "password"
+        }
+      }
+    }
+  },
+  "tags": []
+}
+}

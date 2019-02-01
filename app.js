@@ -1,8 +1,11 @@
 
 import express from 'express';
+import swaggerUi from 'swagger-ui-express';
 import session from 'express-session';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import swaggerDocument from './Learn Ground -Swagger20.json';
+
 import initPassport from './config';
 import { errorHandler, notFoundRoute } from './middlewares';
 import {
@@ -34,7 +37,7 @@ app.use(
     saveUninitialized: false
   })
 );
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/v1/users', authRoutes);
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/profile', profileRoutes);
