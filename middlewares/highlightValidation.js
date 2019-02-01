@@ -1,14 +1,18 @@
-import Sequelize from 'sequelize';
-import models from '../models';
-
+import { isString, isNumber } from 'util';
+import inputTypeValidator from './inputTypeValidator';
 
 export default {
   isInputSupplied(req, res, next) {
     const {
-      highlightedText, startIndex, stopIndex, comment
+      highlightedText,
+      startIndex,
+      stopIndex,
+      comment
     } = req.body;
+
     const inputArray = [highlightedText, startIndex, stopIndex, comment];
     const errorArray = [];
+
     inputArray.forEach((input) => {
       if (!input) errorArray.push(`${input} is required`);
     });
@@ -18,5 +22,19 @@ export default {
     const error = new Error(errorMessage);
     error.status = 400;
     return next(error);
+  },
+
+  isInputTypeValid(req, res, next) {
+    const {
+      highlightedText,
+      startIndex,
+      stopIndex,
+      comment
+    } = req.body;
+    const stringInputArray = [highlightedText, comment];
+    const numericInputArray = [startIndex, stopIndex];
+    inputTypeValidator(isString, stringInputArray, next);
+    inputTypeValidator(isNumber, numericInputArray, next);
+    return next();
   }
 };
