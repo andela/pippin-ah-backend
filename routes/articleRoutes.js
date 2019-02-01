@@ -81,7 +81,9 @@ const {
 
 const {
   isHighlightInputSupplied,
-  isHighlightInputTypeValid
+  isHighlightInputTypeValid,
+  doesHighlightExist,
+  doesUserOwnHighlight
 } = highlightValidation;
 
 const { rateArticle } = Rating;
@@ -214,6 +216,8 @@ router.route('/:slug/highlights')
 router.route('/:slug/highlights/:id')
   .delete(verifyToken,
     doesArticleExist,
+    doesHighlightExist,
+    doesUserOwnHighlight,
     removeHighlight
   );
 
