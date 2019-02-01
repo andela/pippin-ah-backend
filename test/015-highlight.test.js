@@ -5,16 +5,22 @@ import server from '../app';
 
 chai.use(chaiHttp);
 
-let accessToken, baseUrl, articleSlug;
+let accessToken, secondUserAccessToken, url, articleSlug;
 
 describe('Test Suite for Highlights', () => {
   before(async () => {
     await models.sequelize.sync({ force: true });
 
-    const userRequestObject = {
+    const firstUserRequestObject = {
       username: 'bolasmith',
       email: 'bolasmith@email.com',
       password: 'balabola'
+    };
+
+    const secondUserRequestObject = {
+      username: 'toluwole',
+      email: 'toluwole@email.com',
+      password: 'toluwole'
     };
 
     const articleRequestObject = {
@@ -24,17 +30,22 @@ describe('Test Suite for Highlights', () => {
       category: 'Arts'
     };
 
-    const responseObject = await chai.request(server)
+    const firstUserResponseObject = await chai.request(server)
       .post('/api/v1/users')
-      .send(userRequestObject);
-    accessToken = responseObject.body.token;
+      .send(firstUserRequestObject);
+    accessToken = firstUserResponseObject.body.token;
+
+    const secondUserResponseObject = await chai.request(server)
+      .post('/api/v1/users')
+      .send(secondUserRequestObject);
+    secondUserAccessToken = secondUserResponseObject.body.token;
 
     const articleResponse = await chai.request(server)
       .post('/api/v1/articles')
       .send(articleRequestObject)
       .set('Authorization', accessToken);
     articleSlug = articleResponse.body.slug;
-    baseUrl = `/api/v1/articles/${articleSlug}/highlights`;
+    url = `/api/v1/articles/${articleSlug}/highlights`;
   });
 
   describe('Highlight Text', () => {
@@ -50,7 +61,7 @@ describe('Test Suite for Highlights', () => {
 
     it('should not highlight an article without valid inputs', async () => {
       const response = await chai.request(server)
-        .post(`${baseUrl}`)
+        .post(`${url}`)
         .send()
         .set('Authorization', accessToken);
       const errorMsg = 'Required params are not supplied';
@@ -60,7 +71,7 @@ describe('Test Suite for Highlights', () => {
 
     it('should not highlight an article with invalid input Type', async () => {
       const response = await chai.request(server)
-        .post(`${baseUrl}`)
+        .post(`${url}`)
         .send({
           highlightedText: 'Something to think about',
           startIndex: 'startIndex',
@@ -81,11 +92,28 @@ describe('Test Suite for Highlights', () => {
         comment: 'This pushed me to the edge.'
       };
       const response = await chai.request(server)
-        .post(`${baseUrl}`)
+        .post(`${url}`)
         .set('Authorization', accessToken)
         .send(highlightObject);
       expect(response.status).to.equal(201);
       expect(response.body.stopIndex).to.equal(58);
+    });
+
+    it('should not return an empty array if user has no highlight',
+      async () => {
+        const response = await chai.request(server)
+          .get(`${url}`)
+          .set('Authorization', secondUserAccessToken);
+        expect(response.status).to.equal(200);
+        expect(response.body.message).to.equal('You have no highlights yet!');
+      });
+
+    it('should get all user\'s highlights in an article', async () => {
+      const response = await chai.request(server)
+        .get(`${url}`)
+        .set('Authorization', accessToken);
+      expect(response.status).to.equal(200);
+      expect(typeof (response.body.highlights)).to.equal('object');
     });
   });
 });

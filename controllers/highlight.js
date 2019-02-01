@@ -44,6 +44,9 @@ export default {
     const articleId = article.id;
     const highlights = await Highlight
       .findAll({ where: { articleId, userId } });
+    if (highlights.length === 0) {
+      return res.json({ message: 'You have no highlights yet!' });
+    }
     return res.json({ highlights });
   }
 };
