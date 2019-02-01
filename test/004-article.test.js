@@ -153,7 +153,7 @@ describe('ARTICLE TEST SUITE', () => {
         .set('Authorization', accesstoken);
       expect(response.status).to.equal(400);
       expect(response.body.error)
-        .to.equal('Invalid input type for this param!');
+        .to.equal('Input types have to be string!');
     });
 
     it('should successfully create an article', async () => {

@@ -4,14 +4,16 @@ import {
   Comment,
   Reaction,
   Rating,
-  CommentReaction
+  CommentReaction,
+  Highlight
 } from '../controllers';
 
 import {
   verifyToken,
   articleValidation,
   commentValidations,
-  ratingValidation
+  ratingValidation,
+  highlightValidation
 } from '../middlewares';
 
 const router = express.Router();
@@ -39,6 +41,10 @@ const {
   deleteComment
 } = Comment;
 
+const {
+  addHighlight,
+  getAllHighlights
+} = Highlight;
 
 const {
   expectedParamsValidator,
@@ -71,6 +77,11 @@ const {
   inputTypeIsValid,
   ratingIsInRange
 } = ratingValidation;
+
+const {
+  isHighlightInputSupplied,
+  isHighlightInputTypeValid
+} = highlightValidation;
 
 const { rateArticle } = Rating;
 
@@ -185,5 +196,18 @@ router.route('/:slug/dislike')
 
 router.route('/:slug/share/:provider')
   .get(doesArticleExist, shareArticle);
+
+router.route('/:slug/highlights')
+  .post(
+    verifyToken,
+    doesArticleExist,
+    isHighlightInputSupplied,
+    isHighlightInputTypeValid,
+    addHighlight
+  )
+  .get(
+    verifyToken,
+    getAllHighlights
+  );
 
 export default router;
