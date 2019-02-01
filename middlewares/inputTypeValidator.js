@@ -1,7 +1,7 @@
-export default (typeChecker, inputArray, next) => {
+export default (typeChecker, inputArray, errorMessage, next) => {
   inputArray.forEach((input) => {
     if (!typeChecker(input)) {
-      const error = new Error('Invalid input type for this param!');
+      const error = new Error(errorMessage);
       error.status = 400;
       return next(error);
     }
