@@ -262,6 +262,18 @@ export default {
       if (param) inputArray.push(param);
     });
     inputTypeValidator(isString, inputArray, next);
+  },
+
+  async isUsernameExists(req, res, next) {
+    const user = await User.findOne({
+      where: { username: req.params.username }
+    });
+
+    if (!user) {
+      const error = new Error('The user provided does not exist');
+      error.status = 404;
+      return next(error);
+    }
     return next();
   }
 };
