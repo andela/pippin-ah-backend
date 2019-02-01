@@ -43,9 +43,7 @@ const {
 
 const {
   addHighlight,
-  getAllHighlights,
-  editHighlightComment,
-  removeHighlight
+  getAllHighlights
 } = Highlight;
 
 const {
@@ -210,16 +208,6 @@ router.route('/:slug/highlights')
   .get(
     verifyToken,
     getAllHighlights
-  );
-
-router.route('/:slug/highlights/:id')
-  .patch(
-    verifyToken,
-    editHighlightComment
-  )
-  .delete(
-    verifyToken,
-    removeHighlight
   );
 
 export default router;
