@@ -12,7 +12,8 @@ import {
   verifyToken,
   articleValidation,
   commentValidations,
-  ratingValidation
+  ratingValidation,
+  highlightValidation
 } from '../middlewares';
 
 const router = express.Router();
@@ -78,6 +79,11 @@ const {
   inputTypeIsValid,
   ratingIsInRange
 } = ratingValidation;
+
+const {
+  isHighlightInputSupplied,
+  isHighlightInputTypeValid
+} = highlightValidation;
 
 const { rateArticle } = Rating;
 
@@ -196,6 +202,8 @@ router.route('/:slug/share/:provider')
 router.route('/:slug/highlights')
   .post(
     verifyToken,
+    isHighlightInputSupplied,
+    isHighlightInputTypeValid,
     addHighlight
   )
   .get(
