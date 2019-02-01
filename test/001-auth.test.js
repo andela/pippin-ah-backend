@@ -52,6 +52,21 @@ describe('AUTHENTICATION TEST SUITE', () => {
         .send(newUser2);
       expect(response.body.token).to.not.equal(undefined);
     });
+
+    it('should not allow access to protected routes if user does not exist',
+      async () => {
+        const articleObject = {
+          title: 'Can A Butterfly Fly!',
+          body: 'Butterfly Article Content',
+          description: 'Article Description',
+          category: 'Science'
+        };
+        const response = await chai.request(server)
+          .post('/api/v1/articles')
+          .set('Authorization', userToken)
+          .send(articleObject);
+        expect(response.body.error).to.equal('Invalid token');
+      });
   });
 
   describe('SOCIAL AUTHENTICATION', () => {
