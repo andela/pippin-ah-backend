@@ -265,7 +265,7 @@ export default {
     return next();
   },
 
-  async isUsernameExists(req, res, next) {
+  async doesUsernameExist(req, res, next) {
     const user = await User.findOne({
       where: { username: req.params.username }
     });

@@ -12,7 +12,7 @@ const {
   isUsernameValidator,
   usernameExistsValidator,
   passwordValidator,
-  isUsernameExists
+  doesUsernameExist
 } = userValidations;
 
 const { approveRequest, rejectRequest } = Request;
@@ -75,6 +75,6 @@ router.route('/request')
   .post(verifyToken, canRequestToBeMentor, requestToBeMentor);
 
 router.route('/:username')
-  .get(verifyToken, isUsernameExists, getUser);
+  .get(verifyToken, doesUsernameExist, getUser);
 
 export default router;
