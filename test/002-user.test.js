@@ -2,28 +2,64 @@ import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import models from '../models';
 import server from '../app';
+import { userTestData } from '../helpers';
 
 chai.use(chaiHttp);
 
-const { User } = models;
+const { User, Article } = models;
+const {
+  firstRequestObject,
+  secondRequestObject,
+  thirdRequestObject,
+  dummyArticles
+} = userTestData;
+
 const baseUrl = '/api/v1/users';
+const articleUrl = '/api/v1/articles';
 let resetToken;
 
 describe('USER TEST SUITE', () => {
-  let firstUserToken, firstUserID;
+  let firstUserToken, firstUserID, secondUserToken, thirdUserToken;
+  let article1Response, article2Response, article3Response;
 
   before(async () => {
     await models.sequelize.sync({ force: true });
 
-    const requestObject = {
-      username: 'johnsolomon',
-      email: 'john@solomon.com',
-      password: 'johnny777'
-    };
+    const firstResponseObject = await chai.request(server).post(`${baseUrl}`)
+      .send(firstRequestObject);
+    firstUserToken = firstResponseObject.body.token;
 
-    const responseObject = await chai.request(server).post(`${baseUrl}`)
-      .send(requestObject);
-    firstUserToken = responseObject.body.token;
+    const secondResponseObject = await chai.request(server).post(`${baseUrl}`)
+      .send(secondRequestObject);
+    secondUserToken = secondResponseObject.body.token;
+
+    const thirdResponseObject = await chai.request(server).post(`${baseUrl}`)
+      .send(thirdRequestObject);
+    thirdUserToken = thirdResponseObject.body.token;
+
+    await chai.request(server).post('/api/v1/profile/davidsmith/follow')
+      .set('Authorization', firstUserToken);
+
+    await chai.request(server).post('/api/v1/profile/johnsolomon/follow')
+      .set('Authorization', secondUserToken);
+
+    await chai.request(server).post('/api/v1/profile/johnsolomon/follow')
+      .set('Authorization', thirdUserToken);
+
+    article1Response = await chai.request(server)
+      .post(articleUrl)
+      .send(dummyArticles[0])
+      .set('Authorization', firstUserToken);
+
+    article2Response = await chai.request(server)
+      .post(articleUrl)
+      .send(dummyArticles[1])
+      .set('Authorization', firstUserToken);
+
+    article3Response = await chai.request(server)
+      .post(articleUrl)
+      .send(dummyArticles[2])
+      .set('Authorization', firstUserToken);
 
     const firstUserObject = await User.findOne({
       where: { username: 'johnsolomon' }
@@ -364,21 +400,92 @@ describe('USER TEST SUITE', () => {
   });
 
   describe('Get a single User', () => {
-    it('Should get a user with valid user id present in database', async () => {
-      const response = await chai.request(server).get('/api/v1/user')
-        .set('Authorization', firstUserToken);
-      expect(response.body.username).to.equal('johnsolomon');
-    });
+    it('Should not get a non-existent user',
+      async () => {
+        const response = await chai.request(server)
+          .get('/api/v1/user/johnmoon')
+          .set('Authorization', firstUserToken);
+        expect(response.body.error)
+          .to.equal('The user provided does not exist');
+      });
+
+    it('Should get a user with valid username param',
+      async () => {
+        const response = await chai.request(server)
+          .get('/api/v1/user/johnsolomon')
+          .set('Authorization', firstUserToken);
+        expect(response.body.username).to.equal('johnsolomon');
+        expect(response.body.followers).to.equal(2);
+        expect(response.body.following).to.equal(1);
+      });
+
+    // eslint-disable-next-line
+    it('Should get a user\'s longest articles as the top articles if they are not yet rated or liked',
+      async () => {
+        const response = await chai.request(server)
+          .get('/api/v1/user/johnsolomon')
+          .set('Authorization', firstUserToken);
+        expect(response.body.articles.top[0].slug)
+          .to.equal(article1Response.body.slug);
+        expect(response.body.articles.top[1].slug)
+          .to.equal(article3Response.body.slug);
+
+        await chai.request(server)
+          .patch(`${articleUrl}/${article1Response.body.slug}/like`)
+          .set('Authorization', firstUserToken);
+
+        await chai.request(server)
+          .patch(`${articleUrl}/${article1Response.body.slug}/like`)
+          .set('Authorization', secondUserToken);
+
+        await chai.request(server)
+          .patch(`${articleUrl}/${article2Response.body.slug}/like`)
+          .set('Authorization', thirdUserToken);
+      });
+    // eslint-disable-next-line
+    it('Should get a user\'s most liked articles as the top articles if they are not yet rated',
+      async () => {
+        const response = await chai.request(server)
+          .get('/api/v1/user/johnsolomon')
+          .set('Authorization', secondUserToken);
+        expect(response.body.articles.top[0].slug)
+          .to.equal(article1Response.body.slug);
+
+        const article3 = await Article.findOne({
+          where: { slug: article3Response.body.slug }
+        });
+        article3.aveRating = 4;
+        await article3.save();
+
+        const article2 = await Article.findOne({
+          where: { slug: article2Response.body.slug }
+        });
+        article2.aveRating = 3;
+        await article2.save();
+      });
+
+    it('Should get a user\'s highest rated articles as the top articles',
+      async () => {
+        const response = await chai.request(server)
+          .get('/api/v1/user/johnsolomon')
+          .set('Authorization', secondUserToken);
+        expect(response.body.articles.top[0].slug)
+          .to.equal(article3Response.body.slug);
+        expect(response.body.articles.top[1].slug)
+          .to.equal(article2Response.body.slug);
+      });
 
     it('Should not get a user when the token is not provided',
       async () => {
-        const response = await chai.request(server).get('/api/v1/user');
+        const response = await chai.request(server)
+          .get('/api/v1/user/johnsolomon');
         expect(response.body.error).to.equal('No token provided');
       });
 
     it('Should not get a user when invalid token is provided',
       async () => {
-        const response = await chai.request(server).get('/api/v1/user')
+        const response = await chai.request(server)
+          .get('/api/v1/user/johnsolomon')
           .set('Authorization', 'fjjdfjdjfdjfjf');
         expect(response.body.error).to.equal('Invalid token');
       });

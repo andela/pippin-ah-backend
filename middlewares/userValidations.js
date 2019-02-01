@@ -1,6 +1,8 @@
 import Sequelize from 'sequelize';
 import validation from 'validator';
+import { isString } from 'util';
 import models from '../models';
+import inputTypeValidator from './inputTypeValidator';
 
 const { iLike, or, gt } = Sequelize.Op;
 const { User } = models;
@@ -248,5 +250,32 @@ export default {
       return next(error);
     }
     next();
+  },
+
+  async isInputTypeValid(req, res, next) {
+    const {
+      username, email, usernameOrEmail, password
+    } = req.body;
+    const initialArray = [username, email, usernameOrEmail, password];
+    const inputArray = [];
+    initialArray.forEach((param) => {
+      if (param) inputArray.push(param);
+    });
+    const errorMessage = 'Input types have to be strings!';
+    inputTypeValidator(isString, inputArray, errorMessage, next);
+    return next();
+  },
+
+  async doesUsernameExist(req, res, next) {
+    const user = await User.findOne({
+      where: { username: req.params.username }
+    });
+
+    if (!user) {
+      const error = new Error('The user provided does not exist');
+      error.status = 404;
+      return next(error);
+    }
+    return next();
   }
 };

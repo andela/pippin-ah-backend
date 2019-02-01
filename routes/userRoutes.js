@@ -11,7 +11,8 @@ const {
   emailExistsValidator,
   isUsernameValidator,
   usernameExistsValidator,
-  passwordValidator
+  passwordValidator,
+  doesUsernameExist
 } = userValidations;
 
 const { approveRequest, rejectRequest } = Request;
@@ -20,7 +21,7 @@ const {
   getUser,
   updateUser,
   activateUser,
-  getAllAuthors
+  getAllAuthors,
 } = Users;
 
 const { requestToBeMentor } = Request;
@@ -39,7 +40,6 @@ router.route('/activate/:userId').get(activateUser);
 
 router.route('/')
   .all(verifyToken)
-  .get(getUser)
   .patch(
     passwordValidator,
     isUsernameValidator,
@@ -73,5 +73,8 @@ router.route('/authors').get(verifyToken, getAllAuthors);
 
 router.route('/request')
   .post(verifyToken, canRequestToBeMentor, requestToBeMentor);
+
+router.route('/:username')
+  .get(verifyToken, doesUsernameExist, getUser);
 
 export default router;

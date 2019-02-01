@@ -1,5 +1,6 @@
 import Sequelize from 'sequelize';
 import { format } from 'date-fns';
+import { Notifier } from '../services';
 import models from '../models';
 
 const { iLike } = Sequelize.Op;
@@ -16,8 +17,11 @@ export default {
       comment: { [currentTime]: req.body.comment },
       articleId: article.id
     });
+
     const comment = Object.values(newComment.comment)[0];
     const { id, updatedAt } = newComment;
+    await Notifier.newCommentNotification(article.id, decoded.id);
+
     return res.json({ comment, id, updatedAt });
   },
 

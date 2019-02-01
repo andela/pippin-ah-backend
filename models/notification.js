@@ -1,6 +1,5 @@
-
 module.exports = (sequelize, DataTypes) => {
-  const Request = sequelize.define('Request', {
+  const Notification = sequelize.define('Notification', {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -11,21 +10,22 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false
     },
-    request: {
-      type: DataTypes.STRING
+    body: {
+      type: DataTypes.STRING,
+      allowNull: false
     },
     status: {
       type: DataTypes.ENUM,
-      values: ['approved', 'pending', 'rejected'],
-      defaultValue: 'pending',
-    }
-  }
-  );
-  Request.associate = (models) => {
-    Request.belongsTo(models.User, {
+      allowNull: false,
+      values: ['read', 'unread']
+    },
+  });
+
+  Notification.associate = (models) => {
+    Notification.belongsTo(models.User, {
       foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
   };
-  return Request;
+  return Notification;
 };

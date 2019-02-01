@@ -7,7 +7,7 @@ import {
 } from '../middlewares';
 
 const { interestsValidator, nameValidator } = profileValidations;
-const { updateProfile } = Profile;
+const { updateProfile, getUserStats } = Profile;
 const { canFollowUser } = followValidations;
 const { followUser, getFollowing, getFollowers } = Follow;
 const router = express.Router();
@@ -29,5 +29,8 @@ router.route('/following')
 
 router.route('/followers')
   .get(verifyToken, getFollowers);
+
+router.route('/stats')
+  .get(verifyToken, getUserStats);
 
 export default router;

@@ -1,6 +1,7 @@
 import Sequelize from 'sequelize';
 import dateFns from 'date-fns';
 import models from '../models';
+import { Notifier } from '../services';
 import { generateSlug, getReadTime, categories } from '../helpers';
 
 const {
@@ -8,7 +9,9 @@ const {
   User,
   Profile,
   Report,
-  Bookmark
+  Bookmark,
+  Follow,
+  Comment
 } = models;
 const {
   iLike,
@@ -43,6 +46,18 @@ export default {
         readTime: getReadTime(body.trim())
       });
 
+    const followersIdArray = await Follow.findAll({
+      where: { userId },
+      attributes: ['followerId']
+    });
+
+    followersIdArray.forEach((followerId) => {
+      Notifier.notifyFollowersOfNewArticle(
+        followerId.followerId,
+        userId, article.title
+      );
+    });
+
     return res.status(201).json({
       title: article.title,
       body: article.body,
@@ -62,7 +77,6 @@ export default {
   async tagArticle(req, res) {
     let normalizedTags;
     const { title, tags } = req.body;
-
     const { id: userId } = req.decoded;
     const article = await Article.findOne({ where: { userId, title } });
 
@@ -102,43 +116,40 @@ export default {
       category,
       author,
       tag,
-      keywords
+      keywords,
+      limit = 50
     } = req.query;
-    const queryArray = [
-      {
-        [or]: {
-          title: { [iLike]: keywords ? `%${keywords}%` : '%' },
-          description: { [iLike]: keywords ? `%${keywords}%` : '%' },
-          body: { [iLike]: keywords ? `%${keywords}%` : '%' }
-        },
+
+    let offset, { page } = req.query;
+    page = Number(page);
+
+    const queryArray = [{
+      [or]: {
+        title: { [iLike]: keywords ? `%${keywords}%` : '%' },
+        description: { [iLike]: keywords ? `%${keywords}%` : '%' },
+        body: { [iLike]: keywords ? `%${keywords}%` : '%' }
       },
-      {
-        category: category || categories
-      },
-      {
-        tags: tag ? { [contains]: [tag] } : { [notIn]: [] }
-      }
-    ];
+    },
+    { category: category || categories },
+    { tags: tag ? { [contains]: [tag] } : { [notIn]: [] } }];
     if (author) {
       queryArray.push({
         [or]: {
-          '$User.Profile.lastName$': {
-            [iLike]: `%${author}%`
-          },
-          '$User.Profile.firstName$': {
-            [iLike]: `%${author}%`
-          },
-          '$User.username$': {
-            [iLike]: `%${author}%`
-          },
+          '$User.Profile.lastName$': { [iLike]: `%${author}%` },
+          '$User.Profile.firstName$': { [iLike]: `%${author}%` },
+          '$User.username$': { [iLike]: `%${author}%` },
         }
-
       });
     }
+    offset = limit * (page - 1);
+    if (!page || page < 1) {
+      offset = 0; page = 1;
+    }
     const articles = await Article.findAll({
-      where: {
-        [and]: queryArray
-      },
+      order: [['createdAt', 'DESC']],
+      where: { [and]: queryArray },
+      limit,
+      offset,
       include: [{
         model: User,
         required: false,
@@ -146,9 +157,9 @@ export default {
           model: Profile,
           required: false,
         }]
-      }
-      ]
+      }]
     });
+
     const responseArray = articles.map(item => ({
       author: item.User.username,
       slug: item.slug,
@@ -167,14 +178,39 @@ export default {
     );
     return res.json({
       articles: responseArray,
-      count: articles.length
+      count: articles.length,
+      page
     });
   },
 
   async getArticleBySlug(req, res) {
     const { slug } = req.params;
-    const article = await Article.findOne({ where: { slug } });
-    return res.json(article);
+    const article = await Article.findOne({
+      where: { slug },
+      include: [{
+        model: Comment,
+        required: false,
+        attributes: ['id', 'userId', 'comment']
+      }]
+    });
+
+    const response = {
+      id: article.id,
+      title: article.title,
+      body: article.body,
+      description: article.description,
+      tags: article.tags,
+      slug: article.slug,
+      rating: article.rating,
+      aveRating: article.aveRating,
+      category: article.category,
+      readTime: article.readTime,
+      createdAt: article.createdAt,
+      updatedAt: article.updatedAt,
+      comments: article.Comments
+    };
+
+    return res.json(response);
   },
 
   async bookmarkArticle(req, res) {
@@ -226,4 +262,28 @@ export default {
     const slugArray = bookmarkedArticles.map(item => item.Article.slug);
     return res.send(slugArray);
   },
+
+  async shareArticle(req, res) {
+    const { slug } = req.params;
+    const { provider } = req.params;
+    const articleUrl = `${req.get('host')}/api/v1/articles/${slug}`;
+    let shareUrl, fbShareUrl;
+
+    switch (provider) {
+      default:
+        return res.redirect(400, articleUrl);
+      case 'twitter':
+        shareUrl = `https://twitter.com/home?status=http%3A//${articleUrl}`;
+        break;
+      case 'facebook':
+        fbShareUrl = 'https://www.facebook.com/sharer/sharer.php?u=https%3A/';
+        shareUrl = `${fbShareUrl}/${articleUrl}`;
+        break;
+      case 'googleplus':
+        shareUrl = `https://plus.google.com/share?url=http%3A//${articleUrl}`;
+        break;
+    }
+
+    return res.redirect(shareUrl);
+  }
 };

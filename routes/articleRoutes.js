@@ -4,14 +4,16 @@ import {
   Comment,
   Reaction,
   Rating,
-  CommentReaction
+  CommentReaction,
+  Highlight
 } from '../controllers';
 
 import {
   verifyToken,
   articleValidation,
   commentValidations,
-  ratingValidation
+  ratingValidation,
+  highlightValidation
 } from '../middlewares';
 
 const router = express.Router();
@@ -24,7 +26,8 @@ const {
   tagArticle,
   bookmarkArticle,
   getBookmarkedArticles,
-  removeBookmarkedArticle
+  removeBookmarkedArticle,
+  shareArticle
 } = Article;
 
 const { like, cancelReaction, dislike } = Reaction;
@@ -38,6 +41,11 @@ const {
   deleteComment
 } = Comment;
 
+const {
+  addHighlight,
+  getAllHighlights,
+  removeHighlight
+} = Highlight;
 
 const {
   expectedParamsValidator,
@@ -49,7 +57,8 @@ const {
   reportIsEmpty,
   reportIsRequired,
   categoryQueryValidator,
-  checkIfSlugExists
+  checkIfSlugExists,
+  isInputValid
 } = articleValidation;
 
 const {
@@ -57,6 +66,7 @@ const {
   isNewCommentSupplied,
   isCommentValid,
   isNewCommentValid,
+  isCommentDuplicate,
   doesArticleExist,
   doesCommentExist,
   validateUser
@@ -69,6 +79,13 @@ const {
   ratingIsInRange
 } = ratingValidation;
 
+const {
+  isHighlightInputSupplied,
+  isHighlightInputTypeValid,
+  doesHighlightExist,
+  doesUserOwnHighlight
+} = highlightValidation;
+
 const { rateArticle } = Rating;
 
 router.route('/')
@@ -76,6 +93,7 @@ router.route('/')
   .post(
     verifyToken,
     expectedParamsValidator,
+    isInputValid,
     nonEmptyParamsValidator,
     existingTitleValidator,
     categoryValidator,
@@ -104,7 +122,6 @@ router.route('/categories')
 
 router.route('/bookmarks')
   .get(verifyToken, getBookmarkedArticles);
-
 
 router.route('/bookmarks/:slug')
   .all(verifyToken)
@@ -135,6 +152,7 @@ router.route('/:slug/comments')
     doesArticleExist,
     isCommentSupplied,
     isCommentValid,
+    isCommentDuplicate,
     addComment
   );
 
@@ -168,7 +186,6 @@ router.route('/:slug/comments/:id')
     doesCommentExist,
     validateUser,
     deleteComment
-
   );
 
 router.route('/:slug/like')
@@ -179,5 +196,29 @@ router.route('/:slug/cancelreaction')
 
 router.route('/:slug/dislike')
   .patch(verifyToken, doesArticleExist, dislike);
+
+router.route('/:slug/share/:provider')
+  .get(doesArticleExist, shareArticle);
+
+router.route('/:slug/highlights')
+  .post(
+    verifyToken,
+    doesArticleExist,
+    isHighlightInputSupplied,
+    isHighlightInputTypeValid,
+    addHighlight
+  )
+  .get(
+    verifyToken,
+    getAllHighlights
+  );
+
+router.route('/:slug/highlights/:id')
+  .delete(verifyToken,
+    doesArticleExist,
+    doesHighlightExist,
+    doesUserOwnHighlight,
+    removeHighlight
+  );
 
 export default router;

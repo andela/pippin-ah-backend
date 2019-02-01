@@ -4,11 +4,18 @@ import dotenv from 'dotenv';
 import crypto from 'crypto';
 import sendEmail from '../services';
 import models from '../models';
-import { getResetMail } from '../helpers';
+import { getResetMail, emailMessages } from '../helpers';
 
 dotenv.config();
 const { iLike, or, gt } = Sequelize.Op;
-const { User, Profile, Article } = models;
+const {
+  User,
+  Profile,
+  Article,
+  Notification,
+  Reaction,
+  Follow
+} = models;
 
 const secret = process.env.SECRET_KEY;
 const time = { expiresIn: '72hrs' };
@@ -30,22 +37,71 @@ class Users {
     * @param {object} res - The response object.
     */
   static async getUser(req, res) {
-    const { id } = req.decoded;
+    const { username } = req.params;
     const user = await User.findOne(
       {
-        where: { id },
-        include: [{ model: Profile }]
+        where: { username },
+        attributes: ['username', 'isMentor'],
+        include: [
+          {
+            model: Profile,
+            attributes: ['firstName', 'lastName', 'imageUrl', 'bio']
+          },
+          {
+            model: Article,
+            attributes: ['title', 'body', 'description', 'slug', 'aveRating'],
+            include: {
+              model: Reaction,
+              where: { liked: true },
+              required: false
+            }
+          },
+          {
+            model: Follow,
+            attributes: ['followerId'],
+            as: 'userDetails'
+          },
+          {
+            model: Follow,
+            attributes: ['userId'],
+            as: 'followerDetails'
+          },
+        ],
+        group: [
+          'User.id',
+          'Profile.id',
+          'Articles.id',
+          'Articles->Reactions.id',
+          'userDetails.id',
+          'followerDetails.id'
+        ],
+        order: [
+          [Sequelize.fn('MAX', Sequelize.col('aveRating')), 'DESC NULLS LAST'],
+          [Sequelize.fn('COUNT', Sequelize.col('liked')), 'DESC'],
+          [Sequelize.fn('LENGTH', Sequelize.col('body')), 'DESC']
+        ]
       });
-    const profile = user.Profile;
+
+    const topArticles = user.Articles.slice(0, 5).map(item => ({
+      slug: item.slug,
+      title: item.title,
+      description: item.description,
+      aveRating: item.aveRating
+    }));
+
     return res.json({
       username: user.username,
       email: user.email,
       isMentor: user.isMentor,
-      profile: {
-        firstName: profile.firstName,
-        lastName: profile.lastName,
-        bio: profile.bio,
-        imageUrl: profile.imageUrl
+      firstName: user.Profile.firstName,
+      lastName: user.Profile.lastName,
+      bio: user.Profile.bio,
+      imageUrl: user.Profile.imageUrl,
+      following: user.followerDetails.length,
+      followers: user.userDetails.length,
+      articles: {
+        top: topArticles,
+        total: user.Articles.length
       }
     });
   }
@@ -91,9 +147,18 @@ class Users {
             { username: { [iLike]: usernameOrEmail } },
             { email: { [iLike]: usernameOrEmail } }
           ]
-        }
+        },
+        include: [{
+          model: Notification,
+          attributes: ['body', 'id']
+        }]
       });
     await user.validPassword(password);
+    const notificationArray = user.Notifications.map(item => ({
+      notificationMessage: item.body,
+      notificationId: item.id
+    })
+    );
 
     const tokenPayload = {
       id: user.id,
@@ -103,7 +168,8 @@ class Users {
 
     return res.status(200).json({
       message: 'Login was successful',
-      token: generateToken(tokenPayload)
+      token: generateToken(tokenPayload),
+      notifications: notificationArray
     });
   }
 
@@ -138,27 +204,22 @@ class Users {
       isMentor: user.isMentor,
       isAdmin: user.isAdmin
     };
+
+    const notification = await Notification.findAll({
+      where: { userId: user.id }
+    });
+
     const token = generateToken(tokenPayload);
 
     const activationUrl = `${userActivationUrl}${user.id}`;
-    const html = `<h1 style=" text-align:justify";margin-left:50%;
-          padding:15px">
-          Welcome To LearnGround </h1><br>
-          <h3 style=" text-align:justify";margin-left:50%>
-            The Den Of Great Ideas
-          </h3>
-          <strong style=" text-align:justify";margin-left:50%>
-          Your Registration was successful </strong><br>
-          <strong style=" text-align:justify";margin-left:50%>
-          Click <a href="${activationUrl}">Activate</a> to activate
-          your account
-          </strong><br>`;
+    const html = emailMessages.registerMessage(activationUrl);
 
     sendEmail({ email, subject, html });
     return res.status(201).json({
       message: 'An email has been sent to your email address',
       username: user.username,
       email: user.email,
+      notification,
       token
     });
   }

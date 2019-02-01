@@ -8,3 +8,4 @@ export { default as followValidations } from './followValidations';
 export { default as commentValidations } from './commentValidations';
 export { default as ratingValidation } from './ratingValidation';
 export { default as requestValidations } from './requestValidations';
+export { default as highlightValidation } from './highlightValidation';
