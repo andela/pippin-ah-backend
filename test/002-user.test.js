@@ -2,10 +2,18 @@ import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import models from '../models';
 import server from '../app';
+import { userTestData } from '../helpers';
 
 chai.use(chaiHttp);
 
 const { User, Article } = models;
+const {
+  firstRequestObject,
+  secondRequestObject,
+  thirdRequestObject,
+  dummyArticles
+} = userTestData;
+
 const baseUrl = '/api/v1/users';
 const articleUrl = '/api/v1/articles';
 let resetToken;
@@ -16,44 +24,6 @@ describe('USER TEST SUITE', () => {
 
   before(async () => {
     await models.sequelize.sync({ force: true });
-
-    const firstRequestObject = {
-      username: 'johnsolomon',
-      email: 'john@solomon.com',
-      password: 'johnny777'
-    };
-
-    const secondRequestObject = {
-      username: 'davidsmith',
-      email: 'david@smith.com',
-      password: 'davsmith123'
-    };
-
-    const thirdRequestObject = {
-      username: 'janehook',
-      email: 'jane@hook.com',
-      password: 'jane4dhook'
-    };
-    const dummyArticles = [
-      {
-        title: 'My best Day1',
-        body: 'This is the longest article on learnGround',
-        description: 'Experience Recap',
-        category: 'Arts'
-      },
-      {
-        title: 'My best Day2',
-        body: 'It was a great moment',
-        description: 'Experience Recap',
-        category: 'Arts'
-      },
-      {
-        title: 'My best Day3',
-        body: 'It is now a great moment',
-        description: 'Experience Recap',
-        category: 'Arts'
-      }
-    ];
 
     const firstResponseObject = await chai.request(server).post(`${baseUrl}`)
       .send(firstRequestObject);
