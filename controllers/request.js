@@ -29,6 +29,15 @@ export default {
       request,
       status: 'pending'
     });
+
+    const admins = await User.findAll({
+      where: { isAdmin: true },
+      attributes: ['email']
+    });
+
+    const adminArray = admins.map(admin => admin.email);
+    console.log('>>>>>>>>>>>>>>>>>>>', adminArray);
+
     return res.send({
       message: 'Your request to be a mentor has been sent',
       id: response.id
