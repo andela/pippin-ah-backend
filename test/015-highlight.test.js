@@ -5,9 +5,9 @@ import server from '../app';
 
 chai.use(chaiHttp);
 
-describe('Test Suite for Highlights', () => {
-  let accessToken, baseUrl, articleSlug;
+let accessToken, baseUrl, articleSlug;
 
+describe('Test Suite for Highlights', () => {
   before(async () => {
     await models.sequelize.sync({ force: true });
 
@@ -71,6 +71,21 @@ describe('Test Suite for Highlights', () => {
       const errorMsg = '[startIndex] and [stopIndex] have to be numeric!';
       expect(response.status).to.equal(400);
       expect(response.body.error).to.equal(errorMsg);
+    });
+
+    it('should highlight an article with valid inputs', async () => {
+      const highlightObject = {
+        highlightedText: 'Something to think about',
+        startIndex: '2',
+        stopIndex: '58',
+        comment: 'This pushed me to the edge.'
+      };
+      const response = await chai.request(server)
+        .post(`${baseUrl}`)
+        .set('Authorization', accessToken)
+        .send(highlightObject);
+      expect(response.status).to.equal(201);
+      expect(response.body.stopIndex).to.equal(58);
     });
   });
 });
