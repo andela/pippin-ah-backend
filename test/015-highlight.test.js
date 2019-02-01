@@ -5,7 +5,11 @@ import server from '../app';
 
 chai.use(chaiHttp);
 
-let accessToken, secondUserAccessToken, url, articleSlug;
+let accessToken,
+  secondUserAccessToken,
+  url,
+  articleSlug,
+  highlightId;
 
 describe('Test Suite for Highlights', () => {
   before(async () => {
@@ -30,6 +34,13 @@ describe('Test Suite for Highlights', () => {
       category: 'Arts'
     };
 
+    const firstHighlightObject = {
+      highlightedText: 'it was at that moment I knew who he was',
+      startIndex: '72',
+      stopIndex: '105',
+      comment: 'I love how it was well put'
+    };
+
     const firstUserResponseObject = await chai.request(server)
       .post('/api/v1/users')
       .send(firstUserRequestObject);
@@ -46,6 +57,12 @@ describe('Test Suite for Highlights', () => {
       .set('Authorization', accessToken);
     articleSlug = articleResponse.body.slug;
     url = `/api/v1/articles/${articleSlug}/highlights`;
+
+    const highlightResponse = await chai.request(server)
+      .post(`${url}`)
+      .set('Authorization', accessToken)
+      .send(firstHighlightObject);
+    highlightId = highlightResponse.body.id;
   });
 
   describe('Highlight Text', () => {
@@ -115,5 +132,37 @@ describe('Test Suite for Highlights', () => {
       expect(response.status).to.equal(200);
       expect(typeof (response.body.highlights)).to.equal('object');
     });
+  });
+
+  describe('Remove Highlight', () => {
+    it('should return an error if highlight does not exist',
+      async () => {
+        const nonExistingId = '5dc8272e-6296-4048-a51c-2ef5f61e4ee6';
+        const response = await chai.request(server)
+          .delete(`${url}/${nonExistingId}`)
+          .set('Authorization', accessToken);
+        expect(response.status).to.equal(404);
+        expect(response.body.error).to.equal('Highlight does not exist');
+      });
+
+    it('should not remove a highlight if not owned by user',
+      async () => {
+        const response = await chai.request(server)
+          .delete(`${url}/${highlightId}`)
+          .set('Authorization', secondUserAccessToken);
+        const errorMessage = 'You are not authorized to delete this highlight!';
+        expect(response.status).to.equal(401);
+        expect(response.body.error).to.equal(errorMessage);
+      });
+
+    it('should successfully remove highlight',
+      async () => {
+        const response = await chai.request(server)
+          .delete(`${url}/${highlightId}`)
+          .set('Authorization', accessToken);
+        const message = 'Highlight removed successfully!';
+        expect(response.status).to.equal(200);
+        expect(response.body.message).to.equal(message);
+      });
   });
 });
