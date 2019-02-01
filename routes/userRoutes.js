@@ -11,7 +11,8 @@ const {
   emailExistsValidator,
   isUsernameValidator,
   usernameExistsValidator,
-  passwordValidator
+  passwordValidator,
+  isUsernameExists
 } = userValidations;
 
 const { approveRequest, rejectRequest } = Request;
@@ -74,6 +75,6 @@ router.route('/request')
   .post(verifyToken, canRequestToBeMentor, requestToBeMentor);
 
 router.route('/:username')
-  .get(verifyToken, getUser);
+  .get(verifyToken, isUsernameExists, getUser);
 
 export default router;
