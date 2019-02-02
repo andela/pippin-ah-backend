@@ -77,17 +77,51 @@
             "headers": {}
           },
           "400": {
-            "description": "Returns 400 for invalid email or password",
-            "example": {
-              "application/json": {
-                
-                  "error": "Invalid Credentials"
-                
+            "description": "Returns 400 for invalid Credentials",
+            "example": [
+                {
+                  "error": "password must contain only numbers and alphabets"
+                },
+                {
+                  "error": "Your username must be at least 6 characters"
+                },
+                {
+                  "error": "Your password must be at least 8 characters"
+                },
+                {
+                  "error": "username must contain only alphabets and numbers"
+                },
+                {
+                  "error": "please Enter a valid Email"
+                },
+                {
+                  "error": "password is required"
+                },
+                {
+                  "error": "Email is required"
+                },
+                {
+                  "error": "Username is required"
+                },
+                {
+                  "error": "username must not be empty"
+                },
+                {
+                  "error": "password must not be empty"
+                },
+                {
+                  "error": "email must not be empty"
                 }
-            }
-          },
+              ]
+            },
           "409": {
-            "description": "Email Already Exists"
+            "description":"returns 409 if email or username alread exist",
+            "example": [{
+            "error": "Email already in use"
+            },
+            {
+              "error": "Username already in use"
+              }]
           },
           "500": {
             "description": "Server Error"
@@ -143,6 +177,29 @@
               }
             },
             "headers": {}
+          },
+          "400": {
+            "description":"returns 409 if email or username alread exist",
+            "example": [
+              {
+              "error": "Invalid Credentials"
+            },
+            {
+              "error": "Invalid Password"
+            },
+            {
+              "error": "usernameOrEmail is required"
+            },
+            {
+              "error": "password is required"
+            },
+            {
+              "error": "Username must not be empty"
+            }
+            ]
+          },
+          "500": {
+            "description": "Server Error"
           }
         }
       }
