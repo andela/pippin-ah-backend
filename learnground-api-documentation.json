@@ -179,7 +179,7 @@
             "headers": {}
           },
           "400": {
-            "description":"returns 409 if email or username alread exist",
+            "description":"returns 400 for invalid credentials",
             "example": [
               {
               "error": "Invalid Credentials"
@@ -219,6 +219,11 @@
             "required": true,
             "type": "string",
             "description": ""
+          }
+        ],
+        "security": [
+          {
+            "UserToken": []
           }
         ],
         "responses": {
