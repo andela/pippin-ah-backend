@@ -391,6 +391,11 @@
             "description": ""
           }
         ],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -501,6 +506,17 @@
               ]
             },
             "headers": {}
+          },
+          "401": {
+            "description":"Token should be provided",
+            "example": [
+              {
+              "error": "Invalid token"
+            },
+            {
+              "error": "No token provide"
+            }
+            ]
           }
         }
       }
