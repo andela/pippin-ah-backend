@@ -908,11 +908,6 @@
           "application/json"
         ],
         "parameters": [],
-        "security": [
-          {
-            "UserToken": []
-          }
-        ],
         "responses": {
           "200": {
             "description": "",
@@ -1594,7 +1589,7 @@
         }
       }
     },
-    "/articles/categories": {
+    "/articles/:categories": {
       "get": {
         "description": "",
         "summary": "Get Article By Category",
