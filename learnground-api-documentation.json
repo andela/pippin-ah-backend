@@ -601,7 +601,7 @@
         }
       }
     },
-    "/user/request/approve/a42dfab2-9d63-4a83-a5ea-bd72151ce00f": {
+    "/user/request/approve/:id": {
       "patch": {
         "description": "",
         "summary": "Approve a user request to be a Mentor",
@@ -634,7 +634,7 @@
         }
       }
     },
-    "/user/request/reject/a42dfab2-9d63-4a83-a5ea-bd72151ce00f": {
+    "/user/request/reject/id": {
       "patch": {
         "description": "",
         "summary": "Reject request to be a Mentor",
@@ -667,7 +667,7 @@
         }
       }
     },
-    "/user/activate/a42dfab2-9d63-4a83-a5ea-bd72151ce00f": {
+    "/user/activate/id": {
       "get": {
         "description": "",
         "summary": "Activate User account, when link is clicked",
@@ -697,7 +697,7 @@
         }
       }
     },
-    "/profile/sarahaudud/follow": {
+    "/profile/:username/follow": {
       "post": {
         "description": "",
         "summary": "Follow a User",
@@ -1127,7 +1127,7 @@
         }
       }
     },
-    "/articles/report/slug-for-article": {
+    "/articles/report/:slug": {
       "post": {
         "description": "",
         "summary": "Report An Article",
@@ -1175,7 +1175,7 @@
         }
       }
     },
-    "/articles/slug-for-article": {
+    "/articles/:slug": {
       "get": {
         "description": "",
         "summary": "Get Article by slug",
@@ -1216,7 +1216,7 @@
         }
       }
     },
-    "/articles/bookmarks/how-to-be-a-developer-blakelively": {
+    "/articles/bookmarks/:slug": {
       "post": {
         "description": "",
         "summary": "Bookmark an Article",
@@ -1301,7 +1301,7 @@
         }
       }
     },
-    "/articles/how-to-be-a-developer-blakelively/comments": {
+    "/articles/:slug/comments": {
       "post": {
         "description": "",
         "summary": "Comment on an Article",
@@ -1351,7 +1351,7 @@
         }
       }
     },
-    "/articles/how-to-be-a-developer-blakelively/comment": {
+    "/articles/:slug/comment": {
       "patch": {
         "description": "",
         "summary": "Edit a comment",
@@ -1399,7 +1399,7 @@
         }
       }
     },
-    "/articles/how-to-be-a-developer-blakelively/comments/tyeufhdj6475883gdtgry": {
+    "/articles/:slug/comments/:id": {
       "delete": {
         "description": "",
         "summary": "Delete A comment",
@@ -1424,7 +1424,7 @@
         }
       }
     },
-    "/articles/rating/how-to-be-a-developer-blakelively": {
+    "/articles/rating/:slug": {
       "patch": {
         "description": "",
         "summary": "Rate An Article",
@@ -1454,7 +1454,7 @@
         }
       }
     },
-    "/articles/how-to-be-a-developer-blakelively/like": {
+    "/articles/:slug/like": {
       "patch": {
         "description": "",
         "summary": "Like an article",
@@ -1482,7 +1482,7 @@
         }
       }
     },
-    "/articles/how-to-be-a-developer-blakelively/dislike": {
+    "/articles/:slug/dislike": {
       "patch": {
         "description": "",
         "summary": "Dislike An Article",
@@ -1510,7 +1510,7 @@
         }
       }
     },
-    "/articles/how-to-be-a-developer-blakelively/cancelReaction": {
+    "/articles/:slug/cancelReaction": {
       "patch": {
         "description": "",
         "summary": "Cancel Reaction On an Article",
@@ -1538,7 +1538,7 @@
         }
       }
     },
-    "/articles/how-to-be-a-developer-blakelively/comments/55EWRFFDFR34567/like": {
+    "/articles/:slug/comments/id/like": {
       "post": {
         "description": "",
         "summary": "Like A comment",
@@ -1566,7 +1566,7 @@
         }
       }
     },
-    "/articles/how-to-be-a-developer-blakelively/comments/55EWRFFDFR34567/dislike": {
+    "/articles/:slug/comments/:id/dislike": {
       "patch": {
         "description": "",
         "summary": "Dislike A comment",
@@ -1859,7 +1859,7 @@
         }
       }
     },
-    "/notifications/ea17bf8c-4066-47c6-8191-b2be236a68d9/mark-as-read": {
+    "/notifications/:id/mark-as-read": {
       "patch": {
         "description": "",
         "summary": "Mark Notification as read",
@@ -1897,9 +1897,7 @@
       "example": {
         "message": "An email has been sent to your email address",
         "username": "blakelively",
-        "email": "blake2019@gmail.com",
-        "notification": [],
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNGFiNDlkLTg5YWEtNGJiNC04NzFhLTExZDZlODc0YTMyYyIsImlzTWVudG9yIjpmYWxzZSwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTU0OTAzMjE3NCwiZXhwIjoxNTQ5MjkxMzc0fQ.cvC_GKZ1Ieq7FiT0KMxSuQJq5E7GxJGeCwYDZ0lL-Qo"
+        "email": "blake2019@gmail.com"   
       },
       "type": "object",
       "properties": {
@@ -1911,23 +1909,12 @@
         },
         "email": {
           "type": "string"
-        },
-        "notification": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "token": {
-          "type": "string"
         }
       },
       "required": [
         "message",
         "username",
-        "email",
-        "notification",
-        "token"
+        "email"
       ]
     },
     "SignInResponse": {
