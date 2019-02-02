@@ -78,9 +78,8 @@ describe('NOTIFIER TEST SUITE', () => {
           .set('Authorization', accessToken);
         expect(response.status).to.equal(200);
         expect(response.body[0]).to.have.deep.property('notficationId');
-        expect(response.body[0].body).to
-          .equal('Redneck just commented on your article: The new boston');
         expect(Array.isArray(response.body)).to.equal(true);
+        expect(response.body.length).to.equal(2);
       }
     );
 

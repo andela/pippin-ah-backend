@@ -1,5 +1,6 @@
 import Sequelize from 'sequelize';
 import models from '../models';
+import { Notifier } from '../services';
 
 const { iLike } = Sequelize.Op;
 const { User, Follow, Profile } = models;
@@ -19,6 +20,10 @@ export default {
       followerId: req.decoded.id,
       userId: userToFollow.id
     });
+
+    const followingUser = await User.findByPk(req.decoded.id);
+    Notifier.notifyOfNewFollower(userToFollow.id, followingUser.username);
+
     return res.json({
       message: `You are now following ${userToFollow.username}`,
       profile: {
