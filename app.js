@@ -4,7 +4,7 @@ import swaggerUi from 'swagger-ui-express';
 import session from 'express-session';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import swaggerDocument from './learngroundapidocumentation.json';
+import swaggerDocument from './learnground-api-documentation.json';
 
 import initPassport from './config';
 import { errorHandler, notFoundRoute } from './middlewares';
