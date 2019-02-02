@@ -54,6 +54,7 @@
     "sequelize-cli": "^5.4.0",
     "slug": "^0.9.1",
     "supertest": "^3.3.0",
+    "swagger-ui-express": "^4.0.2",
     "underscore": "^1.9.1",
     "validator": "^10.10.0"
   },
