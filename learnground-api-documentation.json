@@ -361,6 +361,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
