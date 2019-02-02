@@ -1,5 +1,5 @@
 import models from '../models';
-import sendEmail from '../services';
+import sendEmail, { Notifier } from '../services';
 import { emailMessages } from '../helpers';
 
 const { User, Request } = models;
@@ -13,7 +13,7 @@ export default {
     const foundRequest = await Request.findOne({ where: { id } });
 
     await foundRequest.update({ status: 'approved' });
-
+    Notifier.notifyOfRequestStatus(foundUser.id, 'approved');
     const subject = 'LEARNGROUND REQUEST UPDATE';
     const { email, username } = foundUser;
     const html = emailMessages.acceptMentorshipMessage(username);
@@ -28,7 +28,7 @@ export default {
       where: { id },
       include: {
         model: User,
-        attributes: ['username', 'email']
+        attributes: ['username', 'email', 'id']
       }
     });
 
@@ -36,6 +36,7 @@ export default {
 
     const subject = 'LEARNGROUND REQUEST UPDATE';
     const { email, username } = foundRequest.User;
+    Notifier.notifyOfRequestStatus(foundRequest.User.id, 'rejected');
     const html = emailMessages.rejectMentorshipMessage(username);
     sendEmail({ email, subject, html });
 
@@ -54,9 +55,10 @@ export default {
 
     const admins = await User.findAll({
       where: { isAdmin: true },
-      attributes: ['email']
+      attributes: ['email', 'id']
     });
 
+    Notifier.notifyAdminsOfRequest(requester.username, admins);
     admins.forEach(admin => sendEmail({
       email: admin.email,
       subject,
