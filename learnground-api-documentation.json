@@ -246,7 +246,21 @@
               }
             },
             "headers": {}
-          }
+          },
+          "401": {
+            "description":"Token should be provided",
+            "example": [
+              {
+              "error": "Invalid token"
+            },
+            {
+              "error": "No token provide"
+            }
+            ]
+          },
+          "500": {
+            "description": "Server Error"
+          }  
         }
       },
       "patch": {
@@ -289,6 +303,11 @@
             "description": ""
           }
         ],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -304,6 +323,31 @@
               }
             },
             "headers": {}
+          },
+          "401": {
+            "description":"Token should be provided",
+            "example": [
+              {
+              "error": "Invalid token"
+            },
+            {
+              "error": "No token provide"
+            }
+            ]
+          },
+          "400": {
+            "description":"Bad reques",
+            "example": [
+              {
+              "error": "Username already in use"
+            },
+            {
+              "error": "Email already in use"
+            }
+            ]
+          },
+          "500": {
+            "description": "Server Error"
           }
         }
       }
