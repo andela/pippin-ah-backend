@@ -540,12 +540,18 @@
             "type": "string",
             "description": ""
           },
+          
           {
             "name": "Content-Type",
             "in": "header",
             "required": true,
             "type": "string",
             "description": ""
+          }
+        ],
+        "security": [
+          {
+            "UserToken": []
           }
         ],
         "responses": {
@@ -573,6 +579,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -599,6 +610,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -627,6 +643,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -655,6 +676,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -688,6 +714,11 @@
             "description": ""
           }
         ],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -719,6 +750,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -754,6 +790,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -828,6 +869,11 @@
             "description": ""
           }
         ],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "201": {
             "description": "",
@@ -862,6 +908,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -1084,6 +1135,11 @@
         "produces": [
           "application/json"
         ],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "consumes": [
           "application/x-www-form-urlencoded"
         ],
@@ -1128,6 +1184,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -1164,6 +1225,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "201": {
             "description": "",
@@ -1185,6 +1251,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -1208,6 +1279,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -1250,6 +1326,11 @@
             "required": true,
             "type": "string",
             "description": ""
+          }
+        ],
+        "security": [
+          {
+            "UserToken": []
           }
         ],
         "responses": {
@@ -1295,6 +1376,11 @@
             "required": true,
             "type": "string",
             "description": ""
+          }
+        ],
+        "security": [
+          {
+            "UserToken": []
           }
         ],
         "responses": {
@@ -1347,6 +1433,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -1372,6 +1463,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -1395,6 +1491,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -1418,6 +1519,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -1441,6 +1547,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "201": {
             "description": "",
@@ -1464,6 +1575,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -1487,6 +1603,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -1710,6 +1831,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -1742,6 +1868,11 @@
           "application/json"
         ],
         "parameters": [],
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
