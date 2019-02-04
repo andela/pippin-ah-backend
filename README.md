@@ -10,7 +10,8 @@ Create a community of like minded authors to foster inspiration and innovation
 by leveraging the modern web.
 
 ---
-
+## API Docs
+'https://learnground-api-staging.herokuapp.com/api-docs'
 ## API Spec
 The preferred JSON object to be returned by the API should be structured as follows:
 
