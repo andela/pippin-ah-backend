@@ -1,8 +1,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface
     .addColumn('Articles', 'coverImageUrl', {
-      type: Sequelize.BOOLEAN,
-      defaultValue: false
+      type: Sequelize.STRING
     }),
   // eslint-disable-next-line no-unused-vars
   down: (queryInterface, Sequelize) => queryInterface
