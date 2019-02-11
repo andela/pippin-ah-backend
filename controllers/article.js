@@ -24,7 +24,7 @@ const {
 export default {
   async createArticle(req, res) {
     const {
-      title, body, description, category,
+      title, body, description, category, coverImageUrl
     } = req.body;
 
     const userId = req.decoded.id;
@@ -41,6 +41,7 @@ export default {
         body: body.trim(),
         description: description.trim(),
         category: category.trim(),
+        coverImageUrl: coverImageUrl.trim(),
         slug: `${generateSlug(title)}-${user.username}`,
         userId,
         readTime: getReadTime(body.trim())
@@ -172,6 +173,7 @@ export default {
       category: item.category,
       body: item.body,
       readTime: item.readTime,
+      coverImageUrl: item.coverImageUrl,
       createdOn: dateFns.format(new Date(item.createdAt), 'D MMMM YYYY, h:ssA'),
       modifiedOn: dateFns.format(new Date(item.updatedAt), 'D MMMM YYYY, h:ssA')
     })
@@ -199,6 +201,7 @@ export default {
       title: article.title,
       body: article.body,
       description: article.description,
+      coverImageUrl: article.coverImageUrl,
       tags: article.tags,
       slug: article.slug,
       rating: article.rating,
