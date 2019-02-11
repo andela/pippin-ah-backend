@@ -22,6 +22,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: false
     },
+    coverImageUrl: {
+      type: DataTypes.STRING
+    },
     tags: {
       type: DataTypes.ARRAY(DataTypes.STRING)
     },

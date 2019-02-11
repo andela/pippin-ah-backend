@@ -139,9 +139,10 @@ export default {
 
   async isInputValid(req, res, next) {
     const {
-      title, body, description, category
+      title, body, description, category, coverImageUrl
     } = req.body;
     const inputArray = [title, body, description, category];
+    if (coverImageUrl) inputArray.push(coverImageUrl);
     const errorMessage = 'Input types have to be string!';
     inputTypeValidator(isString, inputArray, errorMessage, next);
     return next();
