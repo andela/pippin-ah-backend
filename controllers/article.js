@@ -27,13 +27,6 @@ export default {
       title, body, description, category, coverImageUrl
     } = req.body;
 
-    let imgUrl;
-    if (coverImageUrl) {
-      imgUrl = coverImageUrl;
-    } else {
-      imgUrl = '';
-    }
-
     const userId = req.decoded.id;
     const user = await User.findOne(
       {
@@ -48,7 +41,7 @@ export default {
         body: body.trim(),
         description: description.trim(),
         category: category.trim(),
-        coverImageUrl: imgUrl.trim(),
+        coverImageUrl: coverImageUrl && coverImageUrl.trim(),
         slug: `${generateSlug(title)}-${user.username}`,
         userId,
         readTime: getReadTime(body.trim())
