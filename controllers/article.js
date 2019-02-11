@@ -72,6 +72,7 @@ export default {
       description: article.description,
       slug: article.slug,
       rating: article.rating,
+      coverImageUrl: article.coverImageUrl,
       createdAt: article.createdAt,
       readTime: article.readTime,
       author: {
