@@ -340,7 +340,7 @@ class Users {
     const mailHeader = 'LearnGround Password Reset';
     const frontendUrl = process.env.FRONTEND_URL;
     // eslint-disable-next-line
-    const resetLink = `${req.protocol}://${frontendUrl}/resetpassword?${resetToken}`;
+    const resetLink = `${req.protocol}://${frontendUrl}/newpassword?${resetToken}`;
     const resetMail = getResetMail(user.username, mailHeader, resetLink);
     sendEmail({ email: user.email, subject: mailHeader, html: resetMail });
     res.send({
