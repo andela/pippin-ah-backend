@@ -338,8 +338,9 @@ class Users {
     user.tokenExpires = (Date.now() / 1000) + 900000;
     await user.save();
     const mailHeader = 'LearnGround Password Reset';
+    const frontendUrl = process.env.FRONTEND_URL;
     // eslint-disable-next-line
-    const resetLink = `${req.protocol}://${req.get('host')}/resetpassword?${resetToken}`;
+    const resetLink = `${req.protocol}://${frontendUrl}/newpassword?${resetToken}`;
     const resetMail = getResetMail(user.username, mailHeader, resetLink);
     sendEmail({ email: user.email, subject: mailHeader, html: resetMail });
     res.send({
