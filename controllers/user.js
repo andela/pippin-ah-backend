@@ -163,7 +163,8 @@ class Users {
     const tokenPayload = {
       id: user.id,
       isMentor: user.isMentor,
-      isAdmin: user.isAdmin
+      isAdmin: user.isAdmin,
+      username: user.username
     };
 
     return res.status(200).json({
