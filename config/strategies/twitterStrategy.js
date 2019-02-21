@@ -1,14 +1,13 @@
 import passport from 'passport';
-import Strategy from 'passport-twitter';
+import TwitterTokenStrategy from 'passport-twitter-token';
 import { Users } from '../../controllers';
 import { twitterMockStrategy } from './mockStrategy';
 
 const { processSocialUser } = Users;
 
-const strategy = new Strategy({
+const strategy = new TwitterTokenStrategy({
   consumerKey: process.env.TWITTER_CONSUMER_KEY,
   consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-  callbackURL: '/api/v1/users/twitter/redirect',
   includeEmail: true
 },
 (accessToken, refreshToken, profile, done) => {

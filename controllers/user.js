@@ -323,6 +323,51 @@ class Users {
     * @param {object} req - The request object.
     * @param {object} res - The response object.
     */
+  static async processTwitterSocialUser(req, res) {
+    const {
+      email, lastName, firstName, imageUrl
+    } = req.user;
+
+    const user = await User
+      .findOne({ where: { email: { [iLike]: email } } });
+    if (user) {
+      const tokenPayload = {
+        id: user.id,
+        isMentor: user.isMentor,
+        isAdmin: user.isAdmin
+      };
+      const token = generateToken(tokenPayload);
+      return res.json({
+        username: user.username,
+        email: user.email,
+        token
+      });
+    }
+    const username = email.substring(0, email.indexOf('@')).replace('.', '')
+            + Math.random().toString(36).replace('0.', '');
+    const newUser = await User
+      .create({ email, username, isActive: true });
+    const profile = new Profile({ lastName, firstName, imageUrl });
+    await newUser.setProfile(profile);
+    const tokenPayload = {
+      id: newUser.id,
+      isMentor: false,
+      isAdmin: newUser.isAdmin
+    };
+    const token = generateToken(tokenPayload);
+    return res.status(201).json({
+      email: newUser.email,
+      token
+    });
+  }
+
+
+  /**
+    * Represents a controller.
+    * @constructor
+    * @param {object} req - The request object.
+    * @param {object} res - The response object.
+    */
   static async processSocialUser(req, res) {
     const {
       email, lastName, firstName, imageUrl
