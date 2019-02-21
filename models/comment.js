@@ -23,6 +23,12 @@ module.exports = (sequelize, DataTypes) => {
     Comment.belongsTo(models.Article, {
       foreignKey: 'articleId'
     });
+    Comment.belongsTo(models.User, {
+      foreignKey: 'userId'
+    });
+    Comment.hasMany(models.CommentReaction, {
+      foreignKey: 'commentId'
+    });
   };
   return Comment;
 };

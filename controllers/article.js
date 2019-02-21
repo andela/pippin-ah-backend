@@ -11,7 +11,9 @@ const {
   Report,
   Bookmark,
   Follow,
-  Comment
+  Comment,
+  Reaction,
+  CommentReaction
 } = models;
 const {
   iLike,
@@ -190,12 +192,57 @@ export default {
     const { slug } = req.params;
     const article = await Article.findOne({
       where: { slug },
-      include: [{
-        model: Comment,
-        required: false,
-        attributes: ['id', 'userId', 'comment']
-      }]
+      include: [
+        {
+          model: Comment,
+          required: false,
+          attributes: ['id', 'userId', 'comment'],
+          include: [{
+            model: User,
+            required: false,
+            attributes: ['username'],
+            include: [{
+              model: Profile,
+              required: false,
+              attributes: ['firstName', 'lastName', 'imageUrl']
+            }]
+          }, {
+            model: CommentReaction,
+            required: false,
+            attributes: ['commentId', 'commentLikedBy', 'liked'],
+            where: { liked: true }
+          }]
+        },
+        {
+          model: User,
+          required: false,
+          attributes: ['username'],
+          include: [{
+            model: Profile,
+            required: false,
+            attributes: ['firstName', 'lastName', 'imageUrl']
+          }]
+        },
+        {
+          model: Reaction,
+          where: { liked: true },
+          required: false
+        }
+      ]
     });
+
+    const comments = article.Comments.map(commentItem => ({
+      id: commentItem.id,
+      userId: commentItem.userId,
+      comment: commentItem.comment,
+      totalLikes: commentItem.CommentReactions.length,
+      author: {
+        firstName: commentItem.User.Profile.firstName,
+        lastName: commentItem.User.Profile.lastName,
+        imageUrl: commentItem.User.Profile.imageUrl,
+        username: commentItem.User.username
+      }
+    }));
 
     const response = {
       id: article.id,
@@ -211,9 +258,15 @@ export default {
       readTime: article.readTime,
       createdAt: article.createdAt,
       updatedAt: article.updatedAt,
-      comments: article.Comments
+      totalLikes: article.Reactions.length,
+      comments,
+      author: {
+        username: article.User.username,
+        firstName: article.User.Profile.firstName,
+        lastName: article.User.Profile.lastName,
+        imageUrl: article.User.Profile.imageUrl
+      }
     };
-
     return res.json(response);
   },
 
