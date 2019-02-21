@@ -167,10 +167,43 @@ class Users {
       username: user.username
     };
 
+    const userProfile = await Users.getUserProfile(user.username);
 
-    const getUserProfile = await User.findOne(
+    const topArticles = userProfile.Articles.slice(0, 5).map(item => ({
+      slug: item.slug,
+      title: item.title,
+      description: item.description,
+      aveRating: item.aveRating
+    }));
+
+
+    return res.status(200).json({
+      message: 'Login was successful',
+      token: generateToken(tokenPayload),
+      notifications: notificationArray,
+      username: user.username,
+      firstName: userProfile.Profile.firstName,
+      lastName: userProfile.Profile.lastName,
+      bio: userProfile.Profile.bio,
+      imageUrl: userProfile.Profile.imageUrl,
+      following: userProfile.followerDetails.length,
+      followers: userProfile.userDetails.length,
+      articles: {
+        top: topArticles,
+        total: userProfile.Articles.length
+      }
+    });
+  }
+
+  /**
+    * Represents a controller.
+    * @constructor
+    * @param {string} username - The username variable.
+    */
+  static async getUserProfile(username) {
+    const userProfile = await User.findOne(
       {
-        where: { username: user.username },
+        where: { username },
         attributes: ['username', 'isMentor'],
         include: [
           {
@@ -212,30 +245,7 @@ class Users {
         ]
       });
 
-    const topArticles = getUserProfile.Articles.slice(0, 5).map(item => ({
-      slug: item.slug,
-      title: item.title,
-      description: item.description,
-      aveRating: item.aveRating
-    }));
-
-
-    return res.status(200).json({
-      message: 'Login was successful',
-      token: generateToken(tokenPayload),
-      notifications: notificationArray,
-      username: user.username,
-      firstName: getUserProfile.Profile.firstName,
-      lastName: getUserProfile.Profile.lastName,
-      bio: getUserProfile.Profile.bio,
-      imageUrl: getUserProfile.Profile.imageUrl,
-      following: getUserProfile.followerDetails.length,
-      followers: getUserProfile.userDetails.length,
-      articles: {
-        top: topArticles,
-        total: getUserProfile.Articles.length
-      }
-    });
+    return userProfile;
   }
 
   /**
@@ -280,51 +290,8 @@ class Users {
     const html = emailMessages.registerMessage(activationUrl);
     sendEmail({ email, subject, html });
 
-    const getUserProfile = await User.findOne(
-      {
-        where: { username: user.username },
-        attributes: ['username', 'isMentor'],
-        include: [
-          {
-            model: Profile,
-            attributes: ['firstName', 'lastName', 'imageUrl', 'bio']
-          },
-          {
-            model: Article,
-            attributes: ['title', 'body', 'description', 'slug', 'aveRating'],
-            include: {
-              model: Reaction,
-              where: { liked: true },
-              required: false
-            }
-          },
-          {
-            model: Follow,
-            attributes: ['followerId'],
-            as: 'userDetails'
-          },
-          {
-            model: Follow,
-            attributes: ['userId'],
-            as: 'followerDetails'
-          },
-        ],
-        group: [
-          'User.id',
-          'Profile.id',
-          'Articles.id',
-          'Articles->Reactions.id',
-          'userDetails.id',
-          'followerDetails.id',
-        ],
-        order: [
-          [Sequelize.fn('MAX', Sequelize.col('aveRating')), 'DESC NULLS LAST'],
-          [Sequelize.fn('COUNT', Sequelize.col('liked')), 'DESC'],
-          [Sequelize.fn('LENGTH', Sequelize.col('body')), 'DESC']
-        ]
-      });
-
-    const topArticles = getUserProfile.Articles.slice(0, 5).map(item => ({
+    const userProfile = await Users.getUserProfile(user.username);
+    const topArticles = userProfile.Articles.slice(0, 5).map(item => ({
       slug: item.slug,
       title: item.title,
       description: item.description,
@@ -337,15 +304,15 @@ class Users {
       email: user.email,
       notification,
       token,
-      firstName: getUserProfile.Profile.firstName,
-      lastName: getUserProfile.Profile.lastName,
-      bio: getUserProfile.Profile.bio,
-      imageUrl: getUserProfile.Profile.imageUrl,
-      following: getUserProfile.followerDetails.length,
-      followers: getUserProfile.userDetails.length,
+      firstName: userProfile.Profile.firstName,
+      lastName: userProfile.Profile.lastName,
+      bio: userProfile.Profile.bio,
+      imageUrl: userProfile.Profile.imageUrl,
+      following: userProfile.followerDetails.length,
+      followers: userProfile.userDetails.length,
       articles: {
         top: topArticles,
-        total: getUserProfile.Articles.length
+        total: userProfile.Articles.length
       }
     });
   }
