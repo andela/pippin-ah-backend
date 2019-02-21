@@ -167,11 +167,85 @@ class Users {
       username: user.username
     };
 
+    const userProfile = await Users.getUserProfile(user.username);
+
+    const topArticles = userProfile.Articles.slice(0, 5).map(item => ({
+      slug: item.slug,
+      title: item.title,
+      description: item.description,
+      aveRating: item.aveRating
+    }));
+
+
     return res.status(200).json({
       message: 'Login was successful',
       token: generateToken(tokenPayload),
-      notifications: notificationArray
+      notifications: notificationArray,
+      username: user.username,
+      firstName: userProfile.Profile.firstName,
+      lastName: userProfile.Profile.lastName,
+      bio: userProfile.Profile.bio,
+      imageUrl: userProfile.Profile.imageUrl,
+      following: userProfile.followerDetails.length,
+      followers: userProfile.userDetails.length,
+      articles: {
+        top: topArticles,
+        total: userProfile.Articles.length
+      }
     });
+  }
+
+  /**
+    * Represents a controller.
+    * @constructor
+    * @param {string} username - The username variable.
+    */
+  static async getUserProfile(username) {
+    const userProfile = await User.findOne(
+      {
+        where: { username },
+        attributes: ['username', 'isMentor'],
+        include: [
+          {
+            model: Profile,
+            attributes: ['firstName', 'lastName', 'imageUrl', 'bio']
+          },
+          {
+            model: Article,
+            attributes: ['title', 'body', 'description', 'slug', 'aveRating'],
+            include: {
+              model: Reaction,
+              where: { liked: true },
+              required: false
+            }
+          },
+          {
+            model: Follow,
+            attributes: ['followerId'],
+            as: 'userDetails'
+          },
+          {
+            model: Follow,
+            attributes: ['userId'],
+            as: 'followerDetails'
+          },
+        ],
+        group: [
+          'User.id',
+          'Profile.id',
+          'Articles.id',
+          'Articles->Reactions.id',
+          'userDetails.id',
+          'followerDetails.id'
+        ],
+        order: [
+          [Sequelize.fn('MAX', Sequelize.col('aveRating')), 'DESC NULLS LAST'],
+          [Sequelize.fn('COUNT', Sequelize.col('liked')), 'DESC'],
+          [Sequelize.fn('LENGTH', Sequelize.col('body')), 'DESC']
+        ]
+      });
+
+    return userProfile;
   }
 
   /**
@@ -214,14 +288,32 @@ class Users {
 
     const activationUrl = `${userActivationUrl}${user.id}`;
     const html = emailMessages.registerMessage(activationUrl);
-
     sendEmail({ email, subject, html });
+
+    const userProfile = await Users.getUserProfile(user.username);
+    const topArticles = userProfile.Articles.slice(0, 5).map(item => ({
+      slug: item.slug,
+      title: item.title,
+      description: item.description,
+      aveRating: item.aveRating
+    }));
+
     return res.status(201).json({
       message: 'An email has been sent to your email address',
       username: user.username,
       email: user.email,
       notification,
-      token
+      token,
+      firstName: userProfile.Profile.firstName,
+      lastName: userProfile.Profile.lastName,
+      bio: userProfile.Profile.bio,
+      imageUrl: userProfile.Profile.imageUrl,
+      following: userProfile.followerDetails.length,
+      followers: userProfile.userDetails.length,
+      articles: {
+        top: topArticles,
+        total: userProfile.Articles.length
+      }
     });
   }
 
