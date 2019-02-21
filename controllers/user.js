@@ -167,10 +167,74 @@ class Users {
       username: user.username
     };
 
+
+    const getUserProfile = await User.findOne(
+      {
+        where: { username: user.username },
+        attributes: ['username', 'isMentor'],
+        include: [
+          {
+            model: Profile,
+            attributes: ['firstName', 'lastName', 'imageUrl', 'bio']
+          },
+          {
+            model: Article,
+            attributes: ['title', 'body', 'description', 'slug', 'aveRating'],
+            include: {
+              model: Reaction,
+              where: { liked: true },
+              required: false
+            }
+          },
+          {
+            model: Follow,
+            attributes: ['followerId'],
+            as: 'userDetails'
+          },
+          {
+            model: Follow,
+            attributes: ['userId'],
+            as: 'followerDetails'
+          },
+        ],
+        group: [
+          'User.id',
+          'Profile.id',
+          'Articles.id',
+          'Articles->Reactions.id',
+          'userDetails.id',
+          'followerDetails.id'
+        ],
+        order: [
+          [Sequelize.fn('MAX', Sequelize.col('aveRating')), 'DESC NULLS LAST'],
+          [Sequelize.fn('COUNT', Sequelize.col('liked')), 'DESC'],
+          [Sequelize.fn('LENGTH', Sequelize.col('body')), 'DESC']
+        ]
+      });
+
+    const topArticles = getUserProfile.Articles.slice(0, 5).map(item => ({
+      slug: item.slug,
+      title: item.title,
+      description: item.description,
+      aveRating: item.aveRating
+    }));
+
+
     return res.status(200).json({
       message: 'Login was successful',
       token: generateToken(tokenPayload),
-      notifications: notificationArray
+      notifications: notificationArray,
+      username: user.username,
+      firstName: getUserProfile.Profile.firstName,
+      lastName: getUserProfile.Profile.lastName,
+      bio: getUserProfile.Profile.bio,
+      imageUrl: getUserProfile.Profile.imageUrl,
+      following: getUserProfile.followerDetails.length,
+      followers: getUserProfile.userDetails.length,
+      articles: {
+        top: topArticles,
+        total: getUserProfile.Articles.length
+      }
     });
   }
 
@@ -214,14 +278,75 @@ class Users {
 
     const activationUrl = `${userActivationUrl}${user.id}`;
     const html = emailMessages.registerMessage(activationUrl);
-
     sendEmail({ email, subject, html });
+
+    const getUserProfile = await User.findOne(
+      {
+        where: { username: user.username },
+        attributes: ['username', 'isMentor'],
+        include: [
+          {
+            model: Profile,
+            attributes: ['firstName', 'lastName', 'imageUrl', 'bio']
+          },
+          {
+            model: Article,
+            attributes: ['title', 'body', 'description', 'slug', 'aveRating'],
+            include: {
+              model: Reaction,
+              where: { liked: true },
+              required: false
+            }
+          },
+          {
+            model: Follow,
+            attributes: ['followerId'],
+            as: 'userDetails'
+          },
+          {
+            model: Follow,
+            attributes: ['userId'],
+            as: 'followerDetails'
+          },
+        ],
+        group: [
+          'User.id',
+          'Profile.id',
+          'Articles.id',
+          'Articles->Reactions.id',
+          'userDetails.id',
+          'followerDetails.id',
+        ],
+        order: [
+          [Sequelize.fn('MAX', Sequelize.col('aveRating')), 'DESC NULLS LAST'],
+          [Sequelize.fn('COUNT', Sequelize.col('liked')), 'DESC'],
+          [Sequelize.fn('LENGTH', Sequelize.col('body')), 'DESC']
+        ]
+      });
+
+    const topArticles = getUserProfile.Articles.slice(0, 5).map(item => ({
+      slug: item.slug,
+      title: item.title,
+      description: item.description,
+      aveRating: item.aveRating
+    }));
+
     return res.status(201).json({
       message: 'An email has been sent to your email address',
       username: user.username,
       email: user.email,
       notification,
-      token
+      token,
+      firstName: getUserProfile.Profile.firstName,
+      lastName: getUserProfile.Profile.lastName,
+      bio: getUserProfile.Profile.bio,
+      imageUrl: getUserProfile.Profile.imageUrl,
+      following: getUserProfile.followerDetails.length,
+      followers: getUserProfile.userDetails.length,
+      articles: {
+        top: topArticles,
+        total: getUserProfile.Articles.length
+      }
     });
   }
 
