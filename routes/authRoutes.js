@@ -1,6 +1,12 @@
 import express from 'express';
 import { Users } from '../controllers';
 import { userValidations } from '../middlewares';
+import
+{
+  sendTwitterUser,
+  getTwitterUser
+} from '../middlewares/authenticateTwitter';
+
 import {
   googleStrategy,
   facebookStrategy,
@@ -46,6 +52,7 @@ const {
 } = facebookStrategy;
 const {
   twitterAuthenticate,
+  twitterTokenAuth,
   twitterRedirect,
   twitterOnAuthSuccess,
 } = twitterStrategy;
@@ -85,6 +92,12 @@ router.route('/twitter')
 
 router.route('/twitter/redirect')
   .get(twitterRedirect, twitterOnAuthSuccess);
+
+router.route('/twitter/reverse')
+  .post(sendTwitterUser, twitterTokenAuth);
+
+router.route('/twitter')
+  .post(getTwitterUser, twitterOnAuthSuccess);
 
 router.route('/facebook')
   .get(fbAuthenticate);

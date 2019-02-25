@@ -27,7 +27,9 @@ export default {
   twitterAuthenticate: passport.authenticate(
     'twitter', { scope: ['include_email =true'] }
   ),
-
+  twitterTokenAuth: passport.authenticate(
+    'twitter-token', { scope: ['include_email =true'] }
+  ),
   twitterRedirect: passport.authenticate('twitter',
     {
       failureRedirect: '/api/v1/users/twitter/redirect',

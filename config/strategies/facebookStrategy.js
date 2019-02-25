@@ -8,8 +8,7 @@ const { processSocialUser } = Users;
 const strategy = new FacebookStrategy({
   clientID: process.env.FACEBOOK_ID,
   clientSecret: process.env.FACEBOOK_SECRET,
-  callbackURL:
-  `${process.env.FACEBOOK_CALLBACK}/api/v1/users/facebook/redirect`,
+  callbackURL: `${process.env.CLIENT_PORT}/auth?facebook`,
   profileFields: ['id', 'emails', 'name']
 },
 (accessToken, refreshToken, profile, done) => {

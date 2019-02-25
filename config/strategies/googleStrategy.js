@@ -8,7 +8,7 @@ const { processSocialUser } = Users;
 const strategy = new GoogleStrategy({
   clientID: process.env.GOOGLE_ID,
   clientSecret: process.env.GOOGLE_SECRET,
-  callbackURL: '/api/v1/users/google/redirect'
+  callbackURL: `${process.env.CLIENT_PORT}/auth?google`
 }, (accessToken, refreshToken, profile, done) => {
   done(null, {
     email: profile.emails[0].value,

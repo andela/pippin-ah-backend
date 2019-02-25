@@ -22,7 +22,14 @@ const app = express();
 initPassport();
 
 app.enable('trust proxy');
-app.use(cors());
+
+const corsOption = {
+  origin: true,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  exposedHeaders: ['x-auth-token']
+};
+app.use(cors(corsOption));
 
 // Normal express config defaults
 app.use(require('morgan')('dev'));
