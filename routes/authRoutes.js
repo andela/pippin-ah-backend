@@ -1,17 +1,17 @@
 import express from 'express';
 import { Users } from '../controllers';
-import { userValidations } from '../middlewares';
-import
-{
-  sendTwitterUser,
-  getTwitterUser
-} from '../middlewares/authenticateTwitter';
+import { userValidations, authenticateTwitter } from '../middlewares';
 
 import {
   googleStrategy,
   facebookStrategy,
   twitterStrategy
 } from '../config/strategies';
+
+const {
+  sendTwitterUser,
+  getTwitterUser
+} = authenticateTwitter;
 
 const {
   expectedParamsValidator,
@@ -51,9 +51,7 @@ const {
   fbOnAuthSuccess
 } = facebookStrategy;
 const {
-  twitterAuthenticate,
   twitterTokenAuth,
-  twitterRedirect,
   twitterOnAuthSuccess,
 } = twitterStrategy;
 
@@ -87,17 +85,11 @@ router.route('/google')
 router.route('/google/redirect')
   .get(googleRedirect, googleOnAuthSuccess);
 
-router.route('/twitter')
-  .get(twitterAuthenticate);
-
-router.route('/twitter/redirect')
-  .get(twitterRedirect, twitterOnAuthSuccess);
-
 router.route('/twitter/reverse')
-  .post(sendTwitterUser, twitterTokenAuth);
+  .post(sendTwitterUser);
 
 router.route('/twitter')
-  .post(getTwitterUser, twitterOnAuthSuccess);
+  .post(getTwitterUser, twitterTokenAuth, twitterOnAuthSuccess);
 
 router.route('/facebook')
   .get(fbAuthenticate);

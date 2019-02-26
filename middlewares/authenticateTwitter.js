@@ -1,6 +1,6 @@
 import request from 'request';
 
-export const sendTwitterUser = (req, res, next) => {
+const sendTwitterUser = (req, res, next) => {
   request.post({
     url: 'https://api.twitter.com/oauth/request_token',
     oauth: {
@@ -20,7 +20,7 @@ export const sendTwitterUser = (req, res, next) => {
   });
 };
 
-export const getTwitterUser = (req, res, next) => {
+const getTwitterUser = (req, res, next) => {
   request.post({
     url: 'https://api.twitter.com/oauth/access_token?oauth_verifier',
     oauth: {
@@ -47,3 +47,5 @@ export const getTwitterUser = (req, res, next) => {
     next();
   });
 };
+
+export default { sendTwitterUser, getTwitterUser };

@@ -8,6 +8,7 @@ const { processSocialUser } = Users;
 const strategy = new TwitterTokenStrategy({
   consumerKey: process.env.TWITTER_CONSUMER_KEY,
   consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+  callbackURL: 'http://127.0.0.1/auth',
   includeEmail: true
 },
 (accessToken, refreshToken, profile, done) => {
@@ -24,17 +25,9 @@ export default {
     passport.use(isTest ? twitterMockStrategy : strategy);
   },
 
-  twitterAuthenticate: passport.authenticate(
-    'twitter', { scope: ['include_email =true'] }
-  ),
   twitterTokenAuth: passport.authenticate(
-    'twitter-token', { scope: ['include_email =true'] }
+    'twitter-token', { session: false }
   ),
-  twitterRedirect: passport.authenticate('twitter',
-    {
-      failureRedirect: '/api/v1/users/twitter/redirect',
-      session: false
-    }),
 
   twitterOnAuthSuccess: processSocialUser
 };
