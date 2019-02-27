@@ -135,20 +135,25 @@ export default {
     } = req;
 
     const article = await Article.findOne({ where: { slug } });
+    if (!article) {
+      const error = new Error('Article does not exist!');
+      error.status = 404;
+      return next(error);
+    }
     const articleId = article.id;
     const bookmark = await Bookmark.findOne({
       where: { articleId, bookmarkedBy: userId }
     });
 
     if (!bookmark && method === 'DELETE') {
-      const error = new Error('This Article is not bookmarked');
+      const error = new Error('This Article is not bookmarked!');
       error.status = 404;
       return next(error);
     }
 
     if (bookmark && method === 'POST') {
-      const error = new Error('This Article is already bookmarked');
-      error.status = 404;
+      const error = new Error('This Article is already bookmarked!');
+      error.status = 401;
       return next(error);
     }
 
