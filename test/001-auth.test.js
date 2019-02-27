@@ -89,7 +89,7 @@ describe('AUTHENTICATION TEST SUITE', () => {
       it('should successfully authenticate a user via twitter',
         async () => {
           const response = await chai.request(server)
-            .get(`${baseUrl}/twitter`);
+            .post(`${baseUrl}/twitter/reverse`);
           expect(response.status).to.equal(200);
         });
     });

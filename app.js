@@ -22,6 +22,7 @@ const app = express();
 initPassport();
 
 app.enable('trust proxy');
+
 app.use(cors());
 
 // Normal express config defaults

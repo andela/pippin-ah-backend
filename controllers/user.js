@@ -317,6 +317,7 @@ class Users {
     });
   }
 
+
   /**
     * Represents a controller.
     * @constructor
