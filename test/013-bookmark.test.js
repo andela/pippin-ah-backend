@@ -10,6 +10,7 @@ const baseUrl = '/api/v1';
 describe('BOOKMARK TEST SUITE', () => {
   let accessToken;
   let createdSlug;
+  let articleRequestObject;
 
   before(async () => {
     await models.sequelize.sync({ force: true });
@@ -20,7 +21,7 @@ describe('BOOKMARK TEST SUITE', () => {
       password: 'john26354'
     };
 
-    const articleRequestObject = {
+    articleRequestObject = {
       title: 'The new boston',
       body: 'Bucky rubert is the only person you hear in the newboston',
       description: 'Article Description for get all authors',
@@ -40,64 +41,43 @@ describe('BOOKMARK TEST SUITE', () => {
   });
 
   describe('BOOKMARK AN ARTICLE', () => {
-    // eslint-disable-next-line max-len
     it('Should not bookmark an article when the slug does not exist',
       async () => {
         const response = await chai.request(server)
-          .post(`${baseUrl}/articles/bookmarks/the-new-looks`)
+          .post(`${baseUrl}/articles/bookmark/the-new-looks`)
           .set('Authorization', accessToken);
-        expect(response.status).to.equal(400);
+        expect(response.status).to.equal(404);
         expect(response.body).to.have.deep.property('error');
-        expect(response.body.error).to.equal('Article does not exist');
+        expect(response.body.error).to.equal('Article does not exist!');
       }
     );
 
     it('should bookmark article when slug exists', async () => {
       const response = await chai.request(server)
-        .post(`${baseUrl}/articles/bookmarks/${createdSlug}`)
+        .post(`${baseUrl}/articles/bookmark/${createdSlug}`)
         .set('Authorization', accessToken);
       expect(response.status).to.equal(201);
-    }
-    );
+      expect(response.body.message).to.equal('Bookmark successful!');
+    });
 
-    it('should get array of slugs from bookmarked articles',
+    it('should get a user\'s bookmarks',
       async () => {
         const response = await chai.request(server)
           .get(`${baseUrl}/articles/bookmarks`)
           .set('Authorization', accessToken);
         expect(response.status).to.equal(200);
-        expect(response.body[0]).to.equal('the-new-boston-JohnDoe');
+        expect(response.body.bookmarks[0].title).to.equal('The new boston');
       }
     );
 
-    // eslint-disable-next-line
-    it('should not remove article from list of bookmarked articles when article slug does not exist',
+    it('should not remove bookmark if it does not exist',
       async () => {
         const response = await chai.request(server)
-          .patch(`${baseUrl}/articles/bookmarks/time-shall-tell-for-perfection`)
+          .delete(`${baseUrl}/articles/bookmark/time-shall-tell-for-perfection`)
           .set('Authorization', accessToken);
-        expect(response.status).to.equal(400);
+        expect(response.status).to.equal(404);
         expect(response.body).to.have.deep.property('error');
-        expect(response.body.error).to.equal('Article does not exist');
-      }
-    );
-
-    it('should bookmark article when article slug exists',
-      async () => {
-        const response = await chai.request(server)
-          .patch(`${baseUrl}/articles/bookmarks/${createdSlug}`)
-          .set('Authorization', accessToken);
-        expect(response.status).to.equal(200);
-      }
-    );
-
-    it('should return array of slugs for bookmarked articles',
-      async () => {
-        const response = await chai.request(server)
-          .get(`${baseUrl}/articles/bookmarks`)
-          .set('Authorization', accessToken);
-        expect(response.status).to.equal(200);
-        expect(response.body.length).to.equal(0);
+        expect(response.body.error).to.equal('Article does not exist!');
       }
     );
   });
