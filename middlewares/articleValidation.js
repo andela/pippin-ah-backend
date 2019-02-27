@@ -4,7 +4,7 @@ import models from '../models';
 import inputTypeValidator from './inputTypeValidator';
 import { categories as categoryEnum } from '../helpers';
 
-const { Article, Report } = models;
+const { Article, Bookmark, Report } = models;
 const requiredParams = ['title', 'body', 'description', 'category'];
 const { iLike } = Sequelize.Op;
 
@@ -127,14 +127,32 @@ export default {
     return next();
   },
 
-  async checkIfSlugExists(req, res, next) {
-    const { slug } = req.params;
+  async doesBookmarkExist(req, res, next) {
+    const {
+      decoded: { id: userId },
+      params: { slug },
+      method
+    } = req;
+
     const article = await Article.findOne({ where: { slug } });
-    if (article) return next();
-    const errorMessage = 'Article does not exist';
-    const error = new Error(errorMessage);
-    error.status = 400;
-    return next(error);
+    const articleId = article.id;
+    const bookmark = await Bookmark.findOne({
+      where: { articleId, bookmarkedBy: userId }
+    });
+
+    if (!bookmark && method === 'DELETE') {
+      const error = new Error('This Article is not bookmarked');
+      error.status = 404;
+      return next(error);
+    }
+
+    if (bookmark && method === 'POST') {
+      const error = new Error('This Article is already bookmarked');
+      error.status = 404;
+      return next(error);
+    }
+
+    return next();
   },
 
   async isInputValid(req, res, next) {
