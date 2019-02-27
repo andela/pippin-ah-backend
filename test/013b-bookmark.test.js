@@ -103,7 +103,7 @@ describe('BOOKMARK TEST SUITE', () => {
     it('should not remove bookmark if article does not exist',
       async () => {
         const response = await chai.request(server)
-          .delete(`${baseUrl}/articles/bookmarks/time-shall-tell-for-perfection`)
+          .delete(`${baseUrl}/articles/bookmarks/time-shall-tell`)
           .set('Authorization', accessToken);
         expect(response.status).to.equal(404);
         expect(response.body).to.have.deep.property('error');
