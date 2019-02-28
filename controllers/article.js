@@ -244,6 +244,16 @@ export default {
       }
     }));
 
+    let isBookmarked = null;
+    if (req.decoded && req.decoded.id) {
+      isBookmarked = req.decoded.id && await Bookmark.findOne({
+        where: {
+          bookmarkedBy: req.decoded.id,
+          articleId: article.id
+        }
+      });
+    }
+
     const response = {
       id: article.id,
       title: article.title,
@@ -259,6 +269,7 @@ export default {
       createdAt: article.createdAt,
       updatedAt: article.updatedAt,
       totalLikes: article.Reactions.length,
+      isBookmarked: !!isBookmarked,
       comments,
       author: {
         username: article.User.username,
@@ -284,7 +295,10 @@ export default {
 
     await Bookmark.create({ articleId, bookmarkedBy, bookmarked });
 
-    return res.sendStatus(201);
+    return res.status(201).json({
+      message: 'Bookmark successful!',
+      article
+    });
   },
 
   async removeBookmarkedArticle(req, res) {
@@ -295,29 +309,32 @@ export default {
 
     const article = await Article.findOne({ where: { slug } });
     const articleId = article.id;
-
     const bookmark = await Bookmark.findOne({
       where: { articleId, bookmarkedBy: userId }
     });
 
-    await bookmark.update({ bookmarked: false });
-    return res.sendStatus(200);
+    await bookmark.destroy();
+    return res.status(200).json({
+      message: 'Bookmark removed successfully',
+      article
+    });
   },
 
   async getBookmarkedArticles(req, res) {
     const { id: bookmarkedBy } = req.decoded;
 
-    const bookmarkedArticles = await Bookmark
+    const bookmarks = await Bookmark
       .findAll({
         where: { bookmarkedBy, bookmarked: true },
         include: [{
           model: Article,
-          attributes: ['slug'],
         }],
       });
 
-    const slugArray = bookmarkedArticles.map(item => item.Article.slug);
-    return res.send(slugArray);
+    const articleArray = bookmarks.map(item => item.Article);
+    return res.status(200).json({
+      bookmarks: articleArray
+    });
   },
 
   async shareArticle(req, res) {

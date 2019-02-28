@@ -10,6 +10,7 @@ import {
 
 import {
   verifyToken,
+  getUserId,
   articleValidation,
   commentValidations,
   ratingValidation,
@@ -57,7 +58,7 @@ const {
   reportIsEmpty,
   reportIsRequired,
   categoryQueryValidator,
-  checkIfSlugExists,
+  doesBookmarkExist,
   isInputValid
 } = articleValidation;
 
@@ -125,12 +126,12 @@ router.route('/bookmarks')
 
 router.route('/bookmarks/:slug')
   .all(verifyToken)
-  .post(checkIfSlugExists, bookmarkArticle)
-  .patch(checkIfSlugExists, removeBookmarkedArticle);
-
+  .post(doesBookmarkExist, bookmarkArticle)
+  .delete(doesBookmarkExist, removeBookmarkedArticle);
 
 router.route('/:slug')
   .get(
+    getUserId,
     doesArticleExist,
     getArticleBySlug
   );
