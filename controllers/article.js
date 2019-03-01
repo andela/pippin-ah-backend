@@ -13,7 +13,8 @@ const {
   Follow,
   Comment,
   Reaction,
-  CommentReaction
+  CommentReaction,
+  Highlight
 } = models;
 const {
   iLike,
@@ -227,6 +228,21 @@ export default {
           model: Reaction,
           where: { liked: true },
           required: false
+        },
+        {
+          model: Highlight,
+          required: false,
+          include: [{
+            model: User,
+            required: false,
+            attributes: ['username'],
+            include: [{
+              model: Profile,
+              required: false,
+              attributes: ['firstName', 'lastName', 'imageUrl']
+            }]
+          },
+          ]
         }
       ]
     });
@@ -241,6 +257,21 @@ export default {
         lastName: commentItem.User.Profile.lastName,
         imageUrl: commentItem.User.Profile.imageUrl,
         username: commentItem.User.username
+      }
+    }));
+
+    const highlights = article.Highlights.map(highlight => ({
+      id: highlight.id,
+      highlightedText: highlight.highlightedText,
+      startIndex: highlight.startIndex,
+      stopIndex: highlight.stopIndex,
+      comment: highlight.comment,
+      createdAt: highlight.createdAt,
+      author: {
+        firstName: highlight.User.Profile.firstName,
+        lastName: highlight.User.Profile.lastName,
+        imageUrl: highlight.User.Profile.imageUrl,
+        username: highlight.User.username
       }
     }));
 
@@ -276,7 +307,8 @@ export default {
         firstName: article.User.Profile.firstName,
         lastName: article.User.Profile.lastName,
         imageUrl: article.User.Profile.imageUrl
-      }
+      },
+      highlights
     };
     return res.json(response);
   },
